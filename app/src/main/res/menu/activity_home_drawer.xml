@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_addreminder"
+            android:icon="@mipmap/ic_addreminder"
+            android:title="Add Reminder" />
+        <item
+            android:id="@+id/nav_remindOthers"
+            android:icon="@mipmap/ic_remindtoothers"
+            android:title="Remind to Others" />
+        <item
+            android:id="@+id/nav_wakeUpAlarm"
+            android:icon="@mipmap/ic_wakeupalarm"
+            android:title="Wakeup Alarm" />
+        <item
+            android:id="@+id/nav_myReminders"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="My Reminders" />
+        <item
+            android:id="@+id/nav_offers"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Offers and Coupons" />
+    </group>
+
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="Share" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="Send" />-->
+        <!--</menu>-->
+    <!--</item>-->
+
+</menu>

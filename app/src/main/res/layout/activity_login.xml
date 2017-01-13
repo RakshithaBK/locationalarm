@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mobile"
+        android:id="@+id/loginMobileTxt"
+        android:textColorHint="@color/color_hint"
+        android:backgroundTint="@color/color_line"
+        android:textColor="@color/color_Black"
+        android:inputType="phone"
+        android:paddingBottom="10dp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:id="@+id/loginPasswordTxt"
+        android:textColorHint="@color/color_hint"
+        android:backgroundTint="@color/color_line"
+        android:textColor="@color/color_Black"
+        android:inputType="textPassword"
+        android:paddingBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forgotpwd"
+        android:text="Forgot Password?"
+        android:textColor="@color/color_ForgotPwd"
+        android:layout_gravity="right"
+        android:paddingBottom="20dp"/>
+
+    <Button
+        android:id="@+id/signInBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign in"
+        android:background="@drawable/btn_color_gradient"
+        android:layout_margin="10dp"/>
+
+
+    <Button
+
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:text="or"
+        android:background="@drawable/circle_view"
+        android:textColor="@color/color_hint"
+        android:layout_gravity="center_horizontal"
+        />
+
+
+    <CheckBox
+        android:id="@+id/loginCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_Blue"
+        android:layout_gravity="center_horizontal"
+        android:text="Use finger print to sign in"
+        android:textSize="20dp"
+        android:buttonTint="@color/color_Blue"
+        android:layout_marginBottom="20dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginFingerImg"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_fingerprint_144"
+        android:visibility="invisible"/>
+
+</LinearLayout>
