@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:id="@+id/list_view_content">
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:background="@drawable/offers_card">
+
+        <TextView
+            android:id="@+id/smsNumberText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NUMBER_GOES_HERE"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:textSize="15dp"
+            android:textColor="@color/colorFabLabelbackground"
+            android:padding="5dp"
+            android:layout_margin="10dp">
+        </TextView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_height="1dp"
+            android:background="@color/color_line"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="right"
+            android:weightSum="3"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_addlocation"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="1.5km"
+                android:textColor="@color/color_Blue"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:alpha="1"
+                android:layout_gravity="right"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

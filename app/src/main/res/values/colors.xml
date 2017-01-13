@@ -2,5 +2,17 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="color_white">#ffffff</color>
+    <color name="color_hint">#858585</color>
+    <color name="color_Blue">#408be6</color>
+    <color name="color_line">#C9C9C9</color>
+    <color name="color_Black">#000000</color>
+    <color name="color_Purple">#9568ff</color>
+    <color name="color_ForgotPwd">#4886E9</color>
+    <color name="colorAccent">#E9A317</color>
+    <color name="colorActionBar">#8C6CFD</color>
+    <color name="colorActionBarHeader">#795CF6</color>
+    <color name="colorFabRed">#F03E56</color>
+    <color name="colorFabLabelbackground">#606060</color>
+
 </resources>
