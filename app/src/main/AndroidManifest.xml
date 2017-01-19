@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permisson.ACCESS_GPS" />
 
 
     <application
@@ -12,7 +16,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +30,18 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".OffersActivity" />
         <activity android:name=".AlarmRingingActivity"></activity>
+
+        <activity android:name=".MainActivity">
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDFOzoeXPmSKDvNU_K3ABz-YRFr23uldrk" />
+
+        <activity android:name=".AddReminderActivity"></activity>
+
+        <service android:name=".Utils.LocationReminderIntentService"/>
+
     </application>
 
 </manifest>

@@ -5,13 +5,30 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-
     <string name="show_alarm_msg">Get Milk \n and start the day with</string>
     <string name="show_msg">the nice cup of coffee</string>
 
     <string name="show_time_string">Now the time is </string>
     <string name="show_time"> 6:30 am</string>
+
+    <string name="GPSAlertDialogTitle">GPS Settings</string>
+    <string name="GPSAlertDialogMessage">Please turn on the GPS</string>
+    <string name="action_settings">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="Toast.Validation">Please enter valid data for all fields</string>
+
+    <string name="AreYouSure">Delete?</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+
+    <string name="Toast_error">Error</string>
+
+    <string name="remind_me_to">Remind me to...</string>
+
+    <string name="turn_on_internet">Not connected to internet</string>
+    <string name="turn_on_gps">Turn on GPS</string>
+    <string name="ok">OK</string>
 
 
 </resources>
