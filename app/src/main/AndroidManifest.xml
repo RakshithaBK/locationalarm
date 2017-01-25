@@ -32,7 +32,6 @@
         <activity android:name=".OffersActivity"
             android:theme="@style/AppTheme"
             android:label="Offers and Coupons"/>
-        <activity android:name=".AlarmRingingActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

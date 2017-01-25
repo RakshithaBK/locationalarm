@@ -213,8 +213,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                         // add navigation drawer item onclick method here
                         break;
                     case R.id.nav_wakeUpAlarm:
-                        Intent alarmRing = new Intent(HomeActivity.this, AlarmRingingActivity.class);
-                        startActivity(alarmRing);
                         break;
                     case R.id.nav_myReminders:
                         //Do some thing here
