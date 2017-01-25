@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permisson.ACCESS_GPS" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,25 +22,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AuthenticationActivity" />
+        <activity
+            android:name=".AuthenticationActivity"
+            android:theme="@style/AppTheme"></activity>
         <activity android:name=".ConfirmRegisterActivity" />
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".OffersActivity" />
-        <activity android:name=".AlarmRingingActivity"></activity>
-
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".OffersActivity"
+            android:theme="@style/AppTheme"
+            android:label="Offers and Coupons"/>
+        <activity android:name=".AlarmRingingActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDFOzoeXPmSKDvNU_K3ABz-YRFr23uldrk" />
+            android:value="AIzaSyDqmAQS3dFEYSu_PvrYohlnD0fjRspzzrw" />
 
-        <activity android:name=".AddReminderActivity"></activity>
+        <activity
+            android:name=".AddReminderActivity"
+            android:theme="@style/AddReminder"></activity>
 
-        <service android:name=".Utils.LocationReminderIntentService"/>
+        <service android:name=".Utils.LocationReminderIntentService" />
 
+        <activity android:name=".OffersMapActivity"></activity>
     </application>
 
 </manifest>

@@ -40,6 +40,8 @@ public class AddReminderActivity extends AppCompatActivity {
 
         place  =  getIntent().getParcelableExtra("reminder_place");
 
+
+
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
         this.getSupportActionBar().setTitle(R.string.remind_me_to);

@@ -5,10 +5,11 @@
     android:background="@color/color_white"
     android:id="@+id/list_view_content">
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_margin="10dp"
+        android:elevation="2dp"
         android:background="@drawable/offers_card">
 
         <TextView
@@ -45,15 +46,7 @@
                 android:layout_weight="2"
                 android:layout_gravity="center"
                 android:src="@mipmap/ic_addlocation"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="1.5km"
-                android:textColor="@color/color_Blue"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:alpha="1"
-                android:layout_gravity="right"/>
+
         </LinearLayout>
 
     </LinearLayout>

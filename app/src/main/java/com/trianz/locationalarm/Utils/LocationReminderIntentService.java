@@ -15,7 +15,7 @@ import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.gson.Gson;
-import com.trianz.locationalarm.MainActivity;
+import com.trianz.locationalarm.HomeActivity;
 import com.trianz.locationalarm.R;
 
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class LocationReminderIntentService extends IntentService {
       String contextPlace = reminder_place;
 
       NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-      Intent intent = new Intent(this, MainActivity.class);
+      Intent intent = new Intent(this, HomeActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
       PendingIntent pendingNotificationIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

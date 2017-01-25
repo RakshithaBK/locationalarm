@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.trianz.locationalarm.HomeActivity">
+    tools:context="com.trianz.locationalarm.HomeActivity"
+    tools:showIn="@layout/app_bar_home">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -26,25 +27,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginRight="20dp"
-                android:src="@mipmap/ic_addreminder" />
+                android:src="@mipmap/ic_current_date" />
 
             </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_home" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <!-- other content in the activity -->
-    </LinearLayout>
-
     <FrameLayout
         android:id="@+id/frame_layout"
+        android:background="@color/color_hint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_white">
+        android:layout_gravity="end|bottom">
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/fab_menu"
@@ -90,10 +85,9 @@
                 fab:fab_icon="@mipmap/ic_wakeupalarm"
                 fab:fab_size="mini"
                 fab:fab_title="Wakeup Alarm" />
-
-
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     </FrameLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>

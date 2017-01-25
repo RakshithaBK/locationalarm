@@ -3,7 +3,6 @@ package com.trianz.locationalarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +10,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class LoginActivity extends Fragment {
     public static final String REGISTER_URL = "http://10.10.5.202:8080/com.priya.jersey.first/alarm/login/user";
@@ -92,7 +74,7 @@ public class LoginActivity extends Fragment {
 
     public void homeActivity(View view){
 
-        Intent homeActivity = new Intent(getContext(),MainActivity.class);
+        Intent homeActivity = new Intent(getContext(),HomeActivity.class);
                                 startActivity(homeActivity);
 
 
