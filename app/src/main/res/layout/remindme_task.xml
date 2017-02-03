@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/enterTask"
+        android:orientation="horizontal"
+        android:weightSum="12"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:background="#9568ff">
+
+        <ImageView
+            android:id="@+id/closeIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_discard"
+            android:layout_weight="2"
+            android:paddingTop="12dp"/>
+
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Remind Me To..."
+            android:id="@+id/et_remindmeto"
+            android:textCursorDrawable="@null"
+            android:textColor="#fff"
+            android:layout_weight="8"
+            android:backgroundTint="#fff"/>
+
+        <ImageView
+            android:id="@+id/saveIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_save_reminder"
+            android:layout_weight="2"
+            android:paddingTop="12dp"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/enterTask">
+    </ListView>
+
+</RelativeLayout>
