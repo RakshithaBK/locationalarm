@@ -24,14 +24,15 @@
         </activity>
         <activity
             android:name=".AuthenticationActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity android:name=".ConfirmRegisterActivity" />
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".OffersActivity"
-            android:theme="@style/AppTheme"
-            android:label="Offers and Coupons"/>
+        <activity
+            android:name=".OffersActivity"
+            android:label="Offers and Coupons"
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -39,11 +40,21 @@
 
         <activity
             android:name=".AddReminderActivity"
-            android:theme="@style/AddReminder"></activity>
+            android:theme="@style/AddReminder" />
 
         <service android:name=".Utils.LocationReminderIntentService" />
 
-        <activity android:name=".OffersMapActivity"></activity>
+        <activity android:name=".OffersMapActivity" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".AddReminderToDateActivity"
+            android:theme="@style/AddReminder"/>
     </application>
 
 </manifest>

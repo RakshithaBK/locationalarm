@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -59,16 +61,25 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.trianz.locationalarm.Utils.GeofenceController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class HomeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,OnDateSelectedListener, OnMonthChangedListener {
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
@@ -78,27 +89,66 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
     BottomSheetBehavior mBottomSheetBehavior1;
     private String TAG = "Location Alarm";
     Place selectedPlace = null;
+    String selectedDate = null;
     RecyclerView recyclerView;
     private RemindersListAdapter remindersListAdapter;
     static final int SET_REMINDER_REQUEST = 1; // The request code
     TextView reminderError;
     FrameLayout frameLayout;
+    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
+    SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
+    @Bind(R.id.calender_frame)
+    MaterialCalendarView widget;
+    Boolean isDateSelected = false;
 
+//    @Bind(R.id.textView)
+//    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        //calender widget
+        ButterKnife.bind(this);
+        widget.setOnDateChangedListener(this);
+        widget.setOnMonthChangedListener(this);
+       // textView.setText(getSelectedDatesString());
+
+        //Scrollable cardview
         final View bottomSheet = findViewById(R.id.bottom_sheet1);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior1.setHideable(false);
         mBottomSheetBehavior1.setPeekHeight(400);
 
         //Toolbar
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //calender switch to map
+        ImageView calenderImg = (ImageView) findViewById(R.id.calenderImg);
+        calenderImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FrameLayout search_place = (FrameLayout) findViewById(R.id.search_place_card);
+                ViewGroup content_calender= (ViewGroup) findViewById(R.id.calender_frame);
+                FrameLayout content_map = (FrameLayout) findViewById(R.id.content_frame);
+                if(!isDateSelected){
+                    content_calender.setVisibility(View.VISIBLE);
+                    search_place.setVisibility(View.INVISIBLE);
+                    getSupportActionBar().setTitle("");
+                    getSupportActionBar().setSubtitle("");
+                    isDateSelected = true;
+                }else{
+                    content_calender.setVisibility(View.INVISIBLE);
+                    search_place.setVisibility(View.VISIBLE);
+                    getSupportActionBar().setTitle("");
+                    isDateSelected= false;
+
+                }
+            }
+        });
+
 
         //close Button in navigation
         final NavigationView  nvDrawer = (NavigationView) findViewById(R.id.nav_view);
@@ -116,8 +166,10 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
         //Fab actions
         FloatingActionButton wakeupfab = (FloatingActionButton) findViewById(R.id.fab_wakeup_alarm);
-        FloatingActionButton  addreminderfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder);
+        FloatingActionButton  addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
+        FloatingActionButton  addReminderDatefab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_date);
         FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
+
 
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
@@ -154,13 +206,29 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             }
         });
 
-        addreminderfab.setOnClickListener(new View.OnClickListener() {
+        addReminderDatefab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(selectedDate == null){
+                    Snackbar.make(view, "Select a reminder date", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    fabMenu.collapse();
+                }else{
+                    Intent addReminderToDateActivity = new Intent(HomeActivity.this, AddReminderToDateActivity.class);
+                    addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
+                    startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
+                    fabMenu.collapse();
+                }
+            }
+        });
+
+        addReminderLocationfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if(selectedPlace == null)
                 {
-                    Snackbar.make(view, "Select a reminder location.", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "Select a reminder location", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     fabMenu.collapse();
                 }
@@ -263,6 +331,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -466,8 +535,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.READ_SMS)
                             == PackageManager.PERMISSION_GRANTED) {
-
-                        Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -655,5 +723,26 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private String getSelectedDatesString() {
+        CalendarDay date = widget.getSelectedDate();
+        if (date == null) {
+            return "No Selection";
+        }
+        return FORMATTER.format(date.getDate());
+    }
+
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+       // textView.setText(getSelectedDatesString());
+        selectedDate = getSelectedDatesString();
+        Toast.makeText(this, selectedDate, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        getSupportActionBar().setTitle(monthFormat.format(date.getDate()).toString());
+        getSupportActionBar().setSubtitle("");
     }
 }

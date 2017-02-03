@@ -13,6 +13,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     >
 
     <FrameLayout
@@ -28,11 +29,34 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@drawable/tab_layout_top_gradient"
+            android:id="@+id/calender_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mcv_selectionColor="@color/color_Black"
+            app:mcv_dateTextAppearance="@color/color_Black"
+            app:mcv_arrowColor="@color/color_white"
+            app:mcv_tileHeight="40dp"
+            android:visibility="invisible"
+            />
+
+        <!--<TextView-->
+            <!--android:id="@+id/textView"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+            <!--/>-->
+
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="5dp"
+            android:id="@+id/search_place_card"
             card_view:cardCornerRadius="3dp"
             card_view:cardMaxElevation="1dp"
             card_view:cardElevation="2dp"
@@ -46,9 +70,8 @@
                 />
 
         </android.support.v7.widget.CardView>
-
     </FrameLayout>
-</LinearLayout>
+    </LinearLayout>
 
 
     <android.support.v4.widget.NestedScrollView
@@ -102,7 +125,5 @@
                 android:scrollbars="vertical"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-
 
 </android.support.design.widget.CoordinatorLayout>

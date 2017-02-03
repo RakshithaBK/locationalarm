@@ -3,6 +3,7 @@ package com.trianz.locationalarm;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.trianz.locationalarm.Utils.Constants;
 import com.trianz.locationalarm.Utils.GeofenceController;
@@ -32,14 +37,18 @@ public class AddReminderActivity extends AppCompatActivity {
     EditText message;
     Place place;
     protected static final int RESULT_SPEECH = 1;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reminder);
 
-        place  =  getIntent().getParcelableExtra("reminder_place");
-
+        place = getIntent().getParcelableExtra("reminder_place");
 
 
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,7 +58,7 @@ public class AddReminderActivity extends AppCompatActivity {
         message = (EditText) findViewById(R.id.reminder_msg);
         message.requestFocus();
 
-        if(message.requestFocus()) {
+        if (message.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
 
@@ -76,6 +85,9 @@ public class AddReminderActivity extends AppCompatActivity {
             }
         });
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -95,49 +107,41 @@ public class AddReminderActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
-            location_name = place.getName().toString();
-            location_latitude = place.getLatLng().latitude;
-            location_longitude = place.getLatLng().longitude;
-            reminder_message = message.getText().toString();
-            radius = 1;
 
-            if(reminder_message.equals(""))
-            {
-                Snackbar.make(getWindow().getDecorView(), "Set a reminder message.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+                location_name = place.getName().toString();
+                location_latitude = place.getLatLng().latitude;
+                location_longitude = place.getLatLng().longitude;
+                reminder_message = message.getText().toString();
+                radius = 1;
 
-            else {
+                if (reminder_message.equals("")) {
+                    Snackbar.make(getWindow().getDecorView(), "Set a reminder message.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } else {
 
-                if (dataIsValid()) {
+                    if (dataIsValid()) {
 
-                    NamedGeofence geofence = new NamedGeofence();
-                    geofence.reminder_msg = reminder_message;
-                    geofence.reminder_place = location_name;
-                    geofence.latitude = location_latitude;
-                    geofence.longitude = location_longitude;
-                    geofence.radius = radius * 1000.0f;
+                        NamedGeofence geofence = new NamedGeofence();
+                        geofence.reminder_msg = reminder_message;
+                        geofence.reminder_place = location_name;
+                        geofence.latitude = location_latitude;
+                        geofence.longitude = location_longitude;
+                        geofence.radius = radius * 1000.0f;
 
-                    GeofenceController.getInstance().addGeofence(geofence, geofenceControllerListener);
+                        GeofenceController.getInstance().addGeofence(geofence, geofenceControllerListener);
+
+                    } else {
+                        showValidationErrorToast();
+                    }
 
                 }
 
-                else
-                {
-                    showValidationErrorToast();
-                }
 
+                return true;
             }
 
-
-
-
-
-            return true;
+            return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
 
@@ -183,15 +187,15 @@ public class AddReminderActivity extends AppCompatActivity {
     private GeofenceController.GeofenceControllerListener geofenceControllerListener = new GeofenceController.GeofenceControllerListener() {
         @Override
         public void onGeofencesUpdated() {
-                        Intent returnIntent = new Intent();
-                        setResult(Activity.RESULT_OK, returnIntent);
-                        AddReminderActivity.this.finish();
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_OK, returnIntent);
+            AddReminderActivity.this.finish();
         }
 
         @Override
         public void onError() {
 
-         showErrorToast();
+            showErrorToast();
 
         }
     };
@@ -211,7 +215,7 @@ public class AddReminderActivity extends AppCompatActivity {
                     ArrayList<String> text = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-                  //  message.setText(text.get(0));
+                    //  message.setText(text.get(0));
                     message.setText("");
                     if (!TextUtils.isEmpty(text.get(0))) {
                         message.append(text.get(0));
@@ -221,5 +225,41 @@ public class AddReminderActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("AddReminder Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }

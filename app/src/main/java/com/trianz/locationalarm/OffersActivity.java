@@ -91,7 +91,7 @@ public class OffersActivity extends AppCompatActivity {
 
                 while(addressList.containsKey(s)){
                     if(findMyPattern.matcher(s).matches()){
-                        if(s.equals("VK-HDFCBK") || s.equals("VM-HDFCBK")){
+                        if(s.equals("VK-HDFCBK") || s.equals("VM-HDFCBK") || s.equals("DM-HDFCBK") ){
                             searchKey = "Hdfcbank";
                             moveaToMap();
                         }else if(s.equals("AD-OLACBS") || s.equals("IX-OLACBS") || s.equals("VM-OLACAB") ||s.equals("VK-OLACAB") ){

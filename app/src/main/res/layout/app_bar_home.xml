@@ -54,7 +54,18 @@
             fab:fab_labelsPosition="left">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_add_reminder"
+                android:id="@+id/fab_add_reminder_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/colorFabRed"
+                fab:fab_colorPressed="@color/colorFabRed"
+                fab:fab_plusIconColor="@color/color_white"
+                fab:fab_icon="@mipmap/ic_location_on_white_24dp"
+                fab:fab_size="mini"
+                fab:fab_title="Add Reminder to location" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_add_reminder_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorFabRed"
@@ -62,7 +73,7 @@
                 fab:fab_plusIconColor="@color/color_white"
                 fab:fab_icon="@mipmap/ic_addreminder"
                 fab:fab_size="mini"
-                fab:fab_title="Add Reminder" />
+                fab:fab_title="Add Reminder to date" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_remind_others"
