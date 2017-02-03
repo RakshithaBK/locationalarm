@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permisson.ACCESS_GPS" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,25 +22,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AuthenticationActivity" />
+        <activity
+            android:name=".AuthenticationActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".ConfirmRegisterActivity" />
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".OffersActivity" />
-        <activity android:name=".AlarmRingingActivity"></activity>
-
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity
+            android:name=".OffersActivity"
+            android:label="Offers and Coupons"
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDFOzoeXPmSKDvNU_K3ABz-YRFr23uldrk" />
+            android:value="AIzaSyDqmAQS3dFEYSu_PvrYohlnD0fjRspzzrw" />
 
-        <activity android:name=".AddReminderActivity"></activity>
+        <activity
+            android:name=".AddReminderActivity"
+            android:theme="@style/AddReminder" />
 
-        <service android:name=".Utils.LocationReminderIntentService"/>
+        <service android:name=".Utils.LocationReminderIntentService" />
 
+        <activity android:name=".OffersMapActivity" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".AddReminderToDateActivity"
+            android:theme="@style/AddReminder"/>
     </application>
 
 </manifest>

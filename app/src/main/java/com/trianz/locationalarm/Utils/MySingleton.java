@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

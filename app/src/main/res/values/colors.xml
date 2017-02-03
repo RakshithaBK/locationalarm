@@ -9,20 +9,17 @@
     <color name="color_Black">#000000</color>
     <color name="color_Purple">#9568ff</color>
     <color name="color_ForgotPwd">#4886E9</color>
-    <color name="colorAccent">#E9A317</color>
+    <color name="color_Orange">#E9A317</color>
     <color name="colorActionBar">#8C6CFD</color>
     <color name="colorActionBarHeader">#795CF6</color>
     <color name="colorFabRed">#F03E56</color>
     <color name="colorFabLabelbackground">#606060</color>
 
-
+//color code of home screen
     <color name="colorPrimaryLight">#BBDEFB</color>
-
-    <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
-
     <color name="light_grey">#c0c0c0</color>
 
 

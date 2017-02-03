@@ -148,7 +148,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
  .addApi(LocationServices.API)
  .addConnectionCallbacks(callbacks)
  .addOnConnectionFailedListener(connectionFailedListener)
- .build();
+ .new();
  googleApiClient.connect();
  }*/
 
