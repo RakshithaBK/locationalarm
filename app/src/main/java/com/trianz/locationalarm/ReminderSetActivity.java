@@ -133,9 +133,9 @@ public class ReminderSetActivity extends AppCompatActivity {
         String cMonth = cMonthFormat.format(myCalender.getTime());
         selectedMonthAlarm = (Integer.parseInt(cMonth)) - 1;
 
-        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
-        String cYear = cYearFormat.format(myCalender.getTime());
-        selectedYearAlarm = Integer.parseInt(cYear);
+//        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
+//        String cYear = cYearFormat.format(myCalender.getTime());
+//        selectedYearAlarm = Integer.parseInt(cYear);
 
 
         //For Map

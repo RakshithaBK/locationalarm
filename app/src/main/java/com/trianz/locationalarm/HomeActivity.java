@@ -201,8 +201,8 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         wakeupfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Done", Toast.LENGTH_SHORT).show();
-                //Intent to navigate to next page
+               Intent remindMeTask =  new Intent(HomeActivity.this, RemindMeTask.class);
+                startActivity(remindMeTask);
             }
         });
 

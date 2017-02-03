@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permisson.ACCESS_GPS" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -46,7 +50,7 @@
 
         <activity android:name=".OffersMapActivity" />
         <!--
- ATTENTION: This was auto-generated to add Google Play services to your project for
+ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
         -->
         <meta-data
@@ -55,6 +59,29 @@
 
         <activity android:name=".AddReminderToDateActivity"
             android:theme="@style/AddReminder"/>
+
+        <activity android:name=".RemindMeTask"/>
+
+        <activity android:name=".ReminderSetActivity"/>
+
+        <activity android:name=".AlarmRingingActivity">
+
+
+        </activity>
+
+    <service
+            android:name=".AlarmService"
+            android:enabled="true" />
+
+        <!--<receiver android:name=".AlarmReceiver" />-->
+
+        <receiver android:name=".AlarmReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -37,6 +37,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
         if (allDayFlag == false) {
             Intent alarmringingIntent = new Intent(context, AlarmRingingActivity.class);
+            alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             alarmringingIntent.putExtra("reminderEvent", reminderEvent);
             alarmringingIntent.putExtra("repeatAlarmIntervalValue", repeatAlarmIntervalValue);
             alarmringingIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);

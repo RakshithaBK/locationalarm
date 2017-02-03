@@ -68,7 +68,7 @@
             android:text="@string/show_time_string"
             android:textSize="25dp"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+
             android:layout_gravity="center"
             android:layout_marginRight="5dp"/>
         <TextView
@@ -78,7 +78,7 @@
             android:textSize="30dp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+
             android:layout_gravity="center"
             android:id="@+id/tv_currentTime"/>
     </LinearLayout>
