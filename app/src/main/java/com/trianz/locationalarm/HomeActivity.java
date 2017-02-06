@@ -203,6 +203,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             public void onClick(View view) {
                Intent remindMeTask =  new Intent(HomeActivity.this, RemindMeTask.class);
                 startActivity(remindMeTask);
+                fabMenu.collapse();
             }
         });
 
@@ -281,14 +282,16 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                         // add navigation drawer item onclick method here
                         break;
                     case R.id.nav_wakeUpAlarm:
+                        Intent wakeUp = new Intent(HomeActivity.this, RemindMeTask.class);
+                        startActivity(wakeUp);
                         break;
                     case R.id.nav_myReminders:
                         //Do some thing here
                         // add navigation drawer item onclick method here
                         break;
                     case R.id.nav_offers:
-                        Intent i = new Intent(HomeActivity.this, OffersActivity.class);
-                        startActivity(i);
+                        Intent offers = new Intent(HomeActivity.this, OffersActivity.class);
+                        startActivity(offers);
                         break;
                 }
                 return false;

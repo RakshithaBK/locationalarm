@@ -78,9 +78,8 @@ public class RemindMeTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                Intent intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
-//
-//                startActivity(intent);
+                Intent Home = new Intent(RemindMeTask.this, HomeActivity.class);
+                startActivity(Home);
             }
         });
     }

@@ -42,5 +42,28 @@
         <item name="android:padding">10dp</item>
     </style>
 
+    //datepicker theme
+    <style name="MyDatePickerDialogTheme" parent="Theme.AppCompat.Light">
+        <!-- this is new -->
+        <item name="colorPrimaryDark">@color/colorActionBarHeader</item>
+        <item name="colorAccent">@color/color_Blue</item>
+        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+        <item name="android:timePickerStyle">@style/MyTimePickerStyle</item>
+    </style>
+
+    //date style
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:headerBackground">@drawable/tab_layout_top_gradient</item>
+        <item name="android:focusedMonthDateColor">@color/colorFabLabelbackground</item>
+        <item name="android:datePickerMode">calendar</item>
+        <item name="android:selectableItemBackground">@color/color_Purple</item>
+    </style>
+
+    //time style
+    <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
+        <item name="android:headerBackground">@drawable/tab_layout_top_gradient</item>
+        <item name="android:numbersBackgroundColor">@color/color_white</item>
+
+    </style>
 
 </resources>

@@ -7,12 +7,8 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
-
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -25,6 +21,8 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import static com.trianz.locationalarm.R.id.datePicker;
 
 
 /**
@@ -67,26 +65,6 @@ public class ReminderSetActivity extends AppCompatActivity {
     }
     /********/
 
-
-    //For datepicker dialog
-    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            // TODO Auto-generated method stub
-            myCalender.set(Calendar.YEAR, year);
-            myCalender.set(Calendar.MONTH, monthOfYear);
-            myCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            selectedYearAlarm = year;
-            selectedMonthAlarm = monthOfYear;
-            selectedDayAlarm = dayOfMonth;
-            updateLabel();
-        }
-
-    };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,21 +74,26 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         reminderEvent = bundle.getString("reminderEvent");
-
-        TextView datePicked =  (TextView)findViewById(R.id.datePicker);
+        this.getSupportActionBar().hide();
+        final TextView datePicked =  (TextView)findViewById(datePicker);
         final TextView timePicked =  (TextView)findViewById(R.id.timePicker);
         Switch enableAllDay = (Switch) findViewById(R.id.switchIcon);
+
 
         //set the alarm text selected from previous layout
         TextView reminderTsk = (TextView) findViewById(R.id.finalTaskSet);
         reminderTsk.setText(reminderEvent);
 
+
         //Set current time and date to textView
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("EEE, MMM d, yyyy");
         final String currentDate = currentDateFormat.format(myCalender.getTime());
 
+
+
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
         String currentTime = currentTimeFormat.format(myCalender.getTime());
+
 
         datePicked.setText(currentDate);
         timePicked.setText(currentTime);
@@ -146,17 +129,28 @@ public class ReminderSetActivity extends AppCompatActivity {
 //        fragmentTransaction.replace(R.id.mapView, new ContactFragment());
 //        fragmentTransaction.commit();
 
-        //DatePicker
-        datePicked.setOnClickListener(new android.view.View.OnClickListener() {
+
+//Date picker
+        datePicked.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View arg0) {
                 // TODO Auto-generated method stub
-                new DatePickerDialog(ReminderSetActivity.this, date, myCalender
-                        .get(Calendar.YEAR), myCalender.get(Calendar.MONTH),
-                        myCalender.get(Calendar.DAY_OF_MONTH)).show();
+                DatePickerDialog dialog = new DatePickerDialog(ReminderSetActivity.this, new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+                        // TODO Auto-generated method stub
+                        Toast.makeText(ReminderSetActivity.this, ""+arg1+"/"+(arg2+1)+"/"+arg3, Toast.LENGTH_SHORT).show();
+                    }
+                }, myCalender.YEAR, myCalender.MONTH, myCalender.DAY_OF_MONTH);
+                dialog.getDatePicker().setMinDate(System.currentTimeMillis());
+                dialog.setTitle(null);
+                dialog.show();
             }
         });
+
+
 
 
         //TimePicker
@@ -539,8 +533,10 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         String myFormat = "EEE, MMM d, yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        TextView datePicked = (TextView) findViewById(R.id.datePicker);
+        TextView datePicked = (TextView) findViewById(datePicker);
         datePicked.setText(sdf.format(myCalender.getTime()));
+
+
     }
     private static String pad(int c) {
         if (c >= 10)

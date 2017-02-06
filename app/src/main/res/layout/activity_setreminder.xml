@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/finalTaskSet"
                     android:layout_weight="8"
-                    android:textColor="#fff"
+                    android:textColor="@color/color_white"
                     android:paddingTop="11dp"/>
 
                 <ImageView
@@ -71,6 +72,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="All Day"
+                    android:textColor="@color/color_Black"
                     android:id="@+id/allDay"
                     android:layout_weight="8"
                     android:paddingTop="11dp"/>
@@ -106,6 +108,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/datePicker"
                     android:layout_weight="8"
+                    android:textColor="@color/color_Black"
                     android:paddingTop="11dp"
                     android:focusable="false"/>
 
@@ -115,6 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
+                    android:textColor="@color/color_Black"
                     android:paddingTop="8dp"
                     android:paddingEnd="4dp"/>
             </LinearLayout>
@@ -153,10 +157,12 @@
                     android:layout_height="wrap_content"
                     android:text="Reminder type"
                     android:layout_weight="8"
+                    android:textColor="@color/color_Black"
                     android:paddingTop="11dp"/>
 
                 <TextView
                     android:layout_width="0dp"
+                    android:textColor="@color/color_Black"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:paddingTop="8dp"/>
@@ -184,12 +190,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Voice and Notification"
+                    android:textColor="@color/color_Black"
                     android:layout_weight="8"
                     android:paddingTop="11dp"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/color_Black"
                     android:layout_weight="2"
                     android:paddingTop="8dp"/>
             </LinearLayout>
@@ -281,6 +289,7 @@
 
                 <TextView
                     android:layout_width="0dp"
+                    android:textColor="@color/color_Black"
                     android:layout_height="wrap_content"
                     android:text="Remind me"
                     android:layout_weight="8"
@@ -288,6 +297,7 @@
 
                 <TextView
                     android:layout_width="0dp"
+                    android:textColor="@color/color_Black"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:paddingTop="8dp"/>
@@ -313,12 +323,14 @@
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/remindMeBefore"
+                    android:textColor="@color/color_Black"
                     android:layout_height="wrap_content"
                     android:text="20 minutes before"
                     android:layout_weight="8"
                     android:paddingTop="11dp"/>
 
                 <TextView
+                    android:textColor="@color/color_Black"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -353,6 +365,7 @@
 
 
                 <TextView
+                    android:textColor="@color/color_Black"
                     android:layout_width="0dp"
                     android:id="@+id/reminderepeat"
                     android:layout_height="wrap_content"
@@ -361,6 +374,7 @@
                     android:paddingTop="11dp"/>
 
                 <TextView
+                    android:textColor="@color/color_Black"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
