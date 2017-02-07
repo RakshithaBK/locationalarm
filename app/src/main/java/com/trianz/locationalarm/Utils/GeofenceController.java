@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,7 +32,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
 
 // region Properties
 
-  private final String TAG = GeofenceController.class.getName();
+ // private final String TAG = GeofenceController.class.getName();
 
   private GeofenceControllerListener listener;
   private List<NamedGeofence> namedGeofences;
@@ -41,7 +40,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
     return namedGeofences;
   }
   private List<NamedGeofence> namedGeofencesToRemove;
-  private List<NamedGeofence> namedGeofencesToAdd;
+ // private List<NamedGeofence> namedGeofencesToAdd;
   private Geofence geofenceToAdd;
   private NamedGeofence namedGeofenceToAdd;
 
@@ -208,7 +207,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
             System.out.println("in success");
             saveGeofence(namedGeofence);
           } else {
-            Log.e(TAG, "Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
+            //Log.e(TAG, "Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
             sendError();
           }
         }
@@ -236,7 +235,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
             if (status.isSuccess()) {
               removeSavedGeofences();
             } else {
-              Log.e(TAG, "Removing geofence failed: " + status.getStatusMessage());
+              //Log.e(TAG, "Removing geofence failed: " + status.getStatusMessage());
               sendError();
             }
           }
@@ -298,7 +297,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
               if (status.isSuccess()) {
                 removeSavedGeofences();
               } else {
-                Log.e(TAG, "Removing geofence failed: " + status.getStatusMessage());
+               // Log.e(TAG, "Removing geofence failed: " + status.getStatusMessage());
                 sendError();
               }
             }
@@ -311,7 +310,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
 
     @Override
     public void onConnectionSuspended(int i) {
-      Log.e(TAG, "Connecting to GoogleApiClient suspended.");
+      //Log.e(TAG, "Connecting to GoogleApiClient suspended.");
       sendError();
     }
   };
@@ -323,7 +322,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
   private GoogleApiClient.OnConnectionFailedListener connectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-      Log.e(TAG, "Connecting to GoogleApiClient failed.");
+     // Log.e(TAG, "Connecting to GoogleApiClient failed.");
       sendError();
     }
   };

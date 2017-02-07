@@ -28,44 +28,28 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import static com.trianz.locationalarm.Utils.Constants.Instances.isGPSEnabled;
+import static com.trianz.locationalarm.Utils.Constants.Instances.isGPSTrackingEnabled;
+import static com.trianz.locationalarm.Utils.Constants.Instances.isNetworkEnabled;
+import static com.trianz.locationalarm.Utils.Constants.Instances.latitude;
+import static com.trianz.locationalarm.Utils.Constants.Instances.longitude;
+import static com.trianz.locationalarm.Utils.Constants.Instances.mContext;
+import static com.trianz.locationalarm.Utils.Constants.Geometry.geocoderMaxResults;
+import static com.trianz.locationalarm.Utils.Constants.Instances.provider_info;
+
 
 public class GPSTracker extends Service implements LocationListener {
 
     // Get Class Name
     private static String TAG = GPSTracker.class.getName();
-
-    private final Context mContext;
-
-    // flag for GPS Status
-    boolean isGPSEnabled = false;
-
-    // flag for network status
-    boolean isNetworkEnabled = false;
-
-    // flag for GPS Tracking is enabled
-    boolean isGPSTrackingEnabled = false;
-
     Location location;
-    double latitude;
-    double longitude;
-
-    // How many Geocoder should return our GPSTracker
-    int geocoderMaxResults = 1;
-
-    // The minimum distance to change updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
-
     // Declaring a Location Manager
     protected LocationManager locationManager;
-
     // Store LocationManager.GPS_PROVIDER or LocationManager.NETWORK_PROVIDER information
-    private String provider_info;
+
 
     public GPSTracker(Context context) {
-        this.mContext = context;
+        mContext = context;
         getLocation();
     }
 
@@ -85,7 +69,7 @@ public class GPSTracker extends Service implements LocationListener {
 
             // Try to get location if you GPS Service is enabled
             if (isGPSEnabled) {
-                this.isGPSTrackingEnabled = true;
+                isGPSTrackingEnabled = true;
 
                 Log.d(TAG, "Application use GPS Service");
 
@@ -98,7 +82,7 @@ public class GPSTracker extends Service implements LocationListener {
                 provider_info = LocationManager.GPS_PROVIDER;
 
             } else if (isNetworkEnabled) { // Try to get location if you Network Service is enabled
-                this.isGPSTrackingEnabled = true;
+                isGPSTrackingEnabled = true;
 
                 Log.d(TAG, "Application use Network State to get GPS coordinates");
 
@@ -159,7 +143,7 @@ public class GPSTracker extends Service implements LocationListener {
      */
     public boolean getIsGPSTrackingEnabled() {
 
-        return this.isGPSTrackingEnabled;
+        return isGPSTrackingEnabled;
     }
 
     /**
@@ -232,7 +216,7 @@ public class GPSTracker extends Service implements LocationListener {
                  * Geocoder.getFromLocation - Returns an array of Addresses
                  * that are known to describe the area immediately surrounding the given latitude and longitude.
                  */
-                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, this.geocoderMaxResults);
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude,geocoderMaxResults);
 
                 return addresses;
             } catch (IOException e) {
