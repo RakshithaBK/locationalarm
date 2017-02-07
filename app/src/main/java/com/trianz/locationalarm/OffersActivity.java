@@ -29,6 +29,8 @@ public class OffersActivity extends AppCompatActivity {
     Map<String,String> addressList = new HashMap<String, String>();
     String searchKey;
     Matcher matcher = null;
+    List<SMSData> smsList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,25 +38,23 @@ public class OffersActivity extends AppCompatActivity {
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
-        List<SMSData> smsList = new ArrayList<SMSData>();
+        smsList = new ArrayList<SMSData>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.apptoolbar);
         setSupportActionBar(toolbar);
 
-
         // Defined Array values to show in ListView
-        Uri uri = Uri.parse("content://sms/inbox");
         listView.setDivider(null);
         listView.setDividerHeight(0);
+
+        cursorReadInbox();
+        patterMatchToList(smsList);
+    }
+    public void cursorReadInbox(){
+        Uri uri = Uri.parse("content://sms/inbox");
         final Pattern sLimitPattern = Pattern.compile("^[A-Z][A-Z]-[A-Z]+");
-        String selection = "address Like '__-\\d?'";
-        //'__-%'
-
-
         c = getContentResolver().query(uri, new String[]{"_id", "address", "date", "body"},null ,null,null);
         startManagingCursor(c);
-
-
         // Read the sms data and store it in the list
         if(c.moveToFirst()) {
             for (int i = 0; i < c.getCount(); i++) {
@@ -68,16 +68,14 @@ public class OffersActivity extends AppCompatActivity {
                     sms.setBody(smsBody);
                     smsList.add(sms);
                 }else{
-
+                    //Toast.makeText(this, "Matcher Not found", Toast.LENGTH_SHORT).show();
                 }
-
                 c.moveToNext();
-
             }
         }
+    }
 
-
-
+    public void patterMatchToList(List<SMSData> smsList){
         // Assign adapter to ListView
         listView.setAdapter(new OffersListAdapter(this, smsList));
 
@@ -120,23 +118,18 @@ public class OffersActivity extends AppCompatActivity {
                             Toast.makeText(OffersActivity.this, "No location found", Toast.LENGTH_SHORT).show();
                         }
                     }
-
                     break;
                 }
-
-
             }
         });
 
     }
-
 
     public  void  moveaToMap(){
         Intent MapsActivity = new Intent(OffersActivity.this,OffersMapActivity.class);
         MapsActivity.putExtra("Get_Location_Name",searchKey);
         startActivity(MapsActivity);
     }
-
 
     public void onDestroy() {
         super.onDestroy();

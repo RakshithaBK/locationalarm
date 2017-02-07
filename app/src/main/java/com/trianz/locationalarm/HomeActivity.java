@@ -59,7 +59,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -76,30 +75,34 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_LOCATION;
+import static com.trianz.locationalarm.Utils.Constants.Geometry.SET_REMINDER_REQUEST;
+import static com.trianz.locationalarm.Utils.Constants.Instances.context;
+import static com.trianz.locationalarm.Utils.Constants.Instances.frameLayout;
+import static com.trianz.locationalarm.Utils.Constants.Instances.isDateSelected;
+import static com.trianz.locationalarm.Utils.Constants.Instances.mBottomSheetBehavior1;
+import static com.trianz.locationalarm.Utils.Constants.Instances.recyclerView;
+import static com.trianz.locationalarm.Utils.Constants.Instances.reminderError;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDate;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedPlace;
+import static com.trianz.locationalarm.Utils.Constants.Instances.toolbar;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mCurrLocationMarker;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mGoogleApiClient;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mLastLocation;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mLocationRequest;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mMap;
+
 public class HomeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,OnDateSelectedListener, OnMonthChangedListener {
 
-    private GoogleMap mMap;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
-    BottomSheetBehavior mBottomSheetBehavior1;
-    private String TAG = "Location Alarm";
-    Place selectedPlace = null;
-    String selectedDate = null;
-    RecyclerView recyclerView;
+
     private RemindersListAdapter remindersListAdapter;
-    static final int SET_REMINDER_REQUEST = 1; // The request code
-    TextView reminderError;
-    FrameLayout frameLayout;
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
     @Bind(R.id.calender_frame)
     MaterialCalendarView widget;
-    Boolean isDateSelected = false;
 
 //    @Bind(R.id.textView)
 //    TextView textView;
@@ -108,24 +111,62 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        context = this;
         //calender widget
         ButterKnife.bind(this);
         widget.setOnDateChangedListener(this);
         widget.setOnMonthChangedListener(this);
-       // textView.setText(getSelectedDatesString());
-
         //Scrollable cardview
         final View bottomSheet = findViewById(R.id.bottom_sheet1);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior1.setHideable(false);
         mBottomSheetBehavior1.setPeekHeight(400);
-
         //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.getSupportActionBar().setTitle("");
+        switchCalenderToMap();
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        frameLayout.getBackground().setAlpha(0);
+        fabButtonsAction();
+        navigationDrawerAttach();
+        reminderError = (TextView) findViewById(R.id.reminder_error_msg);
+        if(!isNetworkAvailable()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.turn_on_internet)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            HomeActivity.this.finish();
+                        }
+                    }).setCancelable(false)
+                    .create()
+                    .show();
+        }
+        if(!isLocationEnabled(this)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.turn_on_gps)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
+                            HomeActivity.this.finish();
+                        }
+                    }).setCancelable(false)
+                    .create()
+                    .show();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        placeAutoComplete();
+        GeofenceController.getInstance().init(this);
+        recyclerViewSetter();
+    }
+
+    public void switchCalenderToMap(){
         //calender switch to map
         ImageView calenderImg = (ImageView) findViewById(R.id.calenderImg);
         calenderImg.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +174,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             public void onClick(View v) {
                 FrameLayout search_place = (FrameLayout) findViewById(R.id.search_place_card);
                 ViewGroup content_calender= (ViewGroup) findViewById(R.id.calender_frame);
-                FrameLayout content_map = (FrameLayout) findViewById(R.id.content_frame);
                 if(!isDateSelected){
                     content_calender.setVisibility(View.VISIBLE);
                     search_place.setVisibility(View.INVISIBLE);
@@ -149,13 +189,14 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 }
             }
         });
+    }
 
-
+    public void fabButtonsAction(){
         //close Button in navigation
         final NavigationView  nvDrawer = (NavigationView) findViewById(R.id.nav_view);
         View headerView = getLayoutInflater().inflate(R.layout.nav_header_home, nvDrawer, false);
-         nvDrawer.addHeaderView(headerView);
-         ImageView img = (ImageView) headerView.findViewById(R.id.nav_close);
+        nvDrawer.addHeaderView(headerView);
+        ImageView img = (ImageView) headerView.findViewById(R.id.nav_close);
 
         img.setOnClickListener(new View.OnClickListener(){
 
@@ -164,18 +205,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 drawer.closeDrawer(Gravity.LEFT);
             }});
 
-
-        //Fab actions
-        FloatingActionButton wakeupfab = (FloatingActionButton) findViewById(R.id.fab_wakeup_alarm);
-        FloatingActionButton  addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
-        FloatingActionButton  addReminderDatefab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_date);
-        FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
-
-
-        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        frameLayout.getBackground().setAlpha(0);
-
-         final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
@@ -197,12 +227,15 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             }
         });
 
-
-
+        //Fab actions
+        FloatingActionButton wakeupfab = (FloatingActionButton) findViewById(R.id.fab_wakeup_alarm);
+        FloatingActionButton  addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
+        FloatingActionButton  addReminderDatefab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_date);
+        FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
         wakeupfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Intent remindMeTask =  new Intent(HomeActivity.this, RemindMeTask.class);
+                Intent remindMeTask =  new Intent(HomeActivity.this, RemindMeTask.class);
                 startActivity(remindMeTask);
                 fabMenu.collapse();
             }
@@ -216,6 +249,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                             .setAction("Action", null).show();
                     fabMenu.collapse();
                 }else{
+
                     Intent addReminderToDateActivity = new Intent(HomeActivity.this, AddReminderToDateActivity.class);
                     addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
                     startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
@@ -249,19 +283,13 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             @Override
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this, "Tapped", Toast.LENGTH_SHORT).show();
-               //Intent to navigate to next page
+                //Intent to navigate to next page
             }
         });
+    }
 
-        Button signOut = (Button) findViewById(R.id.signOutBtn);
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent LoginAction = new Intent(HomeActivity.this,AuthenticationActivity.class);
-                startActivity(LoginAction);
-            }
-        });
 
+    public void navigationDrawerAttach() {
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -298,50 +326,17 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 return false;
             }
         });
+        Button signOut = (Button) findViewById(R.id.signOutBtn);
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent LoginAction = new Intent(HomeActivity.this,AuthenticationActivity.class);
+                startActivity(LoginAction);
+            }
+        });
+    }
 
-
-        reminderError = (TextView) findViewById(R.id.reminder_error_msg);
-
-        if(!isNetworkAvailable()) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.turn_on_internet)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                            HomeActivity.this.finish();
-                        }
-                    }).setCancelable(false)
-                    .create()
-                    .show();
-        }
-
-
-        if(!isLocationEnabled(this)) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.turn_on_gps)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                            HomeActivity.this.finish();
-                        }
-                    }).setCancelable(false)
-                    .create()
-                    .show();
-        }
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
-        }
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
+    public void placeAutoComplete(){
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
@@ -349,7 +344,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             @Override
             public void onPlaceSelected(Place place) {
 
-                Log.i(TAG, "Place: " + place.getName());
+               // Log.i(TAG, "Place: " + place.getName());
                 selectedPlace = place;
 
                 // Add a marker to the selected place
@@ -375,16 +370,10 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             @Override
             public void onError(Status status) {
                 // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
+               // Log.i(TAG, "An error occurred: " + status);
             }
         });
-
-
-        GeofenceController.getInstance().init(this);
-
-        recyclerViewSetter();
     }
-
 
     /**
      * Manipulates the map once available.
@@ -439,7 +428,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
+    public void  onConnected(Bundle bundle) {
 
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
@@ -484,8 +473,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
-
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) + ContextCompat

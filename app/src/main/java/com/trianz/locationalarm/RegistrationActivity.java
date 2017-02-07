@@ -3,7 +3,6 @@ package com.trianz.locationalarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
@@ -30,14 +27,12 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_EMAIL;
+import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_MOBILE;
+import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_PASSWORD;
+import static com.trianz.locationalarm.Utils.Constants.serviceUrls.REGISTER_URL;
+
 public class RegistrationActivity extends Fragment {
-
-    public static final String REGISTER_URL = "http://10.10.5.202:8080/com.priya.jersey.first/alarm/register/user";
-
-    public static final String KEY_MOBILE = "mobile";
-    public static final String KEY_EMAIL = "email";
-    public static final String KEY_PASSWORD = "password";
-
 
     private EditText editTextMobile;
     private EditText editTextEmail;
@@ -51,8 +46,6 @@ public class RegistrationActivity extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
     super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -72,9 +65,7 @@ public class RegistrationActivity extends Fragment {
             }
         });
 
-
         CheckBox checkboxvariable=(CheckBox)rootView.findViewById(R.id.regCheckBox);
-
         checkboxvariable.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -91,10 +82,7 @@ public class RegistrationActivity extends Fragment {
             }
         });
 
-
-
         return rootView;
-
     }
 
     public void confirmRegistration(View view) {
@@ -107,30 +95,12 @@ public class RegistrationActivity extends Fragment {
         params.put(KEY_PASSWORD,password);
         params.put(KEY_EMAIL, email);
 
-            JSONObject jsonBody = new JSONObject(params);
-
+        JSONObject jsonBody = new JSONObject(params);
         JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, REGISTER_URL ,jsonBody,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            // Parsing json object response
-                            // response will be a json object
-                            JSONObject json = new JSONObject(response.toString());
-                            Log.v("Json obj" ,json.toString());
-                            Boolean status = Boolean.parseBoolean(json.getString("status"));
-                            String message = json.getString("message");
-                            if(status==true){
-                                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-                                Intent homeActivity = new Intent(getContext(),ConfirmRegisterActivity.class);
-                              startActivity(homeActivity);
-                            }else{
-                                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                       OnResponseValidation(response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -139,31 +109,42 @@ public class RegistrationActivity extends Fragment {
                         String message = null;
                         if (volleyError instanceof NetworkError) {
                             message = "Cannot connect to Internet...Please check your connection!";
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         } else if (volleyError instanceof ServerError) {
                             message = "The server could not be found. Please try again after some time!!";
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         } else if (volleyError instanceof AuthFailureError) {
                             message = "Cannot connect to Internet...Please check your connection!";
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                        } else if (volleyError instanceof ParseError) {
-                            message = "Parsing error! Please try again after some time!!";
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                        } else if (volleyError instanceof NoConnectionError) {
-                            message = "Cannot connect to Internet...Please check your connection!";
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         } else if (volleyError instanceof TimeoutError) {
                             message = "Connection TimeOut! Please check your internet connection.";
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         }
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                     }
-
 
                 });
 
         MySingleton.getInstance(getActivity()).addToRequestQueue(JsonObjRequest);
 //        RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
 //        requestQueue.add(JsonObjRequest );
+    }
+
+
+    public void OnResponseValidation(JSONObject response){
+        try {
+            // Parsing json object response
+            // response will be a json object
+            JSONObject json = new JSONObject(response.toString());
+            Boolean status = Boolean.parseBoolean(json.getString("status"));
+            String message = json.getString("message");
+
+            if(status==true){
+                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                Intent homeActivity = new Intent(getContext(),ConfirmRegisterActivity.class);
+                startActivity(homeActivity);
+            }else{
+                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

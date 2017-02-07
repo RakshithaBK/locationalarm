@@ -12,11 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 public class LoginActivity extends Fragment {
-    public static final String REGISTER_URL = "http://10.10.5.202:8080/com.priya.jersey.first/alarm/login/user";
-
-    public static final String KEY_MOBILE = "mobile";
-    public static final String KEY_PASSWORD = "password";
-
 
     private EditText loginEditTextMobile;
     private EditText loginEditTextPassword;
@@ -87,7 +82,7 @@ public class LoginActivity extends Fragment {
 //
 //        JSONObject jsonBody = new JSONObject(params);
 //
-//        JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, REGISTER_URL ,jsonBody,
+//        JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, LOGIN_URL ,jsonBody,
 //                new Response.Listener<JSONObject>() {
 //                    @Override
 //                    public void onResponse(JSONObject response) {

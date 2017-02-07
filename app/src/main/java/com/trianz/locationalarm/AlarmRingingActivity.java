@@ -1,15 +1,12 @@
 package com.trianz.locationalarm;
 
 import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -121,14 +118,12 @@ public class AlarmRingingActivity extends AppCompatActivity {
                         Toast.makeText(AlarmRingingActivity.this, "Dismiss", Toast.LENGTH_SHORT).show();
                         ringtone.stop();
                         inst.cancelAlarmControl(pendingIntentRequestCode);
-                        Intent intent = new Intent(AlarmRingingActivity.this, RemindMeTask.class);
+                        Intent intent = new Intent(AlarmRingingActivity.this, HomeActivity.class);
                         startActivity(intent);
                     }
 
                     view.setVisibility(View.VISIBLE);
                     break;
-
-
 
                 case DragEvent.ACTION_DRAG_ENDED:
                     view.setVisibility(View.VISIBLE);

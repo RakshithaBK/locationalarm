@@ -63,7 +63,6 @@
     <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
         <item name="android:headerBackground">@drawable/tab_layout_top_gradient</item>
         <item name="android:numbersBackgroundColor">@color/color_white</item>
-
     </style>
 
 </resources>

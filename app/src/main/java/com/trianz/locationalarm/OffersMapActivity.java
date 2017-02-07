@@ -26,23 +26,24 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.trianz.locationalarm.Utils.Constants;
 import com.trianz.locationalarm.Utils.GetNearbyPlacesData;
+
+import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_LOCATION;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mCurrLocationMarker;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mGoogleApiClient;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mLastLocation;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mLocationRequest;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mMap;
 
 public class OffersMapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private GoogleMap mMap;
     double latitude;
     double longitude;
-    private int PROXIMITY_RADIUS = 1000;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
     String searchPlace;
 
     @Override
@@ -156,7 +157,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
 
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/textsearch/json?");
         googlePlacesUrl.append("location=" + latitude + "," + longitude);
-        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
+        googlePlacesUrl.append("&radius=" + Constants.Geometry.PROXIMITY_RADIUS);
         googlePlacesUrl.append("&query=" + nearbyPlace);
         googlePlacesUrl.append("&sensor=true");
         googlePlacesUrl.append("&key=" + "AIzaSyDqmAQS3dFEYSu_PvrYohlnD0fjRspzzrw");
@@ -179,6 +180,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
         }
 
         //Place current location marker
+
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -214,7 +216,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
         String keyToSearch = searchPlace;
         Log.d("onClick", "Button is Clicked");
         mMap.clear();
-        String url = getUrl(latitude, longitude, keyToSearch);
+        String url = getUrl(latitude,longitude, keyToSearch);
         Object[] DataTransfer = new Object[2];
         DataTransfer[0] = mMap;
         DataTransfer[1] = url;
@@ -224,7 +226,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
         Toast.makeText(OffersMapActivity.this,keyToSearch, Toast.LENGTH_LONG).show();
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)

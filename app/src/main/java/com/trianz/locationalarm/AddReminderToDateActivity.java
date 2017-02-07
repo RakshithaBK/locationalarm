@@ -68,8 +68,9 @@ public class AddReminderToDateActivity extends AppCompatActivity {
                     NamedGeofence geofence = new NamedGeofence();
                     geofence.reminder_msg = reminder_message;
                     geofence.reminder_place = Date_To_remid;
-                    geofence.radius = radius * 0.0f;
+                    geofence.radius = radius * 1.0f;
                     GeofenceController.getInstance().addGeofence(geofence, geofenceControllerListener);
+
 
                 } else {
                     showValidationErrorToast();

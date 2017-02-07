@@ -53,9 +53,6 @@ public class ReminderSetActivity extends AppCompatActivity {
 
     int pendingIntentRequestCode;
 
-    TextView datePicked = null;
-    TextView timePicked = null;
-
     private static ReminderSetActivity inst;
     public static ReminderSetActivity instance() {
         return inst;
@@ -74,74 +71,66 @@ public class ReminderSetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setreminder);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         Bundle bundle = getIntent().getExtras();
         reminderEvent = bundle.getString("reminderEvent");
         this.getSupportActionBar().hide();
-        datePicked =  (TextView)findViewById(datePicker);
-        timePicked =  (TextView)findViewById(R.id.timePicker);
+        final TextView datePicked =  (TextView)findViewById(datePicker);
+        final TextView timePicked =  (TextView)findViewById(R.id.timePicker);
         Switch enableAllDay = (Switch) findViewById(R.id.switchIcon);
+
 
         //set the alarm text selected from previous layout
         TextView reminderTsk = (TextView) findViewById(R.id.finalTaskSet);
         reminderTsk.setText(reminderEvent);
 
+
         //Set current time and date to textView
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("EEE, MMM d, yyyy");
         final String currentDate = currentDateFormat.format(myCalender.getTime());
 
+
+
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
         String currentTime = currentTimeFormat.format(myCalender.getTime());
+
 
         datePicked.setText(currentDate);
         timePicked.setText(currentTime);
 
-        NotUsingPicker();
+
+        //if user does not use datepicker and timepicker
+        SimpleDateFormat cHourFormat = new SimpleDateFormat("HH");
+        String cHour = cHourFormat.format(myCalender.getTime());
+        selectedHourAlarm = Integer.parseInt(cHour);
+
+        SimpleDateFormat cMinuteFormat = new SimpleDateFormat("mm");
+        String cMinute = cMinuteFormat.format(myCalender.getTime());
+        selectedMinuteAlarm = Integer.parseInt(cMinute);
+
+        SimpleDateFormat cDayFormat = new SimpleDateFormat("d");
+        String cDay = cDayFormat.format(myCalender.getTime());
+        selectedDayAlarm = Integer.parseInt(cDay);
+
+        SimpleDateFormat cMonthFormat = new SimpleDateFormat("MM");
+        String cMonth = cMonthFormat.format(myCalender.getTime());
+        selectedMonthAlarm = (Integer.parseInt(cMonth)) - 1;
+
+//        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
+//        String cYear = cYearFormat.format(myCalender.getTime());
+//        selectedYearAlarm = Integer.parseInt(cYear);
+
 
         //For Map
 //        FragmentManager fragmentManager = getSupportFragmentManager();
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//
 //        fragmentTransaction.replace(R.id.mapView, new ContactFragment());
 //        fragmentTransaction.commit();
 
-        DateTimePickers();
 
-        //clicking on cancel button go back to previous page
-        ImageView closeTask = (ImageView) findViewById(R.id.closeIcon1);
-
-        closeTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(ReminderSetActivity.this, RemindMeTask.class);
-                startActivity(intent);
-            }
-        });
-
-        //set the switch for allDay to off and get the status on change
-        enableAllDay.setChecked(false);
-        enableAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    allDayFlag = true;
-                    timePicked.setVisibility(View.INVISIBLE);
-
-                }else {
-                    allDayFlag = false;
-                    timePicked.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
-
-        reingingBeforeTimeAlarm();
-        selectRepeatInterval();
-        saveAlarmToRemind();
-
-    }
-
-    public void DateTimePickers(){
-        //Date picker
+//Date picker
         datePicked.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -160,6 +149,9 @@ public class ReminderSetActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+
+
+
 
         //TimePicker
         timePicked.setOnClickListener(new View.OnClickListener() {
@@ -189,32 +181,41 @@ public class ReminderSetActivity extends AppCompatActivity {
 
             }
         });
-    }
 
-    public void NotUsingPicker(){
-        //if user does not use datepicker and timepicker
-        SimpleDateFormat cHourFormat = new SimpleDateFormat("HH");
-        String cHour = cHourFormat.format(myCalender.getTime());
-        selectedHourAlarm = Integer.parseInt(cHour);
 
-        SimpleDateFormat cMinuteFormat = new SimpleDateFormat("mm");
-        String cMinute = cMinuteFormat.format(myCalender.getTime());
-        selectedMinuteAlarm = Integer.parseInt(cMinute);
+        //clicking on cancel button go back to previous page
+        ImageView closeTask = (ImageView) findViewById(R.id.closeIcon1);
 
-        SimpleDateFormat cDayFormat = new SimpleDateFormat("d");
-        String cDay = cDayFormat.format(myCalender.getTime());
-        selectedDayAlarm = Integer.parseInt(cDay);
+        closeTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        SimpleDateFormat cMonthFormat = new SimpleDateFormat("MM");
-        String cMonth = cMonthFormat.format(myCalender.getTime());
-        selectedMonthAlarm = (Integer.parseInt(cMonth)) - 1;
+                Intent intent = new Intent(ReminderSetActivity.this, RemindMeTask.class);
+                startActivity(intent);
+            }
+        });
 
-//        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
-//        String cYear = cYearFormat.format(myCalender.getTime());
-//        selectedYearAlarm = Integer.parseInt(cYear);
-    }
 
-    public void reingingBeforeTimeAlarm(){
+
+
+        //set the switch for allDay to off and get the status on change
+        enableAllDay.setChecked(false);
+        enableAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    allDayFlag = true;
+                    timePicked.setVisibility(View.INVISIBLE);
+
+                }else {
+                    allDayFlag = false;
+                    timePicked.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+
         //Select How much time before the alarm should ring
         final TextView remindMeBefore = (TextView) findViewById(R.id.remindMeBefore);
 
@@ -298,11 +299,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 });
             }
         });
-    }
 
-
-
-    public void selectRepeatInterval(){
         //Select Repeat interval for alarm
         final TextView reminderRepeat = (TextView) findViewById(R.id.reminderepeat);
 
@@ -385,9 +382,6 @@ public class ReminderSetActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    public void saveAlarmToRemind(){
         //Save the reminder and go back to landing page
         ImageView saveTask = (ImageView) findViewById(R.id.saveIcon1);
         saveTask.setOnClickListener(new View.OnClickListener() {
@@ -460,6 +454,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     //when the alarm started ringing open a view
@@ -549,6 +544,4 @@ public class ReminderSetActivity extends AppCompatActivity {
         else
             return "0" + String.valueOf(c);
     }
-
-
 }

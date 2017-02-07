@@ -26,15 +26,12 @@ public class OffersListAdapter extends ArrayAdapter<SMSData> {
         super(context, R.layout.list_view_content, smsList);
         this.context = context;
         this.smsList = smsList;
-
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         View rowView = inflater.inflate(R.layout.list_view_content, parent, false);
-
         TextView senderNumber = (TextView) rowView.findViewById(R.id.smsNumberText);
         senderNumber.setText(smsList.get(position).getNumber() + "\n" + "\n"
                 + smsList.get(position).getBody());
