@@ -1,6 +1,7 @@
 package com.trianz.locationalarm.Utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
 
 public class Constants {
 
@@ -26,7 +32,6 @@ public class Constants {
     public static  int PROXIMITY_RADIUS = 1000;
       public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
       public static int SET_REMINDER_REQUEST = 1;
-
   }
 
   public static class SharedPrefs {
@@ -43,6 +48,19 @@ public class Constants {
         public static Context context;
         public static BottomSheetBehavior mBottomSheetBehavior1;
         public static Toolbar toolbar;
+
+        //OffersInstanc Variables
+        public static String address = new String();
+        public static String smsBody = new String();
+        public static Map<String,String> addressList = new HashMap<String, String>();
+        public static String searchKey;
+        public static Matcher matcher = null;
+
+        //GeofenceController
+        public static Boolean connectedFlag=false;
+        public static Gson gson;
+        public static SharedPreferences prefs;
+
     }
 
     public static class mapInstances{

@@ -14,22 +14,21 @@ import android.widget.Toast;
 import com.trianz.locationalarm.Utils.SMSData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.trianz.locationalarm.Utils.Constants.Instances.address;
+import static com.trianz.locationalarm.Utils.Constants.Instances.addressList;
+import static com.trianz.locationalarm.Utils.Constants.Instances.matcher;
+import static com.trianz.locationalarm.Utils.Constants.Instances.searchKey;
+import static com.trianz.locationalarm.Utils.Constants.Instances.smsBody;
 
 public class OffersActivity extends AppCompatActivity {
 
     private Cursor c;
-    ListView listView ;
-    String address = new String();
-    String smsBody = new String();
-    Map<String,String> addressList = new HashMap<String, String>();
-    String searchKey;
-    Matcher matcher = null;
     List<SMSData> smsList;
+    ListView listView ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +112,10 @@ public class OffersActivity extends AppCompatActivity {
                         }else if(s.equals("DM-ENCRL")){
                             searchKey = "Titan";
                             moveaToMap();
-                        }
-                        else{
+                        }else if(s.equals("AX-ARWINF")) {
+                            searchKey = "Airtel";
+                            moveaToMap();
+                        }else{
                             Toast.makeText(OffersActivity.this, "No location found", Toast.LENGTH_SHORT).show();
                         }
                     }

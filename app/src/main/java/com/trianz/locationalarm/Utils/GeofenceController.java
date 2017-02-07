@@ -23,28 +23,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.trianz.locationalarm.Utils.Constants.Instances.connectedFlag;
+import static com.trianz.locationalarm.Utils.Constants.Instances.context;
+import static com.trianz.locationalarm.Utils.Constants.Instances.gson;
+import static com.trianz.locationalarm.Utils.Constants.Instances.prefs;
+import static com.trianz.locationalarm.Utils.Constants.mapInstances.mGoogleApiClient;
+
 public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
 
 // region Properties
 
   private final String TAG = GeofenceController.class.getName();
 
-  Boolean connectedFlag=false;
-  private Context context;
-  private GoogleApiClient googleApiClient;
-  private Gson gson;
-  private SharedPreferences prefs;
   private GeofenceControllerListener listener;
-
   private List<NamedGeofence> namedGeofences;
-
-  public List<NamedGeofence> getNamedGeofences() {
+  public  List<NamedGeofence> getNamedGeofences() {
     return namedGeofences;
   }
-
   private List<NamedGeofence> namedGeofencesToRemove;
   private List<NamedGeofence> namedGeofencesToAdd;
-
   private Geofence geofenceToAdd;
   private NamedGeofence namedGeofenceToAdd;
 
@@ -67,18 +64,18 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
 // region Public
 
   public void init(Context context) {
-    this.context = context.getApplicationContext();
+    context = context.getApplicationContext();
 
     gson = new Gson();
     namedGeofences = new ArrayList<>();
     namedGeofencesToRemove = new ArrayList<>();
-    prefs = this.context.getSharedPreferences(Constants.SharedPrefs.Geofences, Context.MODE_PRIVATE);
-    googleApiClient = new GoogleApiClient.Builder(context)
+    prefs = context.getSharedPreferences(Constants.SharedPrefs.Geofences, Context.MODE_PRIVATE);
+    mGoogleApiClient = new GoogleApiClient.Builder(context)
             .addApi(LocationServices.API)
             .addConnectionCallbacks(this)
             .addOnConnectionFailedListener(connectionFailedListener)
             .build();
-    googleApiClient.connect();
+    mGoogleApiClient.connect();
     loadGeofences();
   }
 
@@ -197,16 +194,12 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
     }
   }
 
-// endregion
-
-// region ConnectionCallbacks
-
   private void onCommandAdd(final NamedGeofence namedGeofence){
     while(connectedFlag==false);
     try {
       Intent intent = new Intent(context, LocationReminderIntentService.class);
       PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-      PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(googleApiClient, getAddGeofencingRequest(namedGeofence), pendingIntent);
+      PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, getAddGeofencingRequest(namedGeofence), pendingIntent);
 
       result.setResultCallback(new ResultCallback<Status>() {
         @Override
@@ -236,7 +229,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
 
     if (removeIds.size() > 0) {
       try {
-        PendingResult<Status> result = LocationServices.GeofencingApi.removeGeofences(googleApiClient, removeIds);
+        PendingResult<Status> result = LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, removeIds);
         result.setResultCallback(new ResultCallback<Status>() {
           @Override
           public void onResult(Status status) {
@@ -298,7 +291,7 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
 
       if (removeIds.size() > 0) {
         try {
-          PendingResult<Status> result = LocationServices.GeofencingApi.removeGeofences(googleApiClient, removeIds);
+          PendingResult<Status> result = LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, removeIds);
           result.setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(Status status) {
