@@ -124,6 +124,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        this.getSupportActionBar().setTitle("");
 
         //calender switch to map
         ImageView calenderImg = (ImageView) findViewById(R.id.calenderImg);

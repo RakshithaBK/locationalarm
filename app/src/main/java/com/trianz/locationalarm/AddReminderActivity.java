@@ -106,8 +106,6 @@ public class AddReminderActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
-
                 location_name = place.getName().toString();
                 location_latitude = place.getLatLng().latitude;
                 location_longitude = place.getLatLng().longitude;
