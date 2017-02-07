@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.trianz.locationalarm.Utils.Constants.Instances.INSTANCE;
 import static com.trianz.locationalarm.Utils.Constants.Instances.connectedFlag;
 import static com.trianz.locationalarm.Utils.Constants.Instances.context;
 import static com.trianz.locationalarm.Utils.Constants.Instances.gson;
@@ -30,25 +31,15 @@ import static com.trianz.locationalarm.Utils.Constants.mapInstances.mGoogleApiCl
 
 public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
 
-// region Properties
-
  // private final String TAG = GeofenceController.class.getName();
-
   private GeofenceControllerListener listener;
   private List<NamedGeofence> namedGeofences;
   public  List<NamedGeofence> getNamedGeofences() {
     return namedGeofences;
   }
   private List<NamedGeofence> namedGeofencesToRemove;
- // private List<NamedGeofence> namedGeofencesToAdd;
   private Geofence geofenceToAdd;
   private NamedGeofence namedGeofenceToAdd;
-
-// endregion
-
-// region Shared Instance
-
-  private static GeofenceController INSTANCE;
 
   public static GeofenceController getInstance() {
     if (INSTANCE == null) {

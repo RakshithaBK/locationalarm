@@ -6,7 +6,9 @@ import android.location.Location;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,6 +40,7 @@ public class Constants {
       public static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
       // How many Geocoder should return our GPSTracker
      public static int geocoderMaxResults = 1;
+      public static final int RESULT_SPEECH = 1;
   }
 
   public static class SharedPrefs {
@@ -66,6 +69,8 @@ public class Constants {
         public static Boolean connectedFlag=false;
         public static Gson gson;
         public static SharedPreferences prefs;
+        public static GeofenceController INSTANCE;
+
 
         //GPS Tracker Instances
         public static Context mContext;
@@ -78,6 +83,14 @@ public class Constants {
         public static String provider_info;
         public static  double latitude;
         public static double longitude;
+
+        //AddReminderActivity
+        public static ImageView speechToText;
+        public static EditText message;
+        public static Place place;
+        public static String location_name,reminder_message;
+        public static double location_latitude, location_longitude;
+        public static float radius;
 
     }
 

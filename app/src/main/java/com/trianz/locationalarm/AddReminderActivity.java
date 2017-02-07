@@ -21,22 +21,23 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
 import com.trianz.locationalarm.Utils.Constants;
 import com.trianz.locationalarm.Utils.GeofenceController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
 
 import java.util.ArrayList;
 
-public class AddReminderActivity extends AppCompatActivity {
+import static com.trianz.locationalarm.Utils.Constants.Geometry.RESULT_SPEECH;
+import static com.trianz.locationalarm.Utils.Constants.Instances.location_latitude;
+import static com.trianz.locationalarm.Utils.Constants.Instances.location_longitude;
+import static com.trianz.locationalarm.Utils.Constants.Instances.location_name;
+import static com.trianz.locationalarm.Utils.Constants.Instances.message;
+import static com.trianz.locationalarm.Utils.Constants.Instances.place;
+import static com.trianz.locationalarm.Utils.Constants.Instances.radius;
+import static com.trianz.locationalarm.Utils.Constants.Instances.reminder_message;
+import static com.trianz.locationalarm.Utils.Constants.Instances.speechToText;
 
-    private String location_name, reminder_message;
-    private double location_latitude, location_longitude;
-    private float radius;
-    ImageView speechToText;
-    EditText message;
-    Place place;
-    protected static final int RESULT_SPEECH = 1;
+public class AddReminderActivity extends AppCompatActivity {
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
