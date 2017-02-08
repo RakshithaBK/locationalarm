@@ -31,7 +31,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 
     Calendar myCalender = Calendar.getInstance();
     Boolean allDayFlag;
-    String remindMeBeforeTimeValue = "20minutes";
+    String remindMeBeforeTimeValue = "0minutes";
     String repeatAlarmIntervalValue = "Does not repeat";
     int selectedHourAlarm;
     int selectedMinuteAlarm;
@@ -41,7 +41,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 
     String reminderEvent;
 
-    int remindMeBeforeTimeValueInInt = 20;
+    int remindMeBeforeTimeValueInInt = 0;
     int counterMinitueValue;
 
     //Alarm
@@ -64,23 +64,9 @@ public class ReminderSetActivity extends AppCompatActivity {
     /********/
 
 
-    //For datepicker dialog
-    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            // TODO Auto-generated method stub
-            myCalender.set(Calendar.YEAR, year);
-            myCalender.set(Calendar.MONTH, monthOfYear);
-            myCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            selectedYearAlarm = year;
-            selectedMonthAlarm = monthOfYear;
-            selectedDayAlarm = dayOfMonth;
-            updateLabel();
-        }
 
-    };
+
 
 
     @Override
@@ -96,7 +82,7 @@ public class ReminderSetActivity extends AppCompatActivity {
         TextView datePicked =  (TextView)findViewById(R.id.datePicker);
         final TextView timePicked =  (TextView)findViewById(R.id.timePicker);
         Switch enableAllDay = (Switch) findViewById(R.id.switchIcon);
-
+        this.getSupportActionBar().hide();
         //set the alarm text selected from previous layout
         TextView reminderTsk = (TextView) findViewById(R.id.finalTaskSet);
         reminderTsk.setText(reminderEvent);
@@ -110,6 +96,10 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         datePicked.setText(currentDate);
         timePicked.setText(currentTime);
+
+
+
+
 
 
         //if user does not use datepicker and timepicker
@@ -129,9 +119,9 @@ public class ReminderSetActivity extends AppCompatActivity {
         String cMonth = cMonthFormat.format(myCalender.getTime());
         selectedMonthAlarm = (Integer.parseInt(cMonth)) - 1;
 
-        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
-        String cYear = cYearFormat.format(myCalender.getTime());
-        selectedYearAlarm = Integer.parseInt(cYear);
+//        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
+//        String cYear = cYearFormat.format(myCalender.getTime());
+//        selectedYearAlarm = Integer.parseInt(cYear);
 
 
         //For Map
@@ -143,17 +133,21 @@ public class ReminderSetActivity extends AppCompatActivity {
 //        fragmentTransaction.commit();
 
         //DatePicker
-        datePicked.setOnClickListener(new android.view.View.OnClickListener() {
-
+        datePicked.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                new DatePickerDialog(ReminderSetActivity.this, date, myCalender
-                        .get(Calendar.YEAR), myCalender.get(Calendar.MONTH),
-                        myCalender.get(Calendar.DAY_OF_MONTH)).show();
+            public void onClick(View arg0) {
+                DatePickerDialog dialog = new DatePickerDialog(ReminderSetActivity.this, new DatePickerDialog.OnDateSetListener() {
+                             @Override
+                     public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+                        // TODO Auto-generated method stub
+                                 Toast.makeText(ReminderSetActivity.this, ""+arg1+"/"+(arg2+1)+"/"+arg3, Toast.LENGTH_SHORT).show();
+                         }
+                     }, myCalender.YEAR, myCalender.MONTH, myCalender.DAY_OF_MONTH);
+                 dialog.getDatePicker().setMinDate(System.currentTimeMillis());
+                 dialog.setTitle(null);
+                 dialog.show();
             }
         });
-
 
         //TimePicker
         timePicked.setOnClickListener(new View.OnClickListener() {

@@ -325,7 +325,7 @@
                     android:id="@+id/remindMeBefore"
                     android:textColor="@color/color_Black"
                     android:layout_height="wrap_content"
-                    android:text="20 minutes before"
+                    android:text="On time"
                     android:layout_weight="8"
                     android:paddingTop="11dp"/>
 
