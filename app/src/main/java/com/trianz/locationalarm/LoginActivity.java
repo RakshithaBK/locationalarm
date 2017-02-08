@@ -72,7 +72,7 @@ public class LoginActivity extends Fragment {
         Intent homeActivity = new Intent(getContext(),HomeActivity.class);
                                 startActivity(homeActivity);
 
-
+        //Network call
 //        final String mobile = loginEditTextMobile.getText().toString().trim();
 //        final String password = loginEditTextPassword.getText().toString().trim();
 //
