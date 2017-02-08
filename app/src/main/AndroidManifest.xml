@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permisson.ACCESS_GPS" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -19,30 +19,24 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".AuthenticationActivity"
             android:theme="@style/AppTheme" />
-
         <activity android:name=".ConfirmRegisterActivity" />
-
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".OffersActivity"
             android:label="Offers and Coupons"
             android:theme="@style/AppTheme" />
-
-
-
         <activity
             android:name=".AddReminderActivity"
             android:theme="@style/AddReminder" />
@@ -50,16 +44,14 @@
         <service android:name=".Utils.LocationReminderIntentService" />
 
         <activity android:name=".OffersMapActivity" />
-
-        <activity android:name=".AddReminderToDateActivity"
-            android:theme="@style/AddReminder"/>
-
-        <activity android:name=".RemindMeTask"/>
-
-        <activity android:name=".ReminderSetActivity"
-            android:theme="@style/MyDatePickerDialogTheme"/>
-
-        <activity android:name=".AlarmRingingActivity"/>
+        <activity
+            android:name=".AddReminderToDateActivity"
+            android:theme="@style/AddReminder" />
+        <activity android:name=".RemindMeTask" />
+        <activity
+            android:name=".ReminderSetActivity"
+            android:theme="@style/MyDatePickerDialogTheme" />
+        <activity android:name=".AlarmRingingActivity" />
 
         <!--
 ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -72,14 +64,14 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
-    <service
+        <service
             android:name=".AlarmService"
             android:enabled="true" />
 
-        <!--<receiver android:name=".AlarmReceiver" />-->
+        <!-- <receiver android:name=".AlarmReceiver" /> -->
 
-        <receiver android:name=".AlarmReceiver"
+        <receiver
+            android:name=".AlarmReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

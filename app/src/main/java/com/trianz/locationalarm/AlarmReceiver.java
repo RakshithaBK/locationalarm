@@ -4,10 +4,8 @@ package com.trianz.locationalarm;
  * Created by Dibyojyoti.Majumder on 04-01-2017.
  */
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +23,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(5000);
+        vibrator.vibrate(2000);
 
         Bundle bundle = intent.getExtras();
         String reminderEvent = bundle.getString("reminderEvent");
@@ -37,7 +35,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
         if (allDayFlag == false) {
             Intent alarmringingIntent = new Intent(context, AlarmRingingActivity.class);
-            alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+//            alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             alarmringingIntent.putExtra("reminderEvent", reminderEvent);
             alarmringingIntent.putExtra("repeatAlarmIntervalValue", repeatAlarmIntervalValue);
             alarmringingIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
@@ -47,6 +46,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         sendNotification(reminderEvent, context);
 
     }
+
     private void sendNotification(String msg, Context context) {
         Log.d("AlarmService", "Preparing to send notification...: " + msg);
 

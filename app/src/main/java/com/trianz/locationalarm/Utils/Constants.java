@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,6 +46,8 @@ public class Constants {
 
   public static class SharedPrefs {
     public static String Geofences = "SHARED_PREFS_GEOFENCES";
+      public static String remindMeBeforeTimeValue = "20minutes";
+      public static String repeatAlarmIntervalValue = "Does not repeat";
 
   }
     public static class Instances{
@@ -70,6 +73,8 @@ public class Constants {
         public static Gson gson;
         public static SharedPreferences prefs;
         public static GeofenceController INSTANCE;
+        public static Geofence geofenceToAdd;
+        public static NamedGeofence namedGeofenceToAdd;
 
 
         //GPS Tracker Instances

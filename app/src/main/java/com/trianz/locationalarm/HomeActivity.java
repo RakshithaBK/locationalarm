@@ -59,6 +59,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -86,21 +87,22 @@ import static com.trianz.locationalarm.Utils.Constants.Instances.reminderError;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDate;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedPlace;
 import static com.trianz.locationalarm.Utils.Constants.Instances.toolbar;
-import static com.trianz.locationalarm.Utils.Constants.mapInstances.mCurrLocationMarker;
-import static com.trianz.locationalarm.Utils.Constants.mapInstances.mGoogleApiClient;
-import static com.trianz.locationalarm.Utils.Constants.mapInstances.mLastLocation;
-import static com.trianz.locationalarm.Utils.Constants.mapInstances.mLocationRequest;
-import static com.trianz.locationalarm.Utils.Constants.mapInstances.mMap;
 
 public class HomeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,OnDateSelectedListener, OnMonthChangedListener {
 
+    private GoogleMap mMap;
+    GoogleApiClient mGoogleApiClient;
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
+    LocationRequest mLocationRequest;
 
     private RemindersListAdapter remindersListAdapter;
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
+
     @Bind(R.id.calender_frame)
     MaterialCalendarView widget;
 
@@ -121,6 +123,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior1.setHideable(false);
         mBottomSheetBehavior1.setPeekHeight(400);
+
         //Toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -240,6 +243,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 fabMenu.collapse();
             }
         });
+
 
         addReminderDatefab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -537,7 +541,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 }
                 return;
             }
-
         }
     }
 

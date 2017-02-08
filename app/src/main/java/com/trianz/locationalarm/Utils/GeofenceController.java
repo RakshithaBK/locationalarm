@@ -25,7 +25,9 @@ import java.util.Map;
 import static com.trianz.locationalarm.Utils.Constants.Instances.INSTANCE;
 import static com.trianz.locationalarm.Utils.Constants.Instances.connectedFlag;
 import static com.trianz.locationalarm.Utils.Constants.Instances.context;
+import static com.trianz.locationalarm.Utils.Constants.Instances.geofenceToAdd;
 import static com.trianz.locationalarm.Utils.Constants.Instances.gson;
+import static com.trianz.locationalarm.Utils.Constants.Instances.namedGeofenceToAdd;
 import static com.trianz.locationalarm.Utils.Constants.Instances.prefs;
 import static com.trianz.locationalarm.Utils.Constants.mapInstances.mGoogleApiClient;
 
@@ -38,14 +40,12 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
     return namedGeofences;
   }
   private List<NamedGeofence> namedGeofencesToRemove;
-  private Geofence geofenceToAdd;
-  private NamedGeofence namedGeofenceToAdd;
+
 
   public static GeofenceController getInstance() {
     if (INSTANCE == null) {
       INSTANCE = new GeofenceController();
     }
-
     return INSTANCE;
   }
 
@@ -81,8 +81,8 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
  }*/
 
   public void addGeofence(NamedGeofence namedGeofence, GeofenceControllerListener listener) {
-    this.namedGeofenceToAdd = namedGeofence;
-    this.geofenceToAdd = namedGeofence.geofence();
+    namedGeofenceToAdd = namedGeofence;
+    geofenceToAdd = namedGeofence.geofence();
     this.listener = listener;
     System.out.println("in addgeofence "+ namedGeofence.reminder_msg);
 

@@ -22,8 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.trianz.locationalarm.R.id.datePicker;
-
 
 /**
  * Created by Dibyojyoti.Majumder on 05-01-2017.
@@ -65,6 +63,26 @@ public class ReminderSetActivity extends AppCompatActivity {
     }
     /********/
 
+
+    //For datepicker dialog
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalender.set(Calendar.YEAR, year);
+            myCalender.set(Calendar.MONTH, monthOfYear);
+            myCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            selectedYearAlarm = year;
+            selectedMonthAlarm = monthOfYear;
+            selectedDayAlarm = dayOfMonth;
+            updateLabel();
+        }
+
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,26 +92,21 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         reminderEvent = bundle.getString("reminderEvent");
-        this.getSupportActionBar().hide();
-        final TextView datePicked =  (TextView)findViewById(datePicker);
+
+        TextView datePicked =  (TextView)findViewById(R.id.datePicker);
         final TextView timePicked =  (TextView)findViewById(R.id.timePicker);
         Switch enableAllDay = (Switch) findViewById(R.id.switchIcon);
-
 
         //set the alarm text selected from previous layout
         TextView reminderTsk = (TextView) findViewById(R.id.finalTaskSet);
         reminderTsk.setText(reminderEvent);
 
-
         //Set current time and date to textView
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("EEE, MMM d, yyyy");
         final String currentDate = currentDateFormat.format(myCalender.getTime());
 
-
-
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
         String currentTime = currentTimeFormat.format(myCalender.getTime());
-
 
         datePicked.setText(currentDate);
         timePicked.setText(currentTime);
@@ -116,9 +129,9 @@ public class ReminderSetActivity extends AppCompatActivity {
         String cMonth = cMonthFormat.format(myCalender.getTime());
         selectedMonthAlarm = (Integer.parseInt(cMonth)) - 1;
 
-//        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
-//        String cYear = cYearFormat.format(myCalender.getTime());
-//        selectedYearAlarm = Integer.parseInt(cYear);
+        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
+        String cYear = cYearFormat.format(myCalender.getTime());
+        selectedYearAlarm = Integer.parseInt(cYear);
 
 
         //For Map
@@ -129,28 +142,17 @@ public class ReminderSetActivity extends AppCompatActivity {
 //        fragmentTransaction.replace(R.id.mapView, new ContactFragment());
 //        fragmentTransaction.commit();
 
-
-//Date picker
-        datePicked.setOnClickListener(new View.OnClickListener() {
+        //DatePicker
+        datePicked.setOnClickListener(new android.view.View.OnClickListener() {
 
             @Override
-            public void onClick(View arg0) {
+            public void onClick(View v) {
                 // TODO Auto-generated method stub
-                DatePickerDialog dialog = new DatePickerDialog(ReminderSetActivity.this, new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-                        // TODO Auto-generated method stub
-                        Toast.makeText(ReminderSetActivity.this, ""+arg1+"/"+(arg2+1)+"/"+arg3, Toast.LENGTH_SHORT).show();
-                    }
-                }, myCalender.YEAR, myCalender.MONTH, myCalender.DAY_OF_MONTH);
-                dialog.getDatePicker().setMinDate(System.currentTimeMillis());
-                dialog.setTitle(null);
-                dialog.show();
+                new DatePickerDialog(ReminderSetActivity.this, date, myCalender
+                        .get(Calendar.YEAR), myCalender.get(Calendar.MONTH),
+                        myCalender.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-
-
 
 
         //TimePicker
@@ -261,7 +263,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 tenMinutesBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        remindMeBeforeTimeValueInInt = (10 * 60 * 1000);
+                        remindMeBeforeTimeValueInInt = 10 ;
                         remindMeBeforeTimeValue = "10minutes";
                         remindMeBeforeDialog.dismiss();
                         remindMeBefore.setText("10 minutes before");
@@ -271,7 +273,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 twentyMinutesBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        remindMeBeforeTimeValueInInt = (20 * 60 * 1000);
+                        remindMeBeforeTimeValueInInt = 20 ;
                         remindMeBeforeTimeValue = "20minutes";
                         remindMeBeforeDialog.dismiss();
                         remindMeBefore.setText("20 minutes before");
@@ -281,7 +283,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 thirtyMinutesBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        remindMeBeforeTimeValueInInt = (30 * 60 * 1000);
+                        remindMeBeforeTimeValueInInt = 30;
                         remindMeBeforeTimeValue = "30minutes";
                         remindMeBeforeDialog.dismiss();
                         remindMeBefore.setText("30 minutes before");
@@ -291,7 +293,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 oneHourBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        remindMeBeforeTimeValueInInt = (60 * 60 * 1000);
+                        remindMeBeforeTimeValueInInt = 60;
                         remindMeBeforeTimeValue = "1hour";
                         remindMeBeforeDialog.dismiss();
                         remindMeBefore.setText("1 hour before");
@@ -411,7 +413,8 @@ public class ReminderSetActivity extends AppCompatActivity {
 
                 else {
                     myCalender.set(Calendar.HOUR_OF_DAY, selectedHourAlarm);
-                    myCalender.set(Calendar.MINUTE, selectedMinuteAlarm - remindMeBeforeTimeValueInInt);
+                    selectedMinuteAlarm = selectedMinuteAlarm - remindMeBeforeTimeValueInInt;
+                    myCalender.set(Calendar.MINUTE, selectedMinuteAlarm );
                     myCalender.set(Calendar.DAY_OF_MONTH, selectedDayAlarm);
                     myCalender.set(Calendar.MONTH, selectedMonthAlarm);
                     myCalender.set(Calendar.YEAR, selectedYearAlarm);
@@ -434,7 +437,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 
                 if(repeatAlarmIntervalValue == "Does not repeat") {
                     //alarmManager.set(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis() , alarmPendingIntent);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 5, alarmPendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 10, alarmPendingIntent);
                 }
                 else if (repeatAlarmIntervalValue == "everyDay") {
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), AlarmManager.INTERVAL_DAY , alarmPendingIntent);
@@ -533,10 +536,8 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         String myFormat = "EEE, MMM d, yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        TextView datePicked = (TextView) findViewById(datePicker);
+        TextView datePicked = (TextView) findViewById(R.id.datePicker);
         datePicked.setText(sdf.format(myCalender.getTime()));
-
-
     }
     private static String pad(int c) {
         if (c >= 10)
@@ -544,4 +545,6 @@ public class ReminderSetActivity extends AppCompatActivity {
         else
             return "0" + String.valueOf(c);
     }
+
+
 }
