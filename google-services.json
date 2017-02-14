@@ -1,0 +1,117 @@
+{
+  "project_info": {
+    "project_number": "206086867851",
+    "firebase_url": "https://awspnotifications.firebaseio.com",
+    "project_id": "awspnotifications",
+    "storage_bucket": "awspnotifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206086867851:android:84f9131e96c6774d",
+        "android_client_info": {
+          "package_name": "com.trianz.microservicesexample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206086867851-dkppl85ri190l0vnn1q1gsurg677tia8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA27bxl2fWj7NYcV-ehD5otq96NIMFZo4Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206086867851:android:2d639509090143cd",
+        "android_client_info": {
+          "package_name": "com.trianz.pushnotificationsservice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206086867851-pi9ncpjncctujurh89g70an1s48iqokr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.trianz.pushnotificationsservice",
+            "certificate_hash": "6EAF0D0BE9EDD7FFC3A1B0DD59D8129E69AE5BFB"
+          }
+        },
+        {
+          "client_id": "206086867851-dkppl85ri190l0vnn1q1gsurg677tia8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA27bxl2fWj7NYcV-ehD5otq96NIMFZo4Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "206086867851-dkppl85ri190l0vnn1q1gsurg677tia8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206086867851:android:b4bda889b113fd76",
+        "android_client_info": {
+          "package_name": "com.trianz.locationalarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206086867851-dkppl85ri190l0vnn1q1gsurg677tia8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA27bxl2fWj7NYcV-ehD5otq96NIMFZo4Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
