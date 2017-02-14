@@ -2,11 +2,13 @@ package com.trianz.locationalarm;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.skyfishjy.library.RippleBackground;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -31,6 +34,10 @@ public class AlarmRingingActivity extends AppCompatActivity {
     String repeatAlarmIntervalValue;
     int pendingIntentRequestCode;
 
+    MediaPlayer mediaPlayer;
+    String notificationTypeValue;
+    String audioFilePath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +50,7 @@ public class AlarmRingingActivity extends AppCompatActivity {
 
         repeatAlarmIntervalValue = bundle.getString("repeatAlarmIntervalValue");
         pendingIntentRequestCode = bundle.getInt("pendingIntentRequestCode");
-
+        notificationTypeValue = bundle.getString("notificationTypeValue");
 
         final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
 
@@ -54,13 +61,26 @@ public class AlarmRingingActivity extends AppCompatActivity {
         findViewById(R.id.imageView1).setOnDragListener(new MyDragListener());
         findViewById(R.id.imageView3).setOnDragListener(new MyDragListener());
 
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if (alarmUri == null) {
-            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if(notificationTypeValue.equals("Notification")) {
+            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            if (alarmUri == null) {
+                alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            }
+            ringtone = RingtoneManager.getRingtone(AlarmRingingActivity.this, alarmUri);
+            ringtone.play();
         }
-        ringtone = RingtoneManager.getRingtone(AlarmRingingActivity.this, alarmUri);
-        ringtone.play();
+        else {
+            audioFilePath = bundle.getString("audioFilePath");
 
+            mediaPlayer = new MediaPlayer();
+            try {
+                mediaPlayer.setDataSource(audioFilePath);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mediaPlayer.start();
+        }
 
         TextView tv_currentTime = (TextView) findViewById(R.id.tv_currentTime);
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
@@ -107,7 +127,9 @@ public class AlarmRingingActivity extends AppCompatActivity {
                     if(((ImageView) v).equals(findViewById(R.id.imageView1)))
                     {
                         Toast.makeText(AlarmRingingActivity.this, "Snooze", Toast.LENGTH_SHORT).show();
-                        ringtone.stop();
+                        if(notificationTypeValue.equals("Notification")) {
+                            ringtone.stop();
+                        }
                         inst.snoozeAlarmControl(pendingIntentRequestCode);
                         Intent intent = new Intent(AlarmRingingActivity.this, RemindMeTask.class);
                         startActivity(intent);
@@ -116,7 +138,9 @@ public class AlarmRingingActivity extends AppCompatActivity {
                     else if(((ImageView) v).equals(findViewById(R.id.imageView3)))
                     {
                         Toast.makeText(AlarmRingingActivity.this, "Dismiss", Toast.LENGTH_SHORT).show();
-                        ringtone.stop();
+                        if(notificationTypeValue.equals("Notification")) {
+                            ringtone.stop();
+                        }
                         inst.cancelAlarmControl(pendingIntentRequestCode);
                         Intent intent = new Intent(AlarmRingingActivity.this, HomeActivity.class);
                         startActivity(intent);

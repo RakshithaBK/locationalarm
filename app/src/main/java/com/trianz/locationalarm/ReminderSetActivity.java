@@ -6,21 +6,31 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
 
 
 /**
@@ -61,18 +71,29 @@ public class ReminderSetActivity extends AppCompatActivity {
         super.onStart();
         inst = this;
     }
-    /********/
 
+    //For Audio
+    MediaRecorder mediaRecorder;
+    MediaPlayer mediaPlayer;
 
+    String audioFilePath;
 
+    boolean isRecording = false;
 
+    Button stopButton;
+    Button playButton;
+    Button recordButton;
 
+    String notificationTypeValue = "Notification";
 
+    /***/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setreminder);
+
+        this.getSupportActionBar().hide();
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -82,7 +103,7 @@ public class ReminderSetActivity extends AppCompatActivity {
         TextView datePicked =  (TextView)findViewById(R.id.datePicker);
         final TextView timePicked =  (TextView)findViewById(R.id.timePicker);
         Switch enableAllDay = (Switch) findViewById(R.id.switchIcon);
-        this.getSupportActionBar().hide();
+
         //set the alarm text selected from previous layout
         TextView reminderTsk = (TextView) findViewById(R.id.finalTaskSet);
         reminderTsk.setText(reminderEvent);
@@ -122,7 +143,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 //        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
 //        String cYear = cYearFormat.format(myCalender.getTime());
 //        selectedYearAlarm = Integer.parseInt(cYear);
-
+        selectedYearAlarm = Calendar.getInstance().get(Calendar.YEAR);
 
         //For Map
 //        FragmentManager fragmentManager = getSupportFragmentManager();
@@ -231,7 +252,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                     tenMinutesBefore.setTextColor(Color.parseColor("#9568ff"));
                 }
                 else if (remindMeBeforeTimeValue == "0minutes") {
-                    twentyMinutesBefore.setTextColor(Color.parseColor("#9568ff"));
+                    zeroMinutesBefore.setTextColor(Color.parseColor("#9568ff"));
                 }
                 else if (remindMeBeforeTimeValue == "20minutes") {
                     twentyMinutesBefore.setTextColor(Color.parseColor("#9568ff"));
@@ -378,6 +399,147 @@ public class ReminderSetActivity extends AppCompatActivity {
             }
         });
 
+
+        //Save reminder as audio file
+        final TextView tv_reminderType = (TextView) findViewById(R.id.tv_reminderType);
+
+
+        tv_reminderType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog remindMeType = new Dialog(ReminderSetActivity.this);
+                remindMeType.setContentView(R.layout.dialog_remindertype);
+
+
+                final TextView typeNotification = (TextView) remindMeType.findViewById(R.id.notificationType);
+                final TextView typeVoice = (TextView) remindMeType.findViewById(R.id.voiceType);
+                final LinearLayout voiceRecordButtons = (LinearLayout) remindMeType.findViewById(R.id.ll_showVoiceRecordButtons);
+
+                recordButton = (Button) remindMeType.findViewById(R.id.btn_record);
+                playButton = (Button) remindMeType.findViewById(R.id.btn_play);
+                stopButton = (Button) remindMeType.findViewById(R.id.btn_stop);
+
+                recordButton.setText("R");
+                playButton.setText("P");
+                stopButton.setText("S");
+
+                if(notificationTypeValue == "Notification") {
+                    typeNotification.setTextColor(Color.parseColor("#9568ff"));
+                }
+                else if (notificationTypeValue == "Voice") {
+                    typeVoice.setTextColor(Color.parseColor("#9568ff"));
+                }
+                remindMeType.show();
+
+                typeNotification.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        notificationTypeValue = "Notification";
+                        remindMeType.dismiss();
+                        tv_reminderType.setText("Notification Reminder");
+                    }
+                });
+                typeVoice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        notificationTypeValue = "Voice";
+                        typeVoice.setTextColor(Color.parseColor("#9568ff"));
+                        typeNotification.setTextColor(Color.parseColor("#000000"));
+                       // remindMeType.dismiss();
+                        voiceRecordButtons.setVisibility(View.VISIBLE);
+                        tv_reminderType.setText("Voice Reminder");
+
+                        if(!hasMicrophone()) {
+                            stopButton.setEnabled(false);
+                            playButton.setEnabled(false);
+                            recordButton.setEnabled(false);
+                        }
+
+                        else {
+                            playButton.setEnabled(false);
+                            stopButton.setEnabled(false);
+                        }
+
+//                        audioFilePath =
+//                                Environment.getExternalStorageDirectory().getAbsolutePath()
+//                                        + "/myaudio.3gp";
+
+                        audioFilePath = getFilesDir()+ "/" + String.valueOf(reminderEvent) + String.valueOf(selectedMinuteAlarm) + String.valueOf(selectedHourAlarm) + "audio.m4a" ;
+                        //Log.d("Send audio file path", audioFilePath);
+
+
+                        recordButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                isRecording = true;
+                                stopButton.setEnabled(true);
+                                playButton.setEnabled(false);
+                                recordButton.setEnabled(false);
+                                try {
+                                    mediaRecorder = new MediaRecorder();
+                                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+                                    mediaRecorder.setOutputFile(audioFilePath);
+                                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+                                    mediaRecorder.prepare();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ReminderSetActivity.this, "Go to app permission in Locationalarm and allow microphone permission", Toast.LENGTH_LONG).show();
+                                }
+                                mediaRecorder.start();
+                            }
+                        });
+
+                        playButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                playButton.setEnabled(false);
+                                recordButton.setEnabled(false);
+                                stopButton.setEnabled(true);
+
+                                mediaPlayer = new MediaPlayer();
+                                try {
+                                    mediaPlayer.setDataSource(audioFilePath);
+                                    mediaPlayer.prepare();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ReminderSetActivity.this, "Go to app permission in Locationalarm and allow microphone permission", Toast.LENGTH_LONG).show();
+                                }
+                               mediaPlayer.start();
+                            }
+                        });
+
+                        stopButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                stopButton.setEnabled(false);
+                                playButton.setEnabled(true);
+
+                                if(isRecording) {
+                                    recordButton.setEnabled(false);
+                                    mediaRecorder.stop();
+                                    mediaRecorder.release();
+                                    mediaRecorder = null;
+                                    isRecording = false;
+                                }
+                                else {
+                                    mediaPlayer.release();
+                                    mediaPlayer = null;
+                                    recordButton.setEnabled(true);
+                                }
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
+
+
+
+        /*************************/
+
         //Save the reminder and go back to landing page
         ImageView saveTask = (ImageView) findViewById(R.id.saveIcon1);
         saveTask.setOnClickListener(new View.OnClickListener() {
@@ -413,11 +575,20 @@ public class ReminderSetActivity extends AppCompatActivity {
                     myCalender.set(Calendar.MONTH, selectedMonthAlarm);
                     myCalender.set(Calendar.YEAR, selectedYearAlarm);
                 }
-                Toast.makeText(ReminderSetActivity.this,"Alarm Set At " + String.valueOf(selectedHourAlarm) + ":" +
-                        String.valueOf(selectedMinuteAlarm) + ":" + String.valueOf(selectedDayAlarm)+ ":" + String.valueOf(selectedMonthAlarm + 1)+ ":" + String.valueOf(selectedYearAlarm),  Toast.LENGTH_LONG).show();
+//                Toast.makeText(ReminderSetActivity.this,"Alarm Set At " + String.valueOf(selectedHourAlarm) + ":" +
+//                        String.valueOf(selectedMinuteAlarm) + ":" + String.valueOf(selectedDayAlarm)+ ":" + String.valueOf(selectedMonthAlarm + 1)+ ":" + String.valueOf(selectedYearAlarm),  Toast.LENGTH_LONG).show();
+
+                Toast.makeText(ReminderSetActivity.this,"Alarm Set At " +
+                        String.valueOf(selectedHourAlarm) + ":" +
+                        String.valueOf(pad(selectedMinuteAlarm)) + " On " +
+                        String.valueOf(selectedDayAlarm)+ "/" +
+                        String.valueOf(selectedMonthAlarm + 1)+ "/" +
+                        String.valueOf(selectedYearAlarm),  Toast.LENGTH_LONG).show();
+
 
                 pendingIntentRequestCode = selectedHourAlarm + selectedMinuteAlarm + selectedDayAlarm + selectedMonthAlarm + selectedYearAlarm;
-                Toast.makeText(ReminderSetActivity.this,String.valueOf(pendingIntentRequestCode),Toast.LENGTH_LONG).show();
+
+                //Toast.makeText(ReminderSetActivity.this,String.valueOf(pendingIntentRequestCode),Toast.LENGTH_LONG).show();
 
                 alarmIntent = new Intent(ReminderSetActivity.this, AlarmReceiver.class);
 
@@ -425,13 +596,17 @@ public class ReminderSetActivity extends AppCompatActivity {
                 alarmIntent.putExtra("allDayFlag", allDayFlag);
                 alarmIntent.putExtra("repeatAlarmIntervalValue", repeatAlarmIntervalValue);
                 alarmIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
+                alarmIntent.putExtra("notificationTypeValue", notificationTypeValue);
+                if (notificationTypeValue.equals("Voice")) {
+                    alarmIntent.putExtra("audioFilePath", audioFilePath);
+                }
 
                 alarmPendingIntent = PendingIntent.getBroadcast(ReminderSetActivity.this, pendingIntentRequestCode, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 
                 if(repeatAlarmIntervalValue == "Does not repeat") {
                     //alarmManager.set(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis() , alarmPendingIntent);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 10, alarmPendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 5, alarmPendingIntent);
                 }
                 else if (repeatAlarmIntervalValue == "everyDay") {
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), AlarmManager.INTERVAL_DAY , alarmPendingIntent);
@@ -446,7 +621,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 365 , alarmPendingIntent);
                 }
 
-                Intent intent = new Intent(ReminderSetActivity.this, RemindMeTask.class);
+                Intent intent = new Intent(ReminderSetActivity.this, HomeActivity.class);
 
                 startActivity(intent);
             }
@@ -470,22 +645,22 @@ public class ReminderSetActivity extends AppCompatActivity {
 //                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 //
 //        alarmManager.set(AlarmManager.RTC, myCalender.getTimeInMillis()+ 1000 * 60 * 10, senderSnoozeIntent );
-
+        Toast.makeText(ReminderSetActivity.this,"Alarm is postponed for 10 minutes",Toast.LENGTH_LONG).show();
 
     }
 
     public void cancelAlarmControl(int receivedPendingIntentRequestCode) {
 
-        Toast.makeText(ReminderSetActivity.this,"Out Block", Toast.LENGTH_LONG).show();
+        //Toast.makeText(ReminderSetActivity.this,"Out Block", Toast.LENGTH_LONG).show();
 
         if (alarmManager != null) {
 
-            Toast.makeText(ReminderSetActivity.this,String.valueOf(receivedPendingIntentRequestCode),Toast.LENGTH_LONG).show();
+            //Toast.makeText(ReminderSetActivity.this,String.valueOf(receivedPendingIntentRequestCode),Toast.LENGTH_LONG).show();
 
             PendingIntent sender = PendingIntent.getBroadcast(ReminderSetActivity.this, receivedPendingIntentRequestCode,
                     alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Toast.makeText(ReminderSetActivity.this,"In Block", Toast.LENGTH_LONG).show();
+            //Toast.makeText(ReminderSetActivity.this,"In Block", Toast.LENGTH_LONG).show();
 
             alarmManager.cancel(sender);
 
@@ -533,12 +708,19 @@ public class ReminderSetActivity extends AppCompatActivity {
         TextView datePicked = (TextView) findViewById(R.id.datePicker);
         datePicked.setText(sdf.format(myCalender.getTime()));
     }
+
+    protected boolean hasMicrophone() {
+        PackageManager pmanager = this.getPackageManager();
+        return pmanager.hasSystemFeature(
+                PackageManager.FEATURE_MICROPHONE);
+    }
+
+
     private static String pad(int c) {
         if (c >= 10)
             return String.valueOf(c);
         else
             return "0" + String.valueOf(c);
     }
-
 
 }

@@ -3,6 +3,7 @@ package com.trianz.locationalarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,28 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.trianz.locationalarm.Utils.MySingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_MOBILE_LOGIN;
+import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_PASSWORD_LOGIN;
+import static com.trianz.locationalarm.Utils.Constants.serviceUrls.LOGIN_URL;
 
 public class LoginActivity extends Fragment {
 
@@ -77,8 +100,8 @@ public class LoginActivity extends Fragment {
 //        final String password = loginEditTextPassword.getText().toString().trim();
 //
 //        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put(KEY_MOBILE, mobile);
-//        params.put(KEY_PASSWORD,password);
+//        params.put(KEY_MOBILE_LOGIN, mobile);
+//        params.put(KEY_PASSWORD_LOGIN,password);
 //
 //        JSONObject jsonBody = new JSONObject(params);
 //

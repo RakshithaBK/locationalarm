@@ -111,6 +111,9 @@ public class Constants {
         public static final String KEY_MOBILE = "mobile";
         public static final String KEY_EMAIL = "email";
         public static final String KEY_PASSWORD = "password";
+
+        public static final String KEY_MOBILE_LOGIN = "mobile";
+        public static final String KEY_PASSWORD_LOGIN = "password";
     }
 
     public static class serviceUrls{

@@ -19,6 +19,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     private NotificationManager alarmNotificationManager;
     int pendingIntentRequestCode;
+    String audioFilePath;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -29,7 +30,12 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         String reminderEvent = bundle.getString("reminderEvent");
         Boolean allDayFlag = bundle.getBoolean("allDayFlag");
         String repeatAlarmIntervalValue = bundle.getString("repeatAlarmIntervalValue");
+        String notificationTypeValue = bundle.getString("notificationTypeValue");
         pendingIntentRequestCode = bundle.getInt("pendingIntentRequestCode");
+
+        if (notificationTypeValue.equals("Voice")) {
+            audioFilePath = bundle.getString("audioFilePath");
+        }
 
         Log.d("reminderEvent", reminderEvent);
 
@@ -40,6 +46,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             alarmringingIntent.putExtra("reminderEvent", reminderEvent);
             alarmringingIntent.putExtra("repeatAlarmIntervalValue", repeatAlarmIntervalValue);
             alarmringingIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
+            alarmringingIntent.putExtra("notificationTypeValue", notificationTypeValue);
+            if (notificationTypeValue.equals("Voice")) {
+                alarmringingIntent.putExtra("audioFilePath", audioFilePath);
+            }
             context.startActivity(alarmringingIntent);
         }
 

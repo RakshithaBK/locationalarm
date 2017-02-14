@@ -109,6 +109,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 //    @Bind(R.id.textView)
 //    TextView textView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,6 +169,9 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         GeofenceController.getInstance().init(this);
         recyclerViewSetter();
     }
+
+
+
 
     public void switchCalenderToMap(){
         //calender switch to map

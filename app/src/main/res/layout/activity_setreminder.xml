@@ -189,10 +189,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Voice and Notification"
+                    android:text="Notification Reminder"
                     android:textColor="@color/color_Black"
                     android:layout_weight="8"
-                    android:paddingTop="11dp"/>
+                    android:paddingTop="11dp"
+                    android:id="@+id/tv_reminderType"/>
 
                 <TextView
                     android:layout_width="0dp"
