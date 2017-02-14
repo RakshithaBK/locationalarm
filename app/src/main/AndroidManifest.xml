@@ -62,7 +62,7 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDqmAQS3dFEYSu_PvrYohlnD0fjRspzzrw" />
+            android:value="AIzaSyDUnhFQHyEIrHGcEDwKU6xUEyc-83YGi58" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
