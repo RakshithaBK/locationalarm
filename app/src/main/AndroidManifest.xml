@@ -71,6 +71,14 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
             android:name=".AlarmService"
             android:enabled="true" />
 
+        <service
+            android:name=".FirebaseIDService"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
         <!-- <receiver android:name=".AlarmReceiver" /> -->
 
         <receiver
