@@ -11,28 +11,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.trianz.locationalarm.Utils.MySingleton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_MOBILE_LOGIN;
-import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_PASSWORD_LOGIN;
-import static com.trianz.locationalarm.Utils.Constants.serviceUrls.LOGIN_URL;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends Fragment {
 
@@ -50,7 +30,6 @@ public class LoginActivity extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -91,6 +70,8 @@ public class LoginActivity extends Fragment {
     }
 
     public void homeActivity(View view){
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d("token",token);
 
         Intent homeActivity = new Intent(getContext(),HomeActivity.class);
                                 startActivity(homeActivity);

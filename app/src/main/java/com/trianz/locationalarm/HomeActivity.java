@@ -86,6 +86,7 @@ import static com.trianz.locationalarm.Utils.Constants.Instances.recyclerView;
 import static com.trianz.locationalarm.Utils.Constants.Instances.reminderError;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDate;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedPlace;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selfReminderFlag;
 import static com.trianz.locationalarm.Utils.Constants.Instances.toolbar;
 
 public class HomeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnMapReadyCallback,
@@ -239,32 +240,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         FloatingActionButton  addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
         FloatingActionButton  addReminderDatefab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_date);
         FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
-        wakeupfab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent remindMeTask =  new Intent(HomeActivity.this, RemindMeTask.class);
-                startActivity(remindMeTask);
-                fabMenu.collapse();
-            }
-        });
-
-
-        addReminderDatefab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(selectedDate == null){
-                    Snackbar.make(view, "Select a reminder date", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    fabMenu.collapse();
-                }else{
-
-                    Intent addReminderToDateActivity = new Intent(HomeActivity.this, AddReminderToDateActivity.class);
-                    addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
-                    startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
-                    fabMenu.collapse();
-                }
-            }
-        });
 
         addReminderLocationfab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,14 +261,42 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             }
         });
 
+        addReminderDatefab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(selectedDate == null){
+                    Snackbar.make(view, "Select a reminder date", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    fabMenu.collapse();
+                }else{
+                    selfReminderFlag = true;
+                    Intent addReminderToDateActivity = new Intent(HomeActivity.this, AddReminderToDateActivity.class);
+                    addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
+                    startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
+                    fabMenu.collapse();
+                }
+            }
+        });
+
 
         remindothersfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this, "Tapped", Toast.LENGTH_SHORT).show();
+                selfReminderFlag = false;
                 //Intent to navigate to next page
             }
         });
+
+        wakeupfab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent remindMeTask =  new Intent(HomeActivity.this, RemindMeTask.class);
+                startActivity(remindMeTask);
+                fabMenu.collapse();
+            }
+        });
+
     }
 
 

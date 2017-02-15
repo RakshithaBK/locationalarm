@@ -12,6 +12,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 public class FirebaseIDService extends FirebaseInstanceIdService {
 
     private static final String TAG = "MyFirebaseIIDService";
+    String refreshedToken;
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -22,7 +23,7 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+         refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
         // If you want to send messages to this application instance or

@@ -60,6 +60,7 @@ public class Constants {
         public static Context context;
         public static BottomSheetBehavior mBottomSheetBehavior1;
         public static Toolbar toolbar;
+        public static Boolean selfReminderFlag;
 
         //OffersInstanc Variables
         public static String address = new String();

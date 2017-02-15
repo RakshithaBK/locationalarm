@@ -48,7 +48,12 @@ public class RemindersListAdapter extends RecyclerView.Adapter<RemindersListAdap
   public void onBindViewHolder(ViewHolder holder, int position) {
     final NamedGeofence geofence = namedGeofences.get(position);
 
-    holder.place.setText(geofence.reminder_place);
+    if (geofence.reminder_Date == null) {
+      holder.place.setText(geofence.reminder_place);
+    }else{
+      holder.place.setText(geofence.reminder_Date);
+    }
+
     holder.message.setText(geofence.reminder_msg);
     holder.reminder_delete.setOnClickListener(new View.OnClickListener() {
       @Override

@@ -160,7 +160,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
         googlePlacesUrl.append("&radius=" + Constants.Geometry.PROXIMITY_RADIUS);
         googlePlacesUrl.append("&query=" + nearbyPlace);
         googlePlacesUrl.append("&sensor=true");
-        googlePlacesUrl.append("&key=" + "AIzaSyDqmAQS3dFEYSu_PvrYohlnD0fjRspzzrw");
+        googlePlacesUrl.append("&key=" + "AIzaSyDUnhFQHyEIrHGcEDwKU6xUEyc-83YGi58");
         Log.d("getUrl", googlePlacesUrl.toString());
         return (googlePlacesUrl.toString());
     }

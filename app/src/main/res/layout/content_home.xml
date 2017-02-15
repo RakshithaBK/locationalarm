@@ -35,7 +35,7 @@
             android:id="@+id/calender_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:mcv_selectionColor="@color/color_Purple"
+            app:mcv_selectionColor="@color/color_Orange"
             app:mcv_dateTextAppearance="@color/color_Black"
             app:mcv_arrowColor="@color/color_white"
             app:mcv_tileHeight="40dp"
@@ -60,7 +60,8 @@
             card_view:cardCornerRadius="3dp"
             card_view:cardMaxElevation="1dp"
             card_view:cardElevation="2dp"
-            card_view:cardUseCompatPadding="true">
+            card_view:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/color_white">
 
             <fragment
                 android:id="@+id/place_autocomplete_fragment"

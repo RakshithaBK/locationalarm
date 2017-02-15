@@ -18,7 +18,9 @@ import com.google.gson.Gson;
 import com.trianz.locationalarm.HomeActivity;
 import com.trianz.locationalarm.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +77,7 @@ public class LocationReminderIntentService extends IntentService {
     for (String geofenceId : geofenceIds) {
       String reminder_message = "";
       String reminder_place = "";
+      String reminder_Date = "";
 
       // Loop over all geofence keys in prefs and retrieve NamedGeofence from SharedPreference
       Map<String, ?> keys = prefs.getAll();
@@ -84,35 +87,54 @@ public class LocationReminderIntentService extends IntentService {
         if (namedGeofence.id.equals(geofenceId)) {
           reminder_message = namedGeofence.reminder_msg;
           reminder_place = namedGeofence.reminder_place;
+          reminder_Date = namedGeofence.reminder_Date;
           break;
         }
       }
 
       // Set the notification text and send the notification
-      String contextMsg =  reminder_message;
+      String contextMsg = reminder_message;
       String contextPlace = reminder_place;
+      String contextDate = reminder_Date;
 
-      NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-      Intent intent = new Intent(this, HomeActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      PendingIntent pendingNotificationIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      Calendar myCalender = Calendar.getInstance();
+      SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM d, yyyy");
+      final String currentDate = currentDateFormat.format(myCalender.getTime());
+      if (contextDate.equals(currentDate)) {
+        callNotification(contextMsg, contextPlace, contextDate);
+      } else {
 
-      // Sound for notification
-      Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-      Notification notification = new NotificationCompat.Builder(this)
-              .setSmallIcon(R.mipmap.ic_launcher)
-              .setContentTitle(contextPlace)
-              .setContentText(contextMsg)
-              .setContentIntent(pendingNotificationIntent)
-              .setStyle(new NotificationCompat.BigTextStyle().bigText(contextMsg))
-              .setSound(alarmSound)
-              .setPriority(NotificationCompat.PRIORITY_HIGH)
-              .setAutoCancel(true)
-              .build();
-      notificationManager.notify(0, notification);
-
+      }
     }
+  }
+
+  public void  callNotification(String contextMsg ,String contextPlace,String contextDate){
+    NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+    Intent intent = new Intent(this, HomeActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    PendingIntent pendingNotificationIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    String titileMsg = "";
+    if(contextDate == null){
+      titileMsg = contextPlace;
+    }else{
+      titileMsg = contextDate;
+    }
+    // Sound for notification
+    Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+    Notification notification = new NotificationCompat.Builder(this)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(titileMsg)
+            .setContentText(contextMsg)
+            .setContentIntent(pendingNotificationIntent)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(contextMsg))
+            .setSound(alarmSound)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .build();
+    notificationManager.notify(0, notification);
+
   }
 
   private void onError(int i) {
