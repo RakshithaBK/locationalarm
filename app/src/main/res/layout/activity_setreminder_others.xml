@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/enterTask"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:background="#9568ff">
+
+                <ImageView
+                    android:id="@+id/closeIcon1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_discard"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/finalTaskSet"
+                    android:layout_weight="8"
+                    android:textColor="@color/color_white"
+                    android:paddingTop="11dp"/>
+
+                <ImageView
+                    android:id="@+id/saveIcon1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_save_reminder"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/reminderType"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@+id/enterTask"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:id="@+id/clockOne"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_allday"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="All Day"
+                    android:textColor="@color/color_Black"
+                    android:id="@+id/allDay"
+                    android:layout_weight="8"
+                    android:paddingTop="11dp"/>
+
+                <Switch
+                    android:id="@+id/switchIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_event"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/reminderType2"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@+id/reminderType"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/datePicker"
+                    android:layout_weight="8"
+                    android:textColor="#CACACA"
+                    android:paddingTop="11dp"
+                    android:focusable="false"/>
+
+                <TextView
+                    android:id="@+id/timePicker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="end"
+                    android:textColor="#CACACA"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="4dp"/>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/reminderType2"
+                android:layout_marginTop="4dp"
+                android:background="#000000"/>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/reminderType3"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@+id/reminderType2"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_allday"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Reminder type"
+                    android:layout_weight="8"
+                    android:textColor="@color/color_Black"
+                    android:paddingTop="11dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:textColor="@color/color_Black"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/reminderType4"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@+id/reminderType3"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Notification Reminder"
+                    android:textColor="#CACACA"
+                    android:layout_weight="8"
+                    android:paddingTop="11dp"
+                    android:id="@+id/tv_reminderType"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_Black"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:id="@+id/hrline1"
+                android:layout_below="@+id/reminderType4"
+                android:layout_marginTop="4dp"
+                android:background="#000000"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/remindMe"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@+id/hrline1"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:src="@mipmap/ic_remindme"
+                    android:paddingTop="8dp"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:textColor="@color/color_Black"
+                    android:layout_height="wrap_content"
+                    android:text="Remind to"
+                    android:layout_weight="8"
+                    android:paddingTop="11dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:textColor="@color/color_Black"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/remindMe2"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@+id/remindMe"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:id="@+id/selectContactNumber"
+                    android:textColor="#CACACA"
+                    android:layout_height="wrap_content"
+                    android:text="Select contact from phone"
+                    android:layout_weight="8"
+                    android:paddingTop="11dp"/>
+
+                <TextView
+                    android:textColor="@color/color_Black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+
+            </LinearLayout>
+
+
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/remindMeOthers"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:weightSum="12"-->
+                <!--android:paddingTop="5dp"-->
+                <!--android:paddingBottom="10dp"-->
+                <!--android:layout_below="@+id/remindMe2"-->
+                <!--android:layout_alignParentStart="true">-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="2"-->
+                    <!--android:paddingTop="8dp"/>-->
+
+
+                <!--<EditText-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:id="@+id/enterEmail"-->
+                    <!--android:textColor="@color/color_Black"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Enter others email id"-->
+                    <!--android:layout_weight="8"-->
+                    <!--android:paddingTop="11dp"/>-->
+
+                <!--<TextView-->
+                    <!--android:textColor="@color/color_Black"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="2"-->
+                    <!--android:paddingTop="8dp"/>-->
+
+            <!--</LinearLayout>-->
+
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:id="@+id/hrline3"
+                android:layout_below="@+id/remindMe2"
+                android:layout_marginTop="4dp"
+                android:background="#000000"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/repeat"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@+id/hrline3"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:src="@mipmap/ic_does_not_repeat"
+                    android:paddingTop="8dp"/>
+
+
+                <TextView
+                    android:textColor="@color/color_Black"
+                    android:layout_width="0dp"
+                    android:id="@+id/reminderepeat"
+                    android:layout_height="wrap_content"
+                    android:text="Does not repeat"
+                    android:layout_weight="8"
+                    android:paddingTop="11dp"/>
+
+                <TextView
+                    android:textColor="@color/color_Black"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

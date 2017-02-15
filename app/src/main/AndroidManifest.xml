@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+       <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:allowBackup="true"
@@ -54,7 +55,11 @@
         <activity
             android:name=".ReminderSetActivity"
             android:theme="@style/MyDatePickerDialogTheme" />
+        <activity
+            android:name=".ReminderSetToOthers"
+            android:theme="@style/MyDatePickerDialogTheme" />
         <activity android:name=".AlarmRingingActivity" />
+
 
         <!--
 ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -76,6 +81,13 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 

@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import static com.trianz.locationalarm.Utils.Constants.Instances.selfReminderFlag;
+
 
 /**
  * Created by Dibyojyoti.Majumder on 04-01-2017.
@@ -67,9 +69,17 @@ public class RemindMeTask extends AppCompatActivity {
 
                 pickedTask = getTask.getText().toString();
 
-                Intent intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
-                intent.putExtra("reminderEvent", pickedTask);
-                startActivity(intent);
+                int flag = 1;
+
+                if(selfReminderFlag) {
+                    Intent intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
+                    intent.putExtra("reminderEvent", pickedTask);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(RemindMeTask.this, ReminderSetToOthers.class);
+                    intent.putExtra("reminderEvent", pickedTask);
+                    startActivity(intent);
+                }
             }
         });
 

@@ -61,6 +61,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -169,8 +171,39 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         placeAutoComplete();
         GeofenceController.getInstance().init(this);
         recyclerViewSetter();
-    }
 
+        //FireBaseMessaging
+
+        if (getIntent().getExtras() != null) {
+
+            for (String key : getIntent().getExtras().keySet()) {
+                String value = getIntent().getExtras().getString(key);
+
+                if (key.equals("AnotherActivity") && value.equals("True")) {
+
+                    //      Toast.makeText(MainActivity.this, "Another Activity!!!", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        }
+
+        subscribeToPushService();
+    }
+    private void subscribeToPushService() {
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+
+        Log.d("AndroidBash", "Subscribed");
+        //  Toast.makeText(MainActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        // Log and toast
+        //   Log.d("AndroidBash", token);
+        //   Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+    }
 
 
 
@@ -269,7 +302,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                             .setAction("Action", null).show();
                     fabMenu.collapse();
                 }else{
-                    selfReminderFlag = true;
+
                     Intent addReminderToDateActivity = new Intent(HomeActivity.this, AddReminderToDateActivity.class);
                     addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
                     startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
@@ -284,6 +317,10 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this, "Tapped", Toast.LENGTH_SHORT).show();
                 selfReminderFlag = false;
+                Intent addReminderToDateActivity = new Intent(HomeActivity.this, RemindMeTask.class);
+                addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
+                startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
+                fabMenu.collapse();
                 //Intent to navigate to next page
             }
         });
@@ -291,6 +328,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         wakeupfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selfReminderFlag = true;
                 Intent remindMeTask =  new Intent(HomeActivity.this, RemindMeTask.class);
                 startActivity(remindMeTask);
                 fabMenu.collapse();
