@@ -68,6 +68,9 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDUnhFQHyEIrHGcEDwKU6xUEyc-83YGi58" />
+        <!-- AIzaSyDrgit2WdTFEhwtY2psOrsAUDiHTQEfK34-->
+
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -75,6 +78,7 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         <service
             android:name=".AlarmService"
             android:enabled="true" />
+
 
         <service
             android:name=".FirebaseIDService"
@@ -95,6 +99,14 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
 
         <receiver
             android:name=".AlarmReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".PushNotificationReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

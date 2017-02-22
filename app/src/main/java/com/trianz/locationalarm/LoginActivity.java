@@ -70,6 +70,7 @@ public class LoginActivity extends Fragment {
     }
 
     public void homeActivity(View view){
+
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d("token",token);
 

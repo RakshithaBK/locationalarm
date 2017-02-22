@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "926837548711",
-    "firebase_url": "https://locationalarm-3b259.firebaseio.com",
-    "project_id": "locationalarm-3b259",
-    "storage_bucket": "locationalarm-3b259.appspot.com"
+    "project_number": "256573225189",
+    "firebase_url": "https://alarmnotification-155105.firebaseio.com",
+    "project_id": "alarmnotification-155105",
+    "storage_bucket": "alarmnotification-155105.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:926837548711:android:b4bda889b113fd76",
+        "mobilesdk_app_id": "1:256573225189:android:b4bda889b113fd76",
         "android_client_info": {
           "package_name": "com.trianz.locationalarm"
         }
       },
       "oauth_client": [
         {
-          "client_id": "926837548711-utl1chkpp3plq07mg5k1kb86644vi87a.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.trianz.locationalarm",
-            "certificate_hash": "6EAF0D0BE9EDD7FFC3A1B0DD59D8129E69AE5BFB"
-          }
-        },
-        {
-          "client_id": "926837548711-51b3uctbomg111k4vu490jlvkbfrck77.apps.googleusercontent.com",
+          "client_id": "256573225189-qlj4tgrp13mkr2mc6t4vnqdslg78h03v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC1m84gGQ2sFaCrfI5OmlHk4xxkyqvSlWo"
+          "current_key": "AIzaSyDwISzstA1TE4YRj5i_dYJIi1Zs4-8bFDU"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "926837548711-51b3uctbomg111k4vu490jlvkbfrck77.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

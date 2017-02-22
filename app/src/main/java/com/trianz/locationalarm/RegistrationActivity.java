@@ -3,6 +3,7 @@ package com.trianz.locationalarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.trianz.locationalarm.Utils.MySingleton;
 
 import org.json.JSONException;
@@ -30,6 +32,7 @@ import java.util.HashMap;
 import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_EMAIL;
 import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_MOBILE;
 import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_PASSWORD;
+import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_TOKEN;
 import static com.trianz.locationalarm.Utils.Constants.serviceUrls.REGISTER_URL;
 
 public class RegistrationActivity extends Fragment {
@@ -86,14 +89,19 @@ public class RegistrationActivity extends Fragment {
     }
 
     public void confirmRegistration(View view) {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d("token",token);
+
         final String mobile = editTextMobile.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
         final String email = editTextEmail.getText().toString().trim();
+        final String fcmRegistrationId = token;
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(KEY_MOBILE, mobile);
         params.put(KEY_PASSWORD,password);
         params.put(KEY_EMAIL, email);
+        params.put(KEY_TOKEN,fcmRegistrationId);
 
         JSONObject jsonBody = new JSONObject(params);
         JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, REGISTER_URL ,jsonBody,

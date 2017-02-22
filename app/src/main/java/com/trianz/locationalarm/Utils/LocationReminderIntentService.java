@@ -99,12 +99,19 @@ public class LocationReminderIntentService extends IntentService {
 
       Calendar myCalender = Calendar.getInstance();
       SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM d, yyyy");
-      final String currentDate = currentDateFormat.format(myCalender.getTime());
-      if (contextDate.equals(currentDate)) {
-        callNotification(contextMsg, contextPlace, contextDate);
-      } else {
+       String currentDate = currentDateFormat.format(myCalender.getTime());
+        if(contextPlace!= null){
+            callNotification(contextMsg, contextPlace, contextDate);
+        }else {
+            if (contextDate.equals(currentDate)) {
+                callNotification(contextMsg, contextPlace, contextDate);
+            } else {
+                    //set alarm reminder of that date
 
-      }
+            }
+        }
+
+
     }
   }
 

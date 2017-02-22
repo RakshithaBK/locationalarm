@@ -1,5 +1,6 @@
 package com.trianz.locationalarm.Utils;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -34,6 +35,7 @@ public class Constants {
     public static double MaxRadius = 20.0; // kilometers
     public static  int PROXIMITY_RADIUS = 1000;
       public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+      public static final int MY_PERMISSIONS_REQUEST_RECORD = 99;
       public static int SET_REMINDER_REQUEST = 1;
       // The minimum distance to change updates in meters
       public static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
@@ -98,6 +100,31 @@ public class Constants {
         public static double location_latitude, location_longitude;
         public static float radius;
 
+        //Add reminderToOthers
+        public static final String KEY_HOUR = "12";
+        public static final String KEY_MONTH = "1";
+        public static final String KEY_DAY = "1";
+        public static final String KEY_YEAR = "2050";
+        public static final String KEY_MINUTE = "00";
+        public static final String KEY_ALLDAYFLAG = "false";
+        public static final String KEY_PHONENUMBER = "9836871071";
+        public static final String KEY_REPEATALARMVALUE = "Does not repeat";
+
+
+        //Notification
+        public static NotificationManager notificationManager;
+        public static  int DISCARD_KEY = 1;
+        public static  int SAVE_KEY = 1;
+
+        //ReminderInstance
+       public static boolean allDayFlag;
+       public static int selectedHourAlarm;
+        public static  int selectedMinuteAlarm;
+        public static  int selectedYearAlarm;
+        public static  int selectedMonthAlarm;
+        public static int selectedDayAlarm;
+
+
     }
 
     public static class mapInstances{
@@ -112,13 +139,14 @@ public class Constants {
         public static final String KEY_MOBILE = "mobile";
         public static final String KEY_EMAIL = "email";
         public static final String KEY_PASSWORD = "password";
+        public static final String KEY_TOKEN = "fcmRegistrationId";
 
         public static final String KEY_MOBILE_LOGIN = "mobile";
         public static final String KEY_PASSWORD_LOGIN = "password";
     }
 
     public static class serviceUrls{
-        public static final String REGISTER_URL = "http://10.10.5.202:8080/com.priya.jersey.first/alarm/register/user";
+        public static final String REGISTER_URL = "http://10.10.5.112:8080/com.location.alarm.api2/alarm/register/user";
         public static final String LOGIN_URL = "http://10.10.5.202:8080/com.priya.jersey.first/alarm/login/user";
     }
 

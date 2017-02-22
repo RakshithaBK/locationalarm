@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -16,7 +15,6 @@ import com.trianz.locationalarm.Utils.GeofenceController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
 
 import static android.R.attr.radius;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selfReminderFlag;
 
 public class AddReminderToDateActivity extends AppCompatActivity {
 
@@ -30,9 +28,6 @@ public class AddReminderToDateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_reminder_to_date);
 
         selectedDate = getIntent().getStringExtra("reminder_Date");
-
-        Log.d("selfReminder",selfReminderFlag.toString());
-
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
         this.getSupportActionBar().setTitle(R.string.remind_me_to);

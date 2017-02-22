@@ -1,5 +1,6 @@
 package com.trianz.locationalarm;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -10,11 +11,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -26,11 +27,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.trianz.locationalarm.Utils.ReminderSetController;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Random;
+
+import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_RECORD;
+import static com.trianz.locationalarm.Utils.Constants.Instances.allDayFlag;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDayAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedHourAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedMinuteAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedMonthAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedYearAlarm;
 
 
 /**
@@ -40,15 +50,8 @@ import java.util.Random;
 public class ReminderSetActivity extends AppCompatActivity {
 
     Calendar myCalender = Calendar.getInstance();
-    Boolean allDayFlag;
     String remindMeBeforeTimeValue = "0minutes";
     String repeatAlarmIntervalValue = "Does not repeat";
-    int selectedHourAlarm;
-    int selectedMinuteAlarm;
-    int selectedYearAlarm;
-    int selectedMonthAlarm;
-    int selectedDayAlarm;
-
     String reminderEvent;
 
     int remindMeBeforeTimeValueInInt = 0;
@@ -119,7 +122,9 @@ public class ReminderSetActivity extends AppCompatActivity {
         timePicked.setText(currentTime);
 
 
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
 
 
 
@@ -140,9 +145,9 @@ public class ReminderSetActivity extends AppCompatActivity {
         String cMonth = cMonthFormat.format(myCalender.getTime());
         selectedMonthAlarm = (Integer.parseInt(cMonth)) - 1;
 
-//        SimpleDateFormat cYearFormat = new SimpleDateFormat("YYYY");
-//        String cYear = cYearFormat.format(myCalender.getTime());
-//        selectedYearAlarm = Integer.parseInt(cYear);
+        SimpleDateFormat cYearFormat = new SimpleDateFormat("yyyy");
+        String cYear = cYearFormat.format(myCalender.getTime());
+        selectedYearAlarm = Integer.parseInt(cYear);
         selectedYearAlarm = Calendar.getInstance().get(Calendar.YEAR);
 
         //For Map
@@ -317,87 +322,7 @@ public class ReminderSetActivity extends AppCompatActivity {
             }
         });
 
-        //Select Repeat interval for alarm
-        final TextView reminderRepeat = (TextView) findViewById(R.id.reminderepeat);
-
-        reminderRepeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog remindMeBeforeDialog = new Dialog(ReminderSetActivity.this);
-                remindMeBeforeDialog.setContentView(R.layout.dialog_repeatalarm);
-
-                final TextView doesNotRepeat = (TextView) remindMeBeforeDialog.findViewById(R.id.doesNotRepeat);
-                final TextView everyDay = (TextView) remindMeBeforeDialog.findViewById(R.id.everyDay);
-                final TextView everyWeek = (TextView) remindMeBeforeDialog.findViewById(R.id.everyWeek);
-                final TextView everyMonth = (TextView) remindMeBeforeDialog.findViewById(R.id.everyMonth);
-                final TextView everyYear = (TextView) remindMeBeforeDialog.findViewById(R.id.everyYear);
-
-                if(repeatAlarmIntervalValue == "Does not repeat") {
-                    doesNotRepeat.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if (repeatAlarmIntervalValue == "everyDay") {
-                    everyDay.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if(repeatAlarmIntervalValue == "everyWeek"){
-                    everyWeek.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if(repeatAlarmIntervalValue == "everyMonth"){
-                    everyMonth.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if(repeatAlarmIntervalValue == "everyYear"){
-                    everyYear.setTextColor(Color.parseColor("#9568ff"));
-                }
-
-                remindMeBeforeDialog.show();
-
-                doesNotRepeat.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "Does not repeat";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Does not repeat");
-                    }
-                });
-                everyDay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "everyDay";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Every day");
-
-                    }
-                });
-                everyWeek.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "everyWeek";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Every week");
-
-                    }
-                });
-                everyMonth.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "everyMonth";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Every month");
-
-                    }
-                });
-                everyYear.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "everyYear";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Every year");
-
-                    }
-                });
-
-
-            }
-        });
+        ReminderSetController.repetationSetup(this);
 
 
         //Save reminder as audio file
@@ -721,6 +646,59 @@ public class ReminderSetActivity extends AppCompatActivity {
             return String.valueOf(c);
         else
             return "0" + String.valueOf(c);
+    }
+
+
+    public boolean checkLocationPermission(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale
+                    (this, android.Manifest.permission.RECORD_AUDIO)) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_REQUEST_RECORD);
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission
+                                .RECORD_AUDIO},
+                        MY_PERMISSIONS_REQUEST_RECORD);
+            }
+            return false;
+        } else {
+            //Call whatever you want
+            return true;
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_RECORD: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.RECORD_AUDIO)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                } else {
+
+                    // Permission denied, Disable the functionality that depends on this permission.
+                    Toast.makeText(this, "RECORD permission denied", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
     }
 
 }

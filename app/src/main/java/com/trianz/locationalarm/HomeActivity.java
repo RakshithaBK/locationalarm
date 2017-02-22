@@ -179,11 +179,11 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             for (String key : getIntent().getExtras().keySet()) {
                 String value = getIntent().getExtras().getString(key);
 
-                if (key.equals("AnotherActivity") && value.equals("True")) {
-
-                    //      Toast.makeText(MainActivity.this, "Another Activity!!!", Toast.LENGTH_SHORT).show();
-
-                }
+//                if (key.equals("AnotherActivity") && value.equals("True")) {
+//
+//                    //      Toast.makeText(MainActivity.this, "Another Activity!!!", Toast.LENGTH_SHORT).show();
+//
+//                }
 
             }
         }
@@ -356,10 +356,12 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                         startActivity(addReminders);
                         break;
                     case R.id.nav_remindOthers:
-                        //Do some thing here
-                        // add navigation drawer item onclick method here
+                        selfReminderFlag = false;
+                        Intent remindToOthers = new Intent(HomeActivity.this, RemindMeTask.class);
+                        startActivity(remindToOthers);
                         break;
                     case R.id.nav_wakeUpAlarm:
+                        selfReminderFlag = true;
                         Intent wakeUp = new Intent(HomeActivity.this, RemindMeTask.class);
                         startActivity(wakeUp);
                         break;

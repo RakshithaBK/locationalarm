@@ -21,7 +21,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
+
+import static com.trianz.locationalarm.Utils.Constants.Instances.DISCARD_KEY;
+import static com.trianz.locationalarm.Utils.Constants.Instances.SAVE_KEY;
+import static com.trianz.locationalarm.Utils.Constants.Instances.notificationManager;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -40,20 +43,42 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+       // Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-        Map<String, String> data = remoteMessage.getData();
-        String myCustomKey = data.get("my_custom_key");
-        Log.d("Msg",myCustomKey);
+        // Check if message contains a data payload.
+        if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+        }
+
+        // Check if message contains a notification payload.
+        if (remoteMessage.getNotification() != null) {
+           // Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+        }
+
+        //The message which i send will have keys named [message, image, AnotherActivity] and corresponding values.
+        //You can change as per the requirement.
+
+        //message will contain the Push Message
+        String message = remoteMessage.getNotification().getBody();
+        //message will contain the Push Message body
+        String message_body = remoteMessage.getData().get("data");
+        //imageUri will contain URL of the image to be displayed with Notification
+        String imageUri = remoteMessage.getData().get("image");
+        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.play);
+        //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
+        //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
+        String TrueOrFlase = remoteMessage.getData().get("AnotherActivity");
+        sendNotification(message, bm, TrueOrFlase, message_body);
+
     }
-
 
     /**
      * Create and show a simple notification containing the received FCM message.
      */
 
-    private void sendNotification(String messageBody, Bitmap image, String TrueOrFalse, String message_body) {
-        Intent intent = new Intent(this, HomeActivity.class);
+    public void sendNotification(String messageBody, Bitmap image, String TrueOrFalse, String message_body) {
+        Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("AnotherActivity", TrueOrFalse);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -61,20 +86,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setLargeIcon(image)/*Notification icon image*/
+               /* .setLargeIcon(image)Notification icon image*/
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .addAction(R.mipmap.ic_addlocation, "Save", SaveIntent())
+                .addAction(R.mipmap.ic_addreminder, "Discard", DiscardIntent())
                 .setContentTitle(messageBody)
-                .setSubText(message_body)
+                .setContentText(message_body)
                 .setStyle(new NotificationCompat.BigPictureStyle()
                         .bigPicture(image))/*Notification with Image*/
                 .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setSound(defaultSoundUri);
 
-        NotificationManager notificationManager =
+         notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
+
+    }
+public PendingIntent DiscardIntent(){
+    Intent disAgreeIntent = new Intent(this, PushNotificationReceiver.class);
+    DISCARD_KEY = 0;
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, disAgreeIntent, 0);
+    startService(disAgreeIntent);
+    return  pendingIntent;
+}
+    public PendingIntent SaveIntent(){
+        Intent agreeIntent = new Intent(this,HomeActivity.class);
+        SAVE_KEY = 0;
+        PendingIntent resultIntent =PendingIntent.getActivity(this,0,agreeIntent,0);
+        return  resultIntent;
     }
 
     /*
@@ -97,6 +137,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         }
     }
+
 }
 
 

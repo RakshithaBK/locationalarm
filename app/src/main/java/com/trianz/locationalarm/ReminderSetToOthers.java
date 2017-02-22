@@ -2,11 +2,9 @@ package com.trianz.locationalarm;
 
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -26,11 +24,26 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.trianz.locationalarm.Utils.ReminderSetController;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_ALLDAYFLAG;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_DAY;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_HOUR;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_MINUTE;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_MONTH;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_PHONENUMBER;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_REPEATALARMVALUE;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_YEAR;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDayAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedHourAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedMinuteAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedMonthAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.selectedYearAlarm;
 
 
 /**
@@ -43,26 +56,14 @@ public class ReminderSetToOthers extends AppCompatActivity {
     String allDayFlag = "false";
 
     String repeatAlarmIntervalValue = "Does not repeat";
-    int selectedHourAlarm;
-    int selectedMinuteAlarm;
-    int selectedYearAlarm;
-    int selectedMonthAlarm;
-    int selectedDayAlarm;
 
     String reminderEvent;
     TextView selectContactNumber;
     String receiverNumber;
 
     //for post req
-    private static final String REGISTER_URL = "";
-    public static final String KEY_HOUR = "12";
-    public static final String KEY_MONTH = "1";
-    public static final String KEY_DAY = "1";
-    public static final String KEY_YEAR = "2050";
-    public static final String KEY_MINUTE = "00";
-    public static final String KEY_ALLDAYFLAG = "false";
-    public static final String KEY_PHONENUMBER = "9836871071";
-    public static final String KEY_REPEATALARMVALUE = "Does not repeat";
+    private static final String REMIND_TO_OTHERS_URL = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,89 +217,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
         });
 
 
-
-        //Select Repeat interval for alarm
-        final TextView reminderRepeat = (TextView) findViewById(R.id.reminderepeat);
-
-        reminderRepeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog remindMeBeforeDialog = new Dialog(ReminderSetToOthers.this);
-                remindMeBeforeDialog.setContentView(R.layout.dialog_repeatalarm);
-
-                final TextView doesNotRepeat = (TextView) remindMeBeforeDialog.findViewById(R.id.doesNotRepeat);
-                final TextView everyDay = (TextView) remindMeBeforeDialog.findViewById(R.id.everyDay);
-                final TextView everyWeek = (TextView) remindMeBeforeDialog.findViewById(R.id.everyWeek);
-                final TextView everyMonth = (TextView) remindMeBeforeDialog.findViewById(R.id.everyMonth);
-                final TextView everyYear = (TextView) remindMeBeforeDialog.findViewById(R.id.everyYear);
-
-                if(repeatAlarmIntervalValue == "Does not repeat") {
-                    doesNotRepeat.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if (repeatAlarmIntervalValue == "everyDay") {
-                    everyDay.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if(repeatAlarmIntervalValue == "everyWeek"){
-                    everyWeek.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if(repeatAlarmIntervalValue == "everyMonth"){
-                    everyMonth.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if(repeatAlarmIntervalValue == "everyYear"){
-                    everyYear.setTextColor(Color.parseColor("#9568ff"));
-                }
-
-                remindMeBeforeDialog.show();
-
-                doesNotRepeat.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "Does not repeat";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Does not repeat");
-                    }
-                });
-                everyDay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "everyDay";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Every day");
-
-                    }
-                });
-                everyWeek.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "everyWeek";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Every week");
-
-                    }
-                });
-                everyMonth.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "everyMonth";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Every month");
-
-                    }
-                });
-                everyYear.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        repeatAlarmIntervalValue = "everyYear";
-                        remindMeBeforeDialog.dismiss();
-                        reminderRepeat.setText("Every year");
-
-                    }
-                });
-
-
-            }
-        });
-
+        ReminderSetController.repetationSetup(this);
         /*************************/
 
         //Save the reminder and go back to landing page
@@ -354,7 +273,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
 
     private void sendReminderDetailsToBackend() {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, REMIND_TO_OTHERS_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
