@@ -3,7 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
-    android:paddingTop="20dp">
+    android:paddingTop="20dp"
+    >
 
     <EditText
         android:layout_width="match_parent"
@@ -14,8 +15,10 @@
         android:backgroundTint="@color/color_line"
         android:textColor="@color/color_Black"
         android:inputType="phone"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"/>
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginTop="10dp"
+        />
 
     <EditText
         android:layout_width="match_parent"
@@ -26,8 +29,9 @@
         android:backgroundTint="@color/color_line"
         android:textColor="@color/color_Black"
         android:inputType="textEmailAddress"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"/>
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginTop="10dp"/>
 
 
     <EditText
@@ -39,44 +43,10 @@
         android:backgroundTint="@color/color_line"
         android:textColor="@color/color_Black"
         android:inputType="textPassword"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"/>
-
-    <CheckBox
-        android:id="@+id/regCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/color_Blue"
-        android:layout_gravity="center_horizontal"
-        android:text="Use finger print to sign in"
-        android:textSize="20dp"
-        android:buttonTint="@color/color_Blue"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:layout_marginTop="10dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Put your finger on the fingerprint sensor.Lift after you feel a vibration"
-        android:textColor="@color/color_Black"
-        android:layout_gravity="center_horizontal"
-        android:textAlignment="center"
-        android:id="@+id/textView"
-        android:layout_alignTop="@+id/regFingerImg"
-        android:layout_alignStart="@+id/regEmailTxt"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:layout_marginTop="10dp"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/regFingerImg"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_fingerprint_144"
-        android:visibility="invisible"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp" />
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"

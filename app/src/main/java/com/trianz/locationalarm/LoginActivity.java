@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -47,23 +45,6 @@ public class LoginActivity extends Fragment {
             }
         });
 
-        CheckBox checkboxvariable=(CheckBox)rootView.findViewById(R.id.loginCheckBox);
-
-        checkboxvariable.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                ImageView imgView = (ImageView) rootView.findViewById(R.id.loginFingerImg);
-                CheckBox checkBox = (CheckBox)v;
-                if(checkBox.isChecked()){
-                    imgView.setVisibility(View.VISIBLE);
-                }else{
-                    imgView.setVisibility(View.INVISIBLE);
-                }
-
-            }
-        });
                 return rootView;
 
 
@@ -144,5 +125,6 @@ public class LoginActivity extends Fragment {
         //requestQueue.add(JsonObjRequest );
 
     }
+
 }
 

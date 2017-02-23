@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -123,6 +126,14 @@ public class Constants {
         public static  int selectedYearAlarm;
         public static  int selectedMonthAlarm;
         public static int selectedDayAlarm;
+       public static Calendar myCalender = Calendar.getInstance();
+        public static String repeatAlarmIntervalValue;
+        public static int pendingIntentRequestCode;
+
+        public static  MediaPlayer mediaPlayer;
+        public static String notificationTypeValue;
+        public static  String audioFilePath;
+        public static Ringtone ringtone;
 
 
     }

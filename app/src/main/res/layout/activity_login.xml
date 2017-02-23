@@ -55,27 +55,19 @@
         android:text="or"
         android:background="@drawable/circle_view"
         android:textColor="@color/color_hint"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         />
 
 
-    <CheckBox
-        android:id="@+id/loginCheckBox"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/color_Blue"
         android:layout_gravity="center_horizontal"
         android:text="Use finger print to sign in"
-        android:textSize="20dp"
-        android:buttonTint="@color/color_Blue"
-        android:layout_marginBottom="20dp"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/loginFingerImg"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_fingerprint_144"
-        android:visibility="invisible"/>
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:buttonTint="@color/color_Blue"/>
 
 </LinearLayout>

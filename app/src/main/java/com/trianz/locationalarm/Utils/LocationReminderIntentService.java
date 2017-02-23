@@ -98,7 +98,7 @@ public class LocationReminderIntentService extends IntentService {
       String contextDate = reminder_Date;
 
       Calendar myCalender = Calendar.getInstance();
-      SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM d, yyyy");
+      SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMMMM d, yyyy");
        String currentDate = currentDateFormat.format(myCalender.getTime());
         if(contextPlace!= null){
             callNotification(contextMsg, contextPlace, contextDate);

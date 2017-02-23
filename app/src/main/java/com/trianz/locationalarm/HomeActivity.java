@@ -12,17 +12,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,9 +28,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -68,6 +63,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.trianz.locationalarm.Utils.GeofenceController;
+import com.trianz.locationalarm.Utils.HomeController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
 
 import java.text.DateFormat;
@@ -88,7 +84,6 @@ import static com.trianz.locationalarm.Utils.Constants.Instances.recyclerView;
 import static com.trianz.locationalarm.Utils.Constants.Instances.reminderError;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDate;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedPlace;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selfReminderFlag;
 import static com.trianz.locationalarm.Utils.Constants.Instances.toolbar;
 
 public class HomeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnMapReadyCallback,
@@ -233,158 +228,34 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
     }
 
     public void fabButtonsAction(){
-        //close Button in navigation
-        final NavigationView  nvDrawer = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = getLayoutInflater().inflate(R.layout.nav_header_home, nvDrawer, false);
-        nvDrawer.addHeaderView(headerView);
-        ImageView img = (ImageView) headerView.findViewById(R.id.nav_close);
-
-        img.setOnClickListener(new View.OnClickListener(){
-
-            public void onClick(View view) {
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(Gravity.LEFT);
-            }});
-
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
-            @Override
-            public void onMenuExpanded() {
-                frameLayout.getBackground().setAlpha(150);
-
-                frameLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        fabMenu.collapse();
-                        return true;
-                    }
-                });
-            }
-
-            @Override
-            public void onMenuCollapsed() {
-                frameLayout.getBackground().setAlpha(0);
-                frameLayout.setOnTouchListener(null);
-            }
-        });
-
         //Fab actions
         FloatingActionButton wakeupfab = (FloatingActionButton) findViewById(R.id.fab_wakeup_alarm);
         FloatingActionButton  addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
         FloatingActionButton  addReminderDatefab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_date);
         FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
 
-        addReminderLocationfab.setOnClickListener(new View.OnClickListener() {
-            @Override
+        //close Button in navigation
+        final NavigationView  nvDrawer = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = getLayoutInflater().inflate(R.layout.nav_header_home, nvDrawer, false);
+        nvDrawer.addHeaderView(headerView);
+        ImageView img = (ImageView) headerView.findViewById(R.id.nav_close);
+        img.setOnClickListener(new View.OnClickListener(){
+
             public void onClick(View view) {
-
-                if(selectedPlace == null)
-                {
-                    Snackbar.make(view, "Select a reminder location", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    fabMenu.collapse();
-                }
-
-                else {
-                    Intent addReminderActivity = new Intent(HomeActivity.this, AddReminderActivity.class);
-                    addReminderActivity.putExtra("reminder_place", (Parcelable) selectedPlace);
-                    startActivityForResult(addReminderActivity, SET_REMINDER_REQUEST);
-                    fabMenu.collapse();
-                }
-            }
-        });
-
-        addReminderDatefab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(selectedDate == null){
-                    Snackbar.make(view, "Select a reminder date", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    fabMenu.collapse();
-                }else{
-
-                    Intent addReminderToDateActivity = new Intent(HomeActivity.this, AddReminderToDateActivity.class);
-                    addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
-                    startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
-                    fabMenu.collapse();
-                }
-            }
-        });
-
-
-        remindothersfab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Tapped", Toast.LENGTH_SHORT).show();
-                selfReminderFlag = false;
-                Intent addReminderToDateActivity = new Intent(HomeActivity.this, RemindMeTask.class);
-                addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
-                startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
-                fabMenu.collapse();
-                //Intent to navigate to next page
-            }
-        });
-
-        wakeupfab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selfReminderFlag = true;
-                Intent remindMeTask =  new Intent(HomeActivity.this, RemindMeTask.class);
-                startActivity(remindMeTask);
-                fabMenu.collapse();
-            }
-        });
-
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(Gravity.LEFT);
+            }});
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        HomeController.FloatActionBtnSetup(this,wakeupfab,addReminderLocationfab,addReminderDatefab,remindothersfab,fabMenu);
     }
 
 
     public void navigationDrawerAttach() {
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                int id = menuItem.getItemId();
-                switch (id) {
-                    case R.id.nav_addreminder:
-                        Intent addReminders = new Intent(HomeActivity.this, HomeActivity.class);
-                        startActivity(addReminders);
-                        break;
-                    case R.id.nav_remindOthers:
-                        selfReminderFlag = false;
-                        Intent remindToOthers = new Intent(HomeActivity.this, RemindMeTask.class);
-                        startActivity(remindToOthers);
-                        break;
-                    case R.id.nav_wakeUpAlarm:
-                        selfReminderFlag = true;
-                        Intent wakeUp = new Intent(HomeActivity.this, RemindMeTask.class);
-                        startActivity(wakeUp);
-                        break;
-                    case R.id.nav_myReminders:
-                        //Do some thing here
-                        // add navigation drawer item onclick method here
-                        break;
-                    case R.id.nav_offers:
-                        Intent offers = new Intent(HomeActivity.this, OffersActivity.class);
-                        startActivity(offers);
-                        break;
-                }
-                return false;
-            }
-        });
         Button signOut = (Button) findViewById(R.id.signOutBtn);
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent LoginAction = new Intent(HomeActivity.this,AuthenticationActivity.class);
-                startActivity(LoginAction);
-            }
-        });
+        HomeController.NavigationDrawerSetup(this,drawer,navigationView,signOut);
+
     }
 
     public void placeAutoComplete(){
@@ -727,12 +598,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -1,6 +1,7 @@
 package com.trianz.locationalarm;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -13,9 +14,13 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -27,13 +32,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.trianz.locationalarm.Utils.GeofenceController;
+import com.trianz.locationalarm.Utils.NamedGeofence;
 import com.trianz.locationalarm.Utils.ReminderSetController;
 
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static android.R.attr.radius;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_RECORD;
 import static com.trianz.locationalarm.Utils.Constants.Instances.allDayFlag;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDayAlarm;
@@ -53,6 +62,7 @@ public class ReminderSetActivity extends AppCompatActivity {
     String remindMeBeforeTimeValue = "0minutes";
     String repeatAlarmIntervalValue = "Does not repeat";
     String reminderEvent;
+    private String reminder_message, Date_To_remid;
 
     int remindMeBeforeTimeValueInInt = 0;
     int counterMinitueValue;
@@ -90,6 +100,25 @@ public class ReminderSetActivity extends AppCompatActivity {
     String notificationTypeValue = "Notification";
 
     /***/
+
+    //For datepicker dialog
+     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+                 @Override
+         public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                 int dayOfMonth) {
+             // TODO Auto-generated method stub
+                     myCalender.set(Calendar.YEAR, year);
+             myCalender.set(Calendar.MONTH, monthOfYear);
+             myCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+             selectedYearAlarm = year;
+            selectedMonthAlarm = monthOfYear;
+             selectedDayAlarm = dayOfMonth;
+             updateLabel();
+
+             }
+
+                 };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,21 +188,35 @@ public class ReminderSetActivity extends AppCompatActivity {
 //        fragmentTransaction.commit();
 
         //DatePicker
+
+
+//        datePicked.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//                DatePickerDialog dialog = new DatePickerDialog(ReminderSetActivity.this, new DatePickerDialog.OnDateSetListener() {
+//                             @Override
+//                     public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+//                        // TODO Auto-generated method stub
+//                                 Toast.makeText(ReminderSetActivity.this, ""+arg1+"/"+(arg2+1)+"/"+arg3, Toast.LENGTH_SHORT).show();
+//
+//                         }
+//                     }, myCalender.YEAR, myCalender.MONTH, myCalender.DAY_OF_MONTH);
+//
+//                 dialog.getDatePicker().setMinDate(System.currentTimeMillis());
+//                 dialog.setTitle(null);
+//                 dialog.show();
+//            }
+//        });
+
         datePicked.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                DatePickerDialog dialog = new DatePickerDialog(ReminderSetActivity.this, new DatePickerDialog.OnDateSetListener() {
-                             @Override
-                     public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-                        // TODO Auto-generated method stub
-                                 Toast.makeText(ReminderSetActivity.this, ""+arg1+"/"+(arg2+1)+"/"+arg3, Toast.LENGTH_SHORT).show();
-                         }
-                     }, myCalender.YEAR, myCalender.MONTH, myCalender.DAY_OF_MONTH);
-                 dialog.getDatePicker().setMinDate(System.currentTimeMillis());
-                 dialog.setTitle(null);
-                 dialog.show();
-            }
-        });
+             public void onClick(View v) {
+                // TODO Auto-generated method stub
+                     new DatePickerDialog(ReminderSetActivity.this, date, myCalender
+                             .get(Calendar.YEAR), myCalender.get(Calendar.MONTH),
+                             myCalender.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
 
         //TimePicker
         timePicked.setOnClickListener(new View.OnClickListener() {
@@ -545,14 +588,92 @@ public class ReminderSetActivity extends AppCompatActivity {
                 else if (repeatAlarmIntervalValue == "everyYear"){
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 365 , alarmPendingIntent);
                 }
+                String selectedDateReminder = getMonth(selectedMonthAlarm) + " " + String.valueOf(selectedDayAlarm) + ", " + String.valueOf(selectedYearAlarm) ;
+                addReminderToList(selectedDateReminder,reminderEvent);
 
-                Intent intent = new Intent(ReminderSetActivity.this, HomeActivity.class);
+                Handler h = new Handler();
+                long delayInMilliseconds = 1000 * 2;
+                h.postDelayed(new Runnable() {
+                    public void run() {
+                        Intent intent = new Intent(ReminderSetActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                    }
+                }, delayInMilliseconds);
 
-                startActivity(intent);
             }
+
         });
 
     }
+
+    public String getMonth(int month) {
+        String getMonthText = new DateFormatSymbols().getMonths()[month];
+        getMonthText = getMonthText.substring(0,3);
+        Log.d("month",getMonthText);
+        return getMonthText;
+    }
+
+    public void addReminderToList(String reminderDate,String reminder_msg){
+
+        reminder_message = reminder_msg;
+        Date_To_remid = reminderDate;
+
+        if (reminder_message.equals("")) {
+            Snackbar.make(getWindow().getDecorView(), "Set a reminder message.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        } else {
+
+            if (dataIsValid()) {
+
+                NamedGeofence geofence = new NamedGeofence();
+                geofence.reminder_msg = reminder_message;
+                geofence.reminder_Date = Date_To_remid;
+                geofence.radius = radius * 1.0f;
+                GeofenceController.getInstance().addGeofence(geofence, geofenceControllerListener);
+
+
+            } else {
+                showValidationErrorToast();
+            }
+
+        }
+
+    }
+
+    public boolean dataIsValid() {
+        boolean validData = true;
+
+        String reminderString = reminder_message;
+
+        if (TextUtils.isEmpty(reminderString)) {
+            validData = false;
+        } else {
+
+            validData = true;
+        }
+
+        return validData;
+    }
+
+    private void showValidationErrorToast() {
+        Toast.makeText(ReminderSetActivity.this, ReminderSetActivity.this.getString(R.string.Toast_Validation), Toast.LENGTH_SHORT).show();
+    }
+
+    private GeofenceController.GeofenceControllerListener geofenceControllerListener = new GeofenceController.GeofenceControllerListener() {
+        @Override
+        public void onGeofencesUpdated() {
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_OK, returnIntent);
+            ReminderSetActivity.this.finish();
+        }
+
+        @Override
+        public void onError() {
+            Toast.makeText(ReminderSetActivity.this, ReminderSetActivity.this.getString(R.string.Toast_error), Toast.LENGTH_SHORT).show();
+        }
+
+
+    };
 
     //when the alarm started ringing open a view
 //    public void openAlarmView() {

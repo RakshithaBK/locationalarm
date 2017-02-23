@@ -21,6 +21,7 @@ public class AddReminderToDateActivity extends AppCompatActivity {
     private String reminder_message, Date_To_remid;
     String selectedDate = null;
     EditText message;
+    String currentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class AddReminderToDateActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
 
             reminder_message = message.getText().toString();
-            Date_To_remid = selectedDate.toString();
+            Date_To_remid = String.valueOf(currentDate);
 
             if (reminder_message.equals("")) {
                 Snackbar.make(getWindow().getDecorView(), "Set a reminder message.", Snackbar.LENGTH_LONG)
@@ -83,7 +84,7 @@ public class AddReminderToDateActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean dataIsValid() {
+    public boolean dataIsValid() {
         boolean validData = true;
 
         String reminderString = reminder_message;

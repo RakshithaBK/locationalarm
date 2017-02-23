@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -68,22 +66,6 @@ public class RegistrationActivity extends Fragment {
             }
         });
 
-        CheckBox checkboxvariable=(CheckBox)rootView.findViewById(R.id.regCheckBox);
-        checkboxvariable.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                ImageView imgView = (ImageView) rootView.findViewById(R.id.regFingerImg);
-                CheckBox checkBox = (CheckBox)v;
-                if(checkBox.isChecked()){
-                    imgView.setVisibility(View.VISIBLE);
-                }else{
-                    imgView.setVisibility(View.INVISIBLE);
-                }
-
-            }
-        });
 
         return rootView;
     }

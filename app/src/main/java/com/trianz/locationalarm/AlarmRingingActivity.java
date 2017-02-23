@@ -3,12 +3,10 @@ package com.trianz.locationalarm;
 import android.content.ClipData;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +18,14 @@ import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+
+import static com.trianz.locationalarm.Utils.Constants.Instances.audioFilePath;
+import static com.trianz.locationalarm.Utils.Constants.Instances.mediaPlayer;
+import static com.trianz.locationalarm.Utils.Constants.Instances.myCalender;
+import static com.trianz.locationalarm.Utils.Constants.Instances.notificationTypeValue;
+import static com.trianz.locationalarm.Utils.Constants.Instances.pendingIntentRequestCode;
+import static com.trianz.locationalarm.Utils.Constants.Instances.ringtone;
+import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.repeatAlarmIntervalValue;
 
 /**
  * Created by Dibyojyoti.Majumder on 12-01-2017.
@@ -29,14 +34,6 @@ import java.util.Calendar;
 public class AlarmRingingActivity extends AppCompatActivity {
 
     ReminderSetActivity inst = ReminderSetActivity.instance();
-    Ringtone ringtone;
-    Calendar myCalender = Calendar.getInstance();
-    String repeatAlarmIntervalValue;
-    int pendingIntentRequestCode;
-
-    MediaPlayer mediaPlayer;
-    String notificationTypeValue;
-    String audioFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
