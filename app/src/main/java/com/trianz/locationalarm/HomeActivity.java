@@ -54,10 +54,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -66,8 +63,6 @@ import com.trianz.locationalarm.Utils.GeofenceController;
 import com.trianz.locationalarm.Utils.HomeController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,12 +71,19 @@ import butterknife.ButterKnife;
 
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.SET_REMINDER_REQUEST;
+import static com.trianz.locationalarm.Utils.Constants.Instances.FORMATTER;
 import static com.trianz.locationalarm.Utils.Constants.Instances.context;
 import static com.trianz.locationalarm.Utils.Constants.Instances.frameLayout;
-import static com.trianz.locationalarm.Utils.Constants.Instances.isDateSelected;
 import static com.trianz.locationalarm.Utils.Constants.Instances.mBottomSheetBehavior1;
+import static com.trianz.locationalarm.Utils.Constants.Instances.mCurrLocationMarker;
+import static com.trianz.locationalarm.Utils.Constants.Instances.mGoogleApiClient;
+import static com.trianz.locationalarm.Utils.Constants.Instances.mLastLocation;
+import static com.trianz.locationalarm.Utils.Constants.Instances.mLocationRequest;
+import static com.trianz.locationalarm.Utils.Constants.Instances.mMap;
+import static com.trianz.locationalarm.Utils.Constants.Instances.monthFormat;
 import static com.trianz.locationalarm.Utils.Constants.Instances.recyclerView;
 import static com.trianz.locationalarm.Utils.Constants.Instances.reminderError;
+import static com.trianz.locationalarm.Utils.Constants.Instances.remindersListAdapter;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDate;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedPlace;
 import static com.trianz.locationalarm.Utils.Constants.Instances.toolbar;
@@ -91,15 +93,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,OnDateSelectedListener, OnMonthChangedListener {
 
-    private GoogleMap mMap;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
 
-    private RemindersListAdapter remindersListAdapter;
-    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
-    SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
 
     @Bind(R.id.calender_frame)
     MaterialCalendarView widget;
@@ -182,49 +176,18 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
             }
         }
-
-        subscribeToPushService();
+        HomeController.subscribeToPushService();
     }
-    private void subscribeToPushService() {
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
 
-        Log.d("AndroidBash", "Subscribed");
-        //  Toast.makeText(MainActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
-
-        String token = FirebaseInstanceId.getInstance().getToken();
-
-        // Log and toast
-        //   Log.d("AndroidBash", token);
-        //   Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-    }
 
 
 
     public void switchCalenderToMap(){
         //calender switch to map
         ImageView calenderImg = (ImageView) findViewById(R.id.calenderImg);
-        calenderImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FrameLayout search_place = (FrameLayout) findViewById(R.id.search_place_card);
-                ViewGroup content_calender= (ViewGroup) findViewById(R.id.calender_frame);
-                if(!isDateSelected){
-                    content_calender.setVisibility(View.VISIBLE);
-                    search_place.setVisibility(View.INVISIBLE);
-                    getSupportActionBar().setTitle("");
-                    getSupportActionBar().setSubtitle("");
-                    isDateSelected = true;
-                }else{
-                    content_calender.setVisibility(View.INVISIBLE);
-                    search_place.setVisibility(View.VISIBLE);
-                    getSupportActionBar().setTitle("");
-                    isDateSelected= false;
-
-                }
-            }
-        });
+        final FrameLayout search_place = (FrameLayout) findViewById(R.id.search_place_card);
+        final ViewGroup content_calender= (ViewGroup) findViewById(R.id.calender_frame);
+       HomeController.switchCalenderToMapSetUp(this,calenderImg,search_place,content_calender);
     }
 
     public void fabButtonsAction(){

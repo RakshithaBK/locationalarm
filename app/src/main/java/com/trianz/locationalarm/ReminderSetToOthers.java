@@ -29,6 +29,7 @@ import com.trianz.locationalarm.Utils.ReminderSetController;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_ALLDAYFLAG;
@@ -64,6 +65,24 @@ public class ReminderSetToOthers extends AppCompatActivity {
     //for post req
     private static final String REMIND_TO_OTHERS_URL = "";
 
+    //For datepicker dialog
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalender.set(Calendar.YEAR, year);
+            myCalender.set(Calendar.MONTH, monthOfYear);
+            myCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            selectedYearAlarm = year;
+            selectedMonthAlarm = monthOfYear;
+            selectedDayAlarm = dayOfMonth;
+            updateLabel();
+
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,17 +159,11 @@ public class ReminderSetToOthers extends AppCompatActivity {
         //DatePicker
         datePicked.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                DatePickerDialog dialog = new DatePickerDialog(ReminderSetToOthers.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-                        // TODO Auto-generated method stub
-                        Toast.makeText(ReminderSetToOthers.this, ""+arg1+"/"+(arg2+1)+"/"+arg3, Toast.LENGTH_SHORT).show();
-                    }
-                }, myCalender.YEAR, myCalender.MONTH, myCalender.DAY_OF_MONTH);
-                dialog.getDatePicker().setMinDate(System.currentTimeMillis());
-                dialog.setTitle(null);
-                dialog.show();
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(ReminderSetToOthers.this, date, myCalender
+                        .get(Calendar.YEAR), myCalender.get(Calendar.MONTH),
+                        myCalender.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -254,6 +267,13 @@ public class ReminderSetToOthers extends AppCompatActivity {
 
     }
 
+    private void updateLabel() {
+
+        String myFormat = "EEE, MMM d, yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        TextView datePicked = (TextView) findViewById(R.id.datePicker);
+        datePicked.setText(sdf.format(myCalender.getTime()));
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub

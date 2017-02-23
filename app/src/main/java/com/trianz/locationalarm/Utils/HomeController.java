@@ -7,13 +7,19 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.trianz.locationalarm.AddReminderActivity;
 import com.trianz.locationalarm.AddReminderToDateActivity;
 import com.trianz.locationalarm.AuthenticationActivity;
@@ -24,6 +30,7 @@ import com.trianz.locationalarm.RemindMeTask;
 
 import static com.trianz.locationalarm.Utils.Constants.Geometry.SET_REMINDER_REQUEST;
 import static com.trianz.locationalarm.Utils.Constants.Instances.frameLayout;
+import static com.trianz.locationalarm.Utils.Constants.Instances.isDateSelected;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDate;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedPlace;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selfReminderFlag;
@@ -173,4 +180,39 @@ public class HomeController {
         });
 
     }
+
+
+    public static void subscribeToPushService() {
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        Log.d("AndroidBash", "Subscribed");
+        String token = FirebaseInstanceId.getInstance().getToken();
+        // Log and toast
+        //   Log.d("AndroidBash", token);
+        //   Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+    }
+
+    public  static void switchCalenderToMapSetUp(final AppCompatActivity appCompatActivity, ImageView calenderImg, final FrameLayout search_place, final ViewGroup content_calender){
+
+        calenderImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!isDateSelected){
+                    content_calender.setVisibility(View.VISIBLE);
+                    search_place.setVisibility(View.INVISIBLE);
+                    appCompatActivity.getSupportActionBar().setTitle("");
+                    appCompatActivity.getSupportActionBar().setSubtitle("");
+                    isDateSelected = true;
+                }else{
+                    content_calender.setVisibility(View.INVISIBLE);
+                    search_place.setVisibility(View.VISIBLE);
+                    appCompatActivity.getSupportActionBar().setTitle("");
+                    isDateSelected= false;
+
+                }
+            }
+        });
+    }
+
 }

@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/datePicker"
                     android:layout_weight="8"
-                    android:textColor="#CACACA"
+                    android:textColor="#5C5C5C"
                     android:paddingTop="11dp"
                     android:focusable="false"/>
 
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:textColor="#CACACA"
+                    android:textColor="#5C5C5C"
                     android:paddingTop="8dp"
                     android:paddingEnd="4dp"/>
             </LinearLayout>
@@ -129,7 +129,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/reminderType2"
                 android:layout_marginTop="4dp"
-                android:background="#000000"/>
+                android:background="@color/color_line"/>
 
 
 
@@ -190,7 +190,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Notification Reminder"
-                    android:textColor="#CACACA"
+                    android:textColor="#5C5C5C"
                     android:layout_weight="8"
                     android:paddingTop="11dp"
                     android:id="@+id/tv_reminderType"/>
@@ -209,7 +209,7 @@
                 android:id="@+id/hrline1"
                 android:layout_below="@+id/reminderType4"
                 android:layout_marginTop="4dp"
-                android:background="#000000"/>
+                android:background="@color/color_line"/>
 
 
             <LinearLayout
@@ -267,7 +267,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/selectContactNumber"
-                    android:textColor="#CACACA"
+                    android:textColor="#5C5C5C"
                     android:layout_height="wrap_content"
                     android:text="Select contact from phone"
                     android:layout_weight="8"
@@ -282,52 +282,13 @@
 
             </LinearLayout>
 
-
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/remindMeOthers"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:weightSum="12"-->
-                <!--android:paddingTop="5dp"-->
-                <!--android:paddingBottom="10dp"-->
-                <!--android:layout_below="@+id/remindMe2"-->
-                <!--android:layout_alignParentStart="true">-->
-
-                <!--<ImageView-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="2"-->
-                    <!--android:paddingTop="8dp"/>-->
-
-
-                <!--<EditText-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:id="@+id/enterEmail"-->
-                    <!--android:textColor="@color/color_Black"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Enter others email id"-->
-                    <!--android:layout_weight="8"-->
-                    <!--android:paddingTop="11dp"/>-->
-
-                <!--<TextView-->
-                    <!--android:textColor="@color/color_Black"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="2"-->
-                    <!--android:paddingTop="8dp"/>-->
-
-            <!--</LinearLayout>-->
-
-
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:id="@+id/hrline3"
                 android:layout_below="@+id/remindMe2"
                 android:layout_marginTop="4dp"
-                android:background="#000000"/>
+                android:background="@color/color_line"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

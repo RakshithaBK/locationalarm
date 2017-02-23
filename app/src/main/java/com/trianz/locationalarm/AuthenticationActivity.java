@@ -36,18 +36,17 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_NAME;
+import static com.trianz.locationalarm.Utils.Constants.Instances.cipher;
+import static com.trianz.locationalarm.Utils.Constants.Instances.container;
+import static com.trianz.locationalarm.Utils.Constants.Instances.cryptoObject;
+import static com.trianz.locationalarm.Utils.Constants.Instances.fingerprintManager;
+import static com.trianz.locationalarm.Utils.Constants.Instances.keyGenerator;
+import static com.trianz.locationalarm.Utils.Constants.Instances.keyStore;
+import static com.trianz.locationalarm.Utils.Constants.Instances.keyguardManager;
+import static com.trianz.locationalarm.Utils.Constants.Instances.tabLayout;
+
 public class AuthenticationActivity extends AppCompatActivity {
-
-    private TabLayout tabLayout;
-    private LinearLayout container;
-
-    private FingerprintManager fingerprintManager;
-    private KeyguardManager keyguardManager;
-    private KeyStore keyStore;
-    private KeyGenerator keyGenerator;
-    private static final String KEY_NAME = "example_key";
-    private Cipher cipher;
-    private FingerprintManager.CryptoObject cryptoObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

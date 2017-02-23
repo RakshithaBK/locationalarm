@@ -1,17 +1,21 @@
 package com.trianz.locationalarm.Utils;
 
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.fingerprint.FingerprintManager;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,11 +25,22 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.trianz.locationalarm.R;
+import com.trianz.locationalarm.RemindersListAdapter;
 
+import java.security.KeyStore;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+
+import butterknife.Bind;
 
 public class Constants {
 
@@ -134,6 +149,30 @@ public class Constants {
         public static String notificationTypeValue;
         public static  String audioFilePath;
         public static Ringtone ringtone;
+
+        //fingerPrint Auth
+        public static TabLayout tabLayout;
+        public static LinearLayout container;
+
+        public static FingerprintManager fingerprintManager;
+        public static KeyguardManager keyguardManager;
+        public static KeyStore keyStore;
+        public static KeyGenerator keyGenerator;
+        public static  final String KEY_NAME = "example_key";
+        public static Cipher cipher;
+        public static FingerprintManager.CryptoObject cryptoObject;
+
+        //HomeControl
+        public static GoogleMap mMap;
+        public static GoogleApiClient mGoogleApiClient;
+        public static Location mLastLocation;
+        public static Marker mCurrLocationMarker;
+        public static LocationRequest mLocationRequest;
+
+        public static RemindersListAdapter remindersListAdapter;
+        public static  final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
+        public static SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
+
 
 
     }
