@@ -24,3 +24,4 @@ Android client for LocationAlarm
 
 ## Logo Design
 
+ss
