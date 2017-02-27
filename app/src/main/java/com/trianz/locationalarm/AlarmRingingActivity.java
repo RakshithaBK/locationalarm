@@ -30,12 +30,12 @@ import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.repeatAlarmIn
 
 public class AlarmRingingActivity extends AppCompatActivity {
 
-    public static int pendingIntentRequestCode;
-    public static  MediaPlayer mediaPlayer;
-    public static String notificationTypeValue;
-    public static  String audioFilePath;
-    public static Ringtone ringtone;
-    public static Calendar myCalender = Calendar.getInstance();
+      int pendingIntentRequestCode;
+       MediaPlayer mediaPlayer;
+      String notificationTypeValue;
+       String audioFilePath;
+      Ringtone ringtone;
+    Calendar myCalender = Calendar.getInstance();
     ReminderSetActivity inst = ReminderSetActivity.instance();
 
     @Override
@@ -132,7 +132,7 @@ public class AlarmRingingActivity extends AppCompatActivity {
                             ringtone.stop();
                         }
                         inst.snoozeAlarmControl(pendingIntentRequestCode);
-                        Intent intent = new Intent(AlarmRingingActivity.this, RemindMeTask.class);
+                        Intent intent = new Intent(AlarmRingingActivity.this, HomeActivity.class);
                         startActivity(intent);
                     }
 
