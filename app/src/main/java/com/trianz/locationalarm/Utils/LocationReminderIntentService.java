@@ -75,43 +75,44 @@ public class LocationReminderIntentService extends IntentService {
 
   private void onEnteredGeofences(List<String> geofenceIds) {
     for (String geofenceId : geofenceIds) {
-      String reminder_message = "";
-      String reminder_place = "";
-      String reminder_Date = "";
+        String reminder_message = "";
+        String reminder_place = "";
+        String reminder_Date = "";
+        String reminder_Date_Alarm = "";
 
-      // Loop over all geofence keys in prefs and retrieve NamedGeofence from SharedPreference
-      Map<String, ?> keys = prefs.getAll();
-      for (Map.Entry<String, ?> entry : keys.entrySet()) {
-        String jsonString = prefs.getString(entry.getKey(), null);
-        NamedGeofence namedGeofence = gson.fromJson(jsonString, NamedGeofence.class);
-        if (namedGeofence.id.equals(geofenceId)) {
-          reminder_message = namedGeofence.reminder_msg;
-          reminder_place = namedGeofence.reminder_place;
-          reminder_Date = namedGeofence.reminder_Date;
-          break;
-        }
-      }
-
-      // Set the notification text and send the notification
-      String contextMsg = reminder_message;
-      String contextPlace = reminder_place;
-      String contextDate = reminder_Date;
-
-      Calendar myCalender = Calendar.getInstance();
-      SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMMMM d, yyyy");
-       String currentDate = currentDateFormat.format(myCalender.getTime());
-        if(contextPlace!= null){
-            callNotification(contextMsg, contextPlace, contextDate);
-        }else {
-            if (contextDate.equals(currentDate)) {
-                callNotification(contextMsg, contextPlace, contextDate);
-            } else {
-                    //set alarm reminder of that date
-
+        // Loop over all geofence keys in prefs and retrieve NamedGeofence from SharedPreference
+        Map<String, ?> keys = prefs.getAll();
+        for (Map.Entry<String, ?> entry : keys.entrySet()) {
+            String jsonString = prefs.getString(entry.getKey(), null);
+            NamedGeofence namedGeofence = gson.fromJson(jsonString, NamedGeofence.class);
+            if (namedGeofence.id.equals(geofenceId)) {
+                reminder_message = namedGeofence.reminder_msg;
+                reminder_place = namedGeofence.reminder_place;
+                reminder_Date = namedGeofence.reminder_Date;
+                reminder_Date_Alarm = namedGeofence.reminder_Date_ToAlarm;
+                break;
             }
         }
 
+        // Set the notification text and send the notification
+        String contextMsg = reminder_message;
+        String contextPlace = reminder_place;
+        String contextDate = reminder_Date;
+        String contextAlarmDate = reminder_Date_Alarm;
 
+        Calendar myCalender = Calendar.getInstance();
+        SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM d, yyyy");
+        final String currentDate = currentDateFormat.format(myCalender.getTime());
+        if (contextAlarmDate == null) {
+            if (contextDate != null) {
+                if (contextDate.equals(currentDate)) {
+                    callNotification(contextMsg, contextPlace, contextDate);
+                } else {
+
+                }
+
+            }
+        }
     }
   }
 

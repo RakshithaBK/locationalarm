@@ -3,10 +3,12 @@ package com.trianz.locationalarm;
 import android.content.ClipData;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,13 +20,8 @@ import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-import static com.trianz.locationalarm.Utils.Constants.Instances.audioFilePath;
-import static com.trianz.locationalarm.Utils.Constants.Instances.mediaPlayer;
-import static com.trianz.locationalarm.Utils.Constants.Instances.myCalender;
-import static com.trianz.locationalarm.Utils.Constants.Instances.notificationTypeValue;
-import static com.trianz.locationalarm.Utils.Constants.Instances.pendingIntentRequestCode;
-import static com.trianz.locationalarm.Utils.Constants.Instances.ringtone;
 import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.repeatAlarmIntervalValue;
 
 /**
@@ -33,6 +30,12 @@ import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.repeatAlarmIn
 
 public class AlarmRingingActivity extends AppCompatActivity {
 
+    public static int pendingIntentRequestCode;
+    public static  MediaPlayer mediaPlayer;
+    public static String notificationTypeValue;
+    public static  String audioFilePath;
+    public static Ringtone ringtone;
+    public static Calendar myCalender = Calendar.getInstance();
     ReminderSetActivity inst = ReminderSetActivity.instance();
 
     @Override
@@ -81,8 +84,9 @@ public class AlarmRingingActivity extends AppCompatActivity {
 
         TextView tv_currentTime = (TextView) findViewById(R.id.tv_currentTime);
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
-        String currentTime = currentTimeFormat.format(myCalender.getTime());
-        tv_currentTime.setText(currentTime);
+        String currentTimeOnRinging = currentTimeFormat.format(myCalender.getTime());
+        Log.d("currentTime",currentTimeOnRinging);
+        tv_currentTime.setText(currentTimeOnRinging);
     }
 
     private final class MyTouchListener implements View.OnTouchListener {

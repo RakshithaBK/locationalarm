@@ -592,7 +592,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 addReminderToList(selectedDateReminder,reminderEvent);
 
                 Handler h = new Handler();
-                long delayInMilliseconds = 1000 * 2;
+                long delayInMilliseconds = 1000 * 1;
                 h.postDelayed(new Runnable() {
                     public void run() {
                         Intent intent = new Intent(ReminderSetActivity.this, HomeActivity.class);
@@ -627,7 +627,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 
                 NamedGeofence geofence = new NamedGeofence();
                 geofence.reminder_msg = reminder_message;
-                geofence.reminder_Date = Date_To_remid;
+                geofence.reminder_Date_ToAlarm = Date_To_remid;
                 geofence.radius = radius * 1.0f;
                 GeofenceController.getInstance().addGeofence(geofence, geofenceControllerListener);
 

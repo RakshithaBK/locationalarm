@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.fingerprint.FingerprintManager;
 import android.location.Location;
-import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
@@ -25,22 +23,17 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.RemindersListAdapter;
 
 import java.security.KeyStore;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-
-import butterknife.Bind;
 
 public class Constants {
 
@@ -141,14 +134,10 @@ public class Constants {
         public static  int selectedYearAlarm;
         public static  int selectedMonthAlarm;
         public static int selectedDayAlarm;
-       public static Calendar myCalender = Calendar.getInstance();
         public static String repeatAlarmIntervalValue;
-        public static int pendingIntentRequestCode;
 
-        public static  MediaPlayer mediaPlayer;
-        public static String notificationTypeValue;
-        public static  String audioFilePath;
-        public static Ringtone ringtone;
+
+
 
         //fingerPrint Auth
         public static TabLayout tabLayout;

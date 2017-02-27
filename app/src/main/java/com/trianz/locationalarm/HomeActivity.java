@@ -116,7 +116,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior1.setHideable(false);
         mBottomSheetBehavior1.setPeekHeight(400);
-
         //Toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

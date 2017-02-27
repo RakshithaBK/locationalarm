@@ -14,6 +14,7 @@ public class NamedGeofence implements Comparable {
   public String reminder_msg;
   public String reminder_place;
   public String reminder_Date;
+  public String reminder_Date_ToAlarm;
   public double latitude;
   public double longitude;
   public float radius;
