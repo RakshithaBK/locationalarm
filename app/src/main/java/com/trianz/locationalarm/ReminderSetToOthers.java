@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -33,18 +34,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_ALLDAYFLAG;
-import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_DAY;
-import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_HOUR;
-import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_MINUTE;
-import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_MONTH;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_DATE;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_PHONENUMBER;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_REPEATALARMVALUE;
-import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_YEAR;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDayAlarm;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedHourAlarm;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedMinuteAlarm;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedMonthAlarm;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedYearAlarm;
+import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_Time;
+import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.access_Token;
 
 
 /**
@@ -61,9 +55,14 @@ public class ReminderSetToOthers extends AppCompatActivity {
     String reminderEvent;
     TextView selectContactNumber;
     String receiverNumber;
+    int selectedHourAlarm;
+    int selectedMinuteAlarm;
+    int selectedYearAlarm;
+    int selectedMonthAlarm;
+    int selectedDayAlarm;
 
     //for post req
-    private static final String REMIND_TO_OTHERS_URL = "";
+    private static final String REMIND_TO_OTHERS_URL = "http://52.30.191.42:8080/locationAlarm/alarm/reminderothers/send";
 
     //For datepicker dialog
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -309,15 +308,21 @@ public class ReminderSetToOthers extends AppCompatActivity {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put(KEY_HOUR, String.valueOf(selectedHourAlarm));
-                params.put(KEY_MINUTE, String.valueOf(selectedMinuteAlarm));
-                params.put(KEY_DAY, String.valueOf(selectedDayAlarm));
-                params.put(KEY_MONTH, String.valueOf(selectedMonthAlarm));
-                params.put(KEY_YEAR, String.valueOf(selectedYearAlarm));
-                params.put(KEY_ALLDAYFLAG, allDayFlag);
+                params.put(KEY_Time, String.valueOf(selectedHourAlarm) + String.valueOf(selectedMinuteAlarm));
+                params.put(KEY_DATE, String.valueOf(selectedDayAlarm)+ String.valueOf(selectedMonthAlarm) + String.valueOf(selectedYearAlarm));
                 params.put(KEY_PHONENUMBER, receiverNumber);
                 params.put(KEY_REPEATALARMVALUE, repeatAlarmIntervalValue);
+                params.put(KEY_ALLDAYFLAG, allDayFlag);
                 return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                String auth = access_Token;
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", auth);
+                return headers;
             }
 
         };

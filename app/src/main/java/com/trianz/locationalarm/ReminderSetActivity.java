@@ -44,12 +44,6 @@ import java.util.Locale;
 
 import static android.R.attr.radius;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_RECORD;
-import static com.trianz.locationalarm.Utils.Constants.Instances.allDayFlag;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDayAlarm;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedHourAlarm;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedMinuteAlarm;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedMonthAlarm;
-import static com.trianz.locationalarm.Utils.Constants.Instances.selectedYearAlarm;
 
 
 /**
@@ -66,6 +60,13 @@ public class ReminderSetActivity extends AppCompatActivity {
 
     int remindMeBeforeTimeValueInInt = 0;
     int counterMinitueValue;
+
+    boolean allDayFlag;
+    int selectedHourAlarm;
+    int selectedMinuteAlarm;
+    int selectedYearAlarm;
+    int selectedMonthAlarm;
+    int selectedDayAlarm;
 
     //Alarm
     AlarmManager alarmManager;

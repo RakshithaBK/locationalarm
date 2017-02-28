@@ -38,13 +38,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         // TODO(developer): Handle FCM messages here.
         // If the application is in the foreground handle both data and notification messages here.
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+      //  Log.d(TAG, "From: " + remoteMessage.getFrom());
        // Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+       // Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -58,18 +59,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         //The message which i send will have keys named [message, image, AnotherActivity] and corresponding values.
         //You can change as per the requirement.
+    try{
+            //message will contain the Push Message
+          //  String messageTitle = remoteMessage.getNotification().getTitle();
+            //message will contain the Push Message body
+            String message_body = remoteMessage.getData().get("reminder_type");
+           // Log.d("message_body",message_body);
+            //imageUri will contain URL of the image to be displayed with Notification
+            String imageUri = remoteMessage.getData().get("image");
+            Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.play);
+            //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
+            //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
+            String TrueOrFlase = remoteMessage.getData().get("AnotherActivity");
+            sendNotification( bm, TrueOrFlase, message_body);
+        }catch (Exception e){
+            Log.d("error",e.toString());
+        }
 
-        //message will contain the Push Message
-        String message = remoteMessage.getNotification().getBody();
-        //message will contain the Push Message body
-        String message_body = remoteMessage.getData().get("data");
-        //imageUri will contain URL of the image to be displayed with Notification
-        String imageUri = remoteMessage.getData().get("image");
-        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.play);
-        //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
-        //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
-        String TrueOrFlase = remoteMessage.getData().get("AnotherActivity");
-        sendNotification(message, bm, TrueOrFlase, message_body);
 
     }
 
@@ -77,7 +83,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Create and show a simple notification containing the received FCM message.
      */
 
-    public void sendNotification(String messageBody, Bitmap image, String TrueOrFalse, String message_body) {
+    public void sendNotification( Bitmap image, String TrueOrFalse, String message_body) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("AnotherActivity", TrueOrFalse);
@@ -90,7 +96,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .addAction(R.mipmap.ic_addlocation, "Save", SaveIntent())
                 .addAction(R.mipmap.ic_addreminder, "Discard", DiscardIntent())
-                .setContentTitle(messageBody)
+                .setContentTitle("location")
                 .setContentText(message_body)
                 .setStyle(new NotificationCompat.BigPictureStyle()
                         .bigPicture(image))/*Notification with Image*/

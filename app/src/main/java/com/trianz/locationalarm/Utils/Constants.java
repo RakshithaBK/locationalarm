@@ -112,32 +112,18 @@ public class Constants {
         public static float radius;
 
         //Add reminderToOthers
-        public static final String KEY_HOUR = "12";
-        public static final String KEY_MONTH = "1";
-        public static final String KEY_DAY = "1";
-        public static final String KEY_YEAR = "2050";
-        public static final String KEY_MINUTE = "00";
-        public static final String KEY_ALLDAYFLAG = "false";
-        public static final String KEY_PHONENUMBER = "9836871071";
-        public static final String KEY_REPEATALARMVALUE = "Does not repeat";
+        public static final String KEY_Time = "time";
+        public static final String KEY_DATE = "date";
+        public static final String KEY_ALLDAYFLAG = "reminder_type";
+        public static final String KEY_PHONENUMBER = "remind_to";
+        public static final String KEY_REPEATALARMVALUE = "repeat";
+
 
 
         //Notification
         public static NotificationManager notificationManager;
         public static  int DISCARD_KEY = 1;
         public static  int SAVE_KEY = 1;
-
-        //ReminderInstance
-       public static boolean allDayFlag;
-       public static int selectedHourAlarm;
-        public static  int selectedMinuteAlarm;
-        public static  int selectedYearAlarm;
-        public static  int selectedMonthAlarm;
-        public static int selectedDayAlarm;
-        public static String repeatAlarmIntervalValue;
-
-
-
 
         //fingerPrint Auth
         public static TabLayout tabLayout;
@@ -182,11 +168,12 @@ public class Constants {
 
         public static final String KEY_MOBILE_LOGIN = "mobile";
         public static final String KEY_PASSWORD_LOGIN = "password";
+       public static String access_Token;
     }
 
     public static class serviceUrls{
-        public static final String REGISTER_URL = "http://10.10.5.112:8080/com.location.alarm.api2/alarm/register/user";
-        public static final String LOGIN_URL = "http://10.10.5.202:8080/com.priya.jersey.first/alarm/login/user";
+        public static final String REGISTER_URL = "http://52.30.191.42:8080/locationAlarm/alarm/register/user";
+        public static final String LOGIN_URL = "http://52.30.191.42:8080/locationAlarm/alarm/login/user";
     }
 
 }
