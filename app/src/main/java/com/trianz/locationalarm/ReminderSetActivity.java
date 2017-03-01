@@ -97,7 +97,6 @@ public class ReminderSetActivity extends AppCompatActivity {
     Button stopButton;
     Button playButton;
     Button recordButton;
-
     String notificationTypeValue = "Notification";
 
     /***/
@@ -125,6 +124,8 @@ public class ReminderSetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setreminder);
+
+
 
         this.getSupportActionBar().hide();
 
@@ -597,6 +598,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 h.postDelayed(new Runnable() {
                     public void run() {
                         Intent intent = new Intent(ReminderSetActivity.this, HomeActivity.class);
+                        intent.putExtra("Token_Flag",0);
                         startActivity(intent);
                     }
                 }, delayInMilliseconds);

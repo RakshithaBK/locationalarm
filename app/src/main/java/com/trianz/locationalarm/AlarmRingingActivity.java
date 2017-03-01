@@ -133,6 +133,7 @@ public class AlarmRingingActivity extends AppCompatActivity {
                         }
                         inst.snoozeAlarmControl(pendingIntentRequestCode);
                         Intent intent = new Intent(AlarmRingingActivity.this, HomeActivity.class);
+                        intent.putExtra("Token_Flag",0);
                         startActivity(intent);
                     }
 
@@ -144,6 +145,7 @@ public class AlarmRingingActivity extends AppCompatActivity {
                         }
                         inst.cancelAlarmControl(pendingIntentRequestCode);
                         Intent intent = new Intent(AlarmRingingActivity.this, HomeActivity.class);
+                        intent.putExtra("Token_Flag",0);
                         startActivity(intent);
                     }
 

@@ -161,9 +161,9 @@ public class HomeController {
             @Override
             public void onClick(View view) {
                 selfReminderFlag = false;
-                Intent addReminderToDateActivity = new Intent(appCompatActivity, RemindMeTask.class);
-                addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
-                appCompatActivity.startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
+                Intent reminderToOthers = new Intent(appCompatActivity, RemindMeTask.class);
+                reminderToOthers.putExtra("reminder_Date", selectedDate);
+                appCompatActivity.startActivityForResult(reminderToOthers, SET_REMINDER_REQUEST);
                 fabMenu.collapse();
                 //Intent to navigate to next page
             }

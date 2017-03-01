@@ -1,6 +1,7 @@
 package com.trianz.locationalarm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -27,9 +28,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_MOBILE_LOGIN;
 import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_PASSWORD_LOGIN;
-import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.access_Token;
 import static com.trianz.locationalarm.Utils.Constants.serviceUrls.LOGIN_URL;
 
 public class LoginActivity extends Fragment {
@@ -37,6 +38,9 @@ public class LoginActivity extends Fragment {
     private EditText loginEditTextMobile;
     private EditText loginEditTextPassword;
     private Button loginButtonRegister;
+
+    /**Dib**/
+    public static final String MY_PREFS_NAME = "MyPrefsFile" ;
 
     public LoginActivity() {
         // Required empty public constructor
@@ -87,6 +91,7 @@ public class LoginActivity extends Fragment {
         params.put(KEY_PASSWORD_LOGIN,password);
 
         JSONObject jsonBody = new JSONObject(params);
+        Log.d("Login_Params",params.toString());
 
         JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, LOGIN_URL ,jsonBody,
                 new Response.Listener<JSONObject>() {
@@ -101,12 +106,16 @@ public class LoginActivity extends Fragment {
                             String message = json.getString("message");
                             String data_Token = json.getString("data");
                             JSONObject obj_token = new JSONObject(data_Token);
-                             access_Token = obj_token.getString("accessToken");
+                            String access_Token = obj_token.getString("accessToken");
                             Log.d("access_Token",access_Token);
+
 
                             if(status==true){
                                 Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
                                 Intent homeActivity = new Intent(getContext(),HomeActivity.class);
+                                SharedPreferences.Editor editor =  getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                                editor.putString("AccessToken", access_Token);
+                                editor.commit();
                                 startActivity(homeActivity);
                             }else{
                                 Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();

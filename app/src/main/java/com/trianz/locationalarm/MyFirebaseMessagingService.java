@@ -61,17 +61,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //You can change as per the requirement.
     try{
             //message will contain the Push Message
-          //  String messageTitle = remoteMessage.getNotification().getTitle();
+            String messageTitle = remoteMessage.getData().get("from_mobile");
             //message will contain the Push Message body
-            String message_body = remoteMessage.getData().get("reminder_type");
-           // Log.d("message_body",message_body);
+            String message_body = remoteMessage.getData().get("date");
+          String message_body2 = remoteMessage.getData().get("time");
+
             //imageUri will contain URL of the image to be displayed with Notification
             String imageUri = remoteMessage.getData().get("image");
             Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.play);
             //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
             //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
             String TrueOrFlase = remoteMessage.getData().get("AnotherActivity");
-            sendNotification( bm, TrueOrFlase, message_body);
+            sendNotification( messageTitle,bm, TrueOrFlase, message_body,message_body2);
         }catch (Exception e){
             Log.d("error",e.toString());
         }
@@ -83,7 +84,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Create and show a simple notification containing the received FCM message.
      */
 
-    public void sendNotification( Bitmap image, String TrueOrFalse, String message_body) {
+    public void sendNotification(String Title, Bitmap image, String TrueOrFalse, String message_body,String message_body2) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("AnotherActivity", TrueOrFalse);
@@ -94,14 +95,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                /* .setLargeIcon(image)Notification icon image*/
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .addAction(R.mipmap.ic_addlocation, "Save", SaveIntent())
-                .addAction(R.mipmap.ic_addreminder, "Discard", DiscardIntent())
-                .setContentTitle("location")
+                .setContentTitle(Title)
                 .setContentText(message_body)
-                .setStyle(new NotificationCompat.BigPictureStyle()
-                        .bigPicture(image))/*Notification with Image*/
+                .setSubText(message_body2)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message_body))/*Notification with Image*/
                 .setAutoCancel(true)
-                .setSound(defaultSoundUri);
+                .setSound(defaultSoundUri)
+                .addAction(R.mipmap.ic_addlocation, "Save", SaveIntent())
+                .addAction(R.mipmap.ic_addreminder, "Discard", DiscardIntent());
 
          notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

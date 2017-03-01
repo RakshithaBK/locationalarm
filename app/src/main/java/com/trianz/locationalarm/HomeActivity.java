@@ -93,8 +93,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,OnDateSelectedListener, OnMonthChangedListener {
 
-
-
     @Bind(R.id.calender_frame)
     MaterialCalendarView widget;
 
@@ -104,9 +102,12 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         context = this;
+
+
         //calender widget
         ButterKnife.bind(this);
         widget.setOnDateChangedListener(this);

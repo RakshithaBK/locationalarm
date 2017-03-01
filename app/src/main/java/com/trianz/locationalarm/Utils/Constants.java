@@ -59,6 +59,7 @@ public class Constants {
 
   public static class SharedPrefs {
     public static String Geofences = "SHARED_PREFS_GEOFENCES";
+
       public static String remindMeBeforeTimeValue = "20minutes";
       public static String repeatAlarmIntervalValue = "Does not repeat";
 
@@ -168,7 +169,6 @@ public class Constants {
 
         public static final String KEY_MOBILE_LOGIN = "mobile";
         public static final String KEY_PASSWORD_LOGIN = "password";
-       public static String access_Token;
     }
 
     public static class serviceUrls{

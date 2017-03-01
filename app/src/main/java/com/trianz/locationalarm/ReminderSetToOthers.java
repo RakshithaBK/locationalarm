@@ -4,11 +4,13 @@ package com.trianz.locationalarm;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -23,9 +25,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.trianz.locationalarm.Utils.ReminderSetController;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,12 +38,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.trianz.locationalarm.R.id.closeIcon1;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_ALLDAYFLAG;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_DATE;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_PHONENUMBER;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_REPEATALARMVALUE;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_Time;
-import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.access_Token;
 
 
 /**
@@ -50,7 +55,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
     Calendar myCalender = Calendar.getInstance();
     String allDayFlag = "false";
 
-    String repeatAlarmIntervalValue = "Does not repeat";
+    String repeatAlarmIntervalValue = "Does";
 
     String reminderEvent;
     TextView selectContactNumber;
@@ -60,6 +65,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
     int selectedYearAlarm;
     int selectedMonthAlarm;
     int selectedDayAlarm;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     //for post req
     private static final String REMIND_TO_OTHERS_URL = "http://52.30.191.42:8080/locationAlarm/alarm/reminderothers/send";
@@ -197,7 +203,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
 
 
         //clicking on cancel button go back to previous page
-        ImageView closeTask = (ImageView) findViewById(R.id.closeIcon1);
+        ImageView closeTask = (ImageView) findViewById(closeIcon1);
 
         closeTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,15 +249,15 @@ public class ReminderSetToOthers extends AppCompatActivity {
                 }
                 else {
 
-                    Toast.makeText(ReminderSetToOthers.this,String.valueOf(selectedHourAlarm) + ":" +
-                                    String.valueOf(pad(selectedMinuteAlarm)) + " On " +
-                                    String.valueOf(selectedDayAlarm)+ "/" +
-                                    String.valueOf(selectedMonthAlarm + 1)+ "/" +
-                                    String.valueOf(selectedYearAlarm)+ "  "+
-                                    repeatAlarmIntervalValue + "   "+
-                                    allDayFlag + "  "  +
-                                    receiverNumber
-                            ,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ReminderSetToOthers.this,String.valueOf(selectedHourAlarm) + ":" +
+//                                    String.valueOf(pad(selectedMinuteAlarm)) + " On " +
+//                                    String.valueOf(selectedDayAlarm)+ "/" +
+//                                    String.valueOf(selectedMonthAlarm + 1)+ "/" +
+//                                    String.valueOf(selectedYearAlarm)+ "  "+
+//                                    repeatAlarmIntervalValue + "   "+
+//                                    allDayFlag + "  "  +
+//                                    receiverNumber
+//                            ,Toast.LENGTH_SHORT).show();
 
                     sendReminderDetailsToBackend();
 
@@ -284,7 +290,8 @@ public class ReminderSetToOthers extends AppCompatActivity {
                 cursor.moveToFirst();
 
                 receiverNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
+                receiverNumber = receiverNumber.replace(" ","");
+                Log.d("PhoneNumber",receiverNumber);
                 selectContactNumber.setText(receiverNumber);
             }
 
@@ -292,11 +299,37 @@ public class ReminderSetToOthers extends AppCompatActivity {
 
     private void sendReminderDetailsToBackend() {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REMIND_TO_OTHERS_URL,
-                new Response.Listener<String>() {
+        HashMap<String,String> params = new HashMap<String, String>();
+        String selectedTime = String.valueOf(selectedHourAlarm) + ":" + String.valueOf(selectedMinuteAlarm);
+        String selectedDate = String.valueOf(selectedDayAlarm)+ "/" + String.valueOf(selectedMonthAlarm) + "/" + String.valueOf(selectedYearAlarm);
+        params.put(KEY_Time, selectedTime);
+        params.put(KEY_DATE,selectedDate );
+        params.put(KEY_PHONENUMBER, receiverNumber);
+        params.put(KEY_REPEATALARMVALUE, repeatAlarmIntervalValue);
+        params.put(KEY_ALLDAYFLAG, allDayFlag);
+        JSONObject jsonBody = new JSONObject(params);
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, REMIND_TO_OTHERS_URL,jsonBody,
+
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(ReminderSetToOthers.this,response,Toast.LENGTH_LONG).show();
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject json = new JSONObject(response.toString());
+                            Log.d("Json obj" ,json.toString());
+                            String message = json.getString("message");
+                            Boolean status = Boolean.parseBoolean(json.getString("status"));
+
+                            if(status==true){
+                                Toast.makeText(ReminderSetToOthers.this,message, Toast.LENGTH_SHORT).show();
+                                Intent homeActivity = new Intent(ReminderSetToOthers.this,HomeActivity.class);
+                                startActivity(homeActivity);
+                            }else{
+                                Toast.makeText(ReminderSetToOthers.this,message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e){
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -305,24 +338,21 @@ public class ReminderSetToOthers extends AppCompatActivity {
                         Toast.makeText(ReminderSetToOthers.this,error.toString(),Toast.LENGTH_LONG).show();
                     }
                 }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put(KEY_Time, String.valueOf(selectedHourAlarm) + String.valueOf(selectedMinuteAlarm));
-                params.put(KEY_DATE, String.valueOf(selectedDayAlarm)+ String.valueOf(selectedMonthAlarm) + String.valueOf(selectedYearAlarm));
-                params.put(KEY_PHONENUMBER, receiverNumber);
-                params.put(KEY_REPEATALARMVALUE, repeatAlarmIntervalValue);
-                params.put(KEY_ALLDAYFLAG, allDayFlag);
-                return params;
-            }
+
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                String auth = access_Token;
-                headers.put("Content-Type", "application/json");
+                SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                String access_TokenKey1 = prefs.getString("AccessToken","No Name Defined");
+                String auth = access_TokenKey1;
                 headers.put("Authorization", auth);
                 return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
             }
 
         };

@@ -32,6 +32,7 @@ public class RemindMeTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remindme_task);
 
+
         getTask = (EditText)findViewById(R.id.et_remindmeto);
         getTask.setHintTextColor(getResources().getColor(R.color.white));
 
@@ -66,20 +67,18 @@ public class RemindMeTask extends AppCompatActivity {
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent;
                 pickedTask = getTask.getText().toString();
 
-                int flag = 1;
-
                 if(selfReminderFlag) {
-                    Intent intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
-                    intent.putExtra("reminderEvent", pickedTask);
-                    startActivity(intent);
+                     intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
+
                 }else{
-                    Intent intent = new Intent(RemindMeTask.this, ReminderSetToOthers.class);
-                    intent.putExtra("reminderEvent", pickedTask);
-                    startActivity(intent);
+                     intent = new Intent(RemindMeTask.this, ReminderSetToOthers.class);
+
                 }
+                intent.putExtra("reminderEvent", pickedTask);
+                startActivity(intent);
             }
         });
 
@@ -89,6 +88,7 @@ public class RemindMeTask extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent Home = new Intent(RemindMeTask.this, HomeActivity.class);
+                Home.putExtra("Token_Flag",0);
                 startActivity(Home);
             }
         });
