@@ -18,9 +18,7 @@ import com.google.gson.Gson;
 import com.trianz.locationalarm.HomeActivity;
 import com.trianz.locationalarm.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +75,6 @@ public class LocationReminderIntentService extends IntentService {
     for (String geofenceId : geofenceIds) {
         String reminder_message = "";
         String reminder_place = "";
-        String reminder_Date = "";
         String reminder_Date_Alarm = "";
 
         // Loop over all geofence keys in prefs and retrieve NamedGeofence from SharedPreference
@@ -88,7 +85,6 @@ public class LocationReminderIntentService extends IntentService {
             if (namedGeofence.id.equals(geofenceId)) {
                 reminder_message = namedGeofence.reminder_msg;
                 reminder_place = namedGeofence.reminder_place;
-                reminder_Date = namedGeofence.reminder_Date;
                 reminder_Date_Alarm = namedGeofence.reminder_Date_ToAlarm;
                 break;
             }
@@ -97,22 +93,15 @@ public class LocationReminderIntentService extends IntentService {
         // Set the notification text and send the notification
         String contextMsg = reminder_message;
         String contextPlace = reminder_place;
-        String contextDate = reminder_Date;
         String contextAlarmDate = reminder_Date_Alarm;
 
-        Calendar myCalender = Calendar.getInstance();
-        SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM d, yyyy");
-        final String currentDate = currentDateFormat.format(myCalender.getTime());
-        if (contextAlarmDate == null) {
-            if (contextDate != null) {
-                if (contextDate.equals(currentDate)) {
-                    callNotification(contextMsg, contextPlace, contextDate);
-                } else {
+        if(contextAlarmDate==null){
+            callNotification(contextMsg, contextPlace, contextAlarmDate);
+        }else{
 
-                }
-
-            }
         }
+
+
     }
   }
 

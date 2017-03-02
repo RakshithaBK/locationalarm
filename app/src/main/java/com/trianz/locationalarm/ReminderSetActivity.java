@@ -241,6 +241,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 
                         selectedHourAlarm = selectedHour;
                         selectedMinuteAlarm = selectedMinute;
+                        Log.d("selectedMinuteAlarm",String.valueOf(selectedMinuteAlarm));
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 // mTimePicker.setTitle("Select Time");

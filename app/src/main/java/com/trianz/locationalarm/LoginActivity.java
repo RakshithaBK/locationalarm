@@ -74,6 +74,7 @@ public class LoginActivity extends Fragment {
 
     }
 
+
     public void homeActivity(View view){
 
         String token = FirebaseInstanceId.getInstance().getToken();
@@ -150,6 +151,8 @@ public class LoginActivity extends Fragment {
         //requestQueue.add(JsonObjRequest );
 
     }
+
+
 
 }
 

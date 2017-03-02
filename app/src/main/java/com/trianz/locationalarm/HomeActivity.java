@@ -194,7 +194,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         //Fab actions
         FloatingActionButton wakeupfab = (FloatingActionButton) findViewById(R.id.fab_wakeup_alarm);
         FloatingActionButton  addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
-        FloatingActionButton  addReminderDatefab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_date);
         FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
 
         //close Button in navigation
@@ -209,7 +208,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 drawer.closeDrawer(Gravity.LEFT);
             }});
         final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        HomeController.FloatActionBtnSetup(this,wakeupfab,addReminderLocationfab,addReminderDatefab,remindothersfab,fabMenu);
+        HomeController.FloatActionBtnSetup(this,wakeupfab,addReminderLocationfab,remindothersfab,fabMenu);
     }
 
 
@@ -220,6 +219,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         HomeController.NavigationDrawerSetup(this,drawer,navigationView,signOut);
 
     }
+
 
     public void placeAutoComplete(){
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
@@ -553,12 +553,12 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
     }
 
 

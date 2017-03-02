@@ -5,15 +5,16 @@
         <item
             android:id="@+id/nav_addreminder"
             android:icon="@mipmap/ic_addreminder"
-            android:title="Add Reminder" />
+            android:title="Add Reminder to Location" />
+        <item
+            android:id="@+id/nav_wakeUpAlarm"
+            android:icon="@mipmap/ic_wakeupalarm"
+            android:title="Add Reminder to Date" />
         <item
             android:id="@+id/nav_remindOthers"
             android:icon="@mipmap/ic_remindtoothers"
             android:title="Remind to Others" />
-        <item
-            android:id="@+id/nav_wakeUpAlarm"
-            android:icon="@mipmap/ic_wakeupalarm"
-            android:title="Wakeup Alarm" />
+
         <item
             android:id="@+id/nav_myReminders"
             android:icon="@drawable/ic_menu_manage"

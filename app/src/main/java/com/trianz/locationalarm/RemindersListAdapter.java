@@ -51,12 +51,7 @@ public class RemindersListAdapter extends RecyclerView.Adapter<RemindersListAdap
     if (geofence.reminder_place != null) {
       holder.place.setText(geofence.reminder_place);
     }else{
-      if(geofence.reminder_Date == null){
         holder.place.setText(geofence.reminder_Date_ToAlarm);
-      }else {
-        holder.place.setText(geofence.reminder_Date);
-      }
-
     }
 
     holder.message.setText(geofence.reminder_msg);

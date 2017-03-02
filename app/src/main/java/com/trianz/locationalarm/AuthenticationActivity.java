@@ -146,6 +146,11 @@ public class AuthenticationActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     protected void generateKey() {
         try {

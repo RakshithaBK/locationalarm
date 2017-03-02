@@ -65,15 +65,15 @@
                 fab:fab_title="Add Reminder to location" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_add_reminder_date"
+                android:id="@+id/fab_wakeup_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorFabRed"
                 fab:fab_colorPressed="@color/colorFabRed"
                 fab:fab_plusIconColor="@color/color_white"
-                fab:fab_icon="@mipmap/ic_addreminder"
+                fab:fab_icon="@mipmap/ic_wakeupalarm"
                 fab:fab_size="mini"
-                fab:fab_title="Add Reminder to date" />
+                fab:fab_title="Add Reminder to Date" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_remind_others"
@@ -86,16 +86,8 @@
                 fab:fab_size="mini"
                 fab:fab_title="Remind to Others" />
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_wakeup_alarm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/colorFabRed"
-                fab:fab_colorPressed="@color/colorFabRed"
-                fab:fab_plusIconColor="@color/color_white"
-                fab:fab_icon="@mipmap/ic_wakeupalarm"
-                fab:fab_size="mini"
-                fab:fab_title="Wakeup Alarm" />
+
+
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     </FrameLayout>

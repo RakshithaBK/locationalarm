@@ -4,6 +4,7 @@ package com.trianz.locationalarm;
  * Created by AndroidBash on 20-Aug-16.
  */
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -18,9 +19,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Calendar;
 
 import static com.trianz.locationalarm.Utils.Constants.Instances.DISCARD_KEY;
 import static com.trianz.locationalarm.Utils.Constants.Instances.SAVE_KEY;
@@ -30,6 +29,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "FirebaseMessageService";
     Bitmap bitmap;
+    String message_body;
+    String message_body2;
+    int reminderDay;
+    int reminderMonth;
+    int reminderYear;
+    int reminderHour;
+    int reminderMinute;
+    String reminder_message;
+    Calendar myCalender = Calendar.getInstance();
+    AlarmManager alarmManager;
+    ReminderSetActivity inst = ReminderSetActivity.instance();
+    Intent alarmIntent;
+
+
 
     /**
      * Called when message is received.
@@ -38,7 +51,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         // TODO(developer): Handle FCM messages here.
         // If the application is in the foreground handle both data and notification messages here.
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -63,16 +76,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             //message will contain the Push Message
             String messageTitle = remoteMessage.getData().get("from_mobile");
             //message will contain the Push Message body
-            String message_body = remoteMessage.getData().get("date");
-          String message_body2 = remoteMessage.getData().get("time");
+             message_body = remoteMessage.getData().get("date");
+             message_body2 = remoteMessage.getData().get("time");
+              reminder_message = remoteMessage.getData().get("reminder_type");
 
-            //imageUri will contain URL of the image to be displayed with Notification
-            String imageUri = remoteMessage.getData().get("image");
             Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.play);
             //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
             //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
             String TrueOrFlase = remoteMessage.getData().get("AnotherActivity");
-            sendNotification( messageTitle,bm, TrueOrFlase, message_body,message_body2);
+            sendNotification(reminder_message, messageTitle,bm, TrueOrFlase, message_body,message_body2);
         }catch (Exception e){
             Log.d("error",e.toString());
         }
@@ -84,7 +96,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Create and show a simple notification containing the received FCM message.
      */
 
-    public void sendNotification(String Title, Bitmap image, String TrueOrFalse, String message_body,String message_body2) {
+    public void sendNotification(String reminder_message,String Title, Bitmap image, String TrueOrFalse, String message_body,String message_body2) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("AnotherActivity", TrueOrFalse);
@@ -96,10 +108,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                /* .setLargeIcon(image)Notification icon image*/
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(Title)
-                .setContentText(message_body)
-                .setSubText(message_body2)
+                .setContentText("Date: " + message_body + "\n" + "Time: " + message_body2)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(message_body))/*Notification with Image*/
+                        .bigText("wants to remind you about " + reminder_message + "\n" + "Date: " + message_body + " " + "Time: " + message_body2))/*Notification with Image*/
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .addAction(R.mipmap.ic_addlocation, "Save", SaveIntent())
@@ -119,33 +130,44 @@ public PendingIntent DiscardIntent(){
     return  pendingIntent;
 }
     public PendingIntent SaveIntent(){
+        reminderDay = Integer.parseInt(message_body.substring(0,2));
+        reminderMonth = Integer.parseInt(message_body.substring(3,5)) - 1;
+        Log.d("others month",String.valueOf(reminderMonth));
+        reminderYear = Integer.parseInt(message_body.substring(6,10));
+        reminderHour = Integer.parseInt(message_body2.substring(0,2));
+        reminderMinute = Integer.parseInt(message_body2.substring(3,5));
+
+        myCalender.set(Calendar.MINUTE, reminderMinute );
+        myCalender.set(Calendar.HOUR_OF_DAY, reminderHour);
+        myCalender.set(Calendar.DAY_OF_MONTH, reminderDay);
+        myCalender.set(Calendar.MONTH, reminderMonth);
+        myCalender.set(Calendar.YEAR, reminderYear);
+
+            int  pendingIntentRequestCode = reminderHour + reminderMinute + reminderDay + reminderMonth + reminderYear;
+             alarmIntent = new Intent(MyFirebaseMessagingService.this, ReminderReceiver.class);
+            alarmIntent.putExtra("reminderEvent", reminder_message);
+            alarmIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
+            PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(MyFirebaseMessagingService.this, pendingIntentRequestCode, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 5, alarmPendingIntent);
+
+                //String selectedDateReminder = String.valueOf(reminderMonth) + " " + String.valueOf(reminderDay) + ", " + String.valueOf(reminderYear) ;
+              // inst.addReminderToList(selectedDateReminder,reminder_message);
+
+//                Handler h = new Handler();
+//                long delayInMilliseconds = 1000 * 1;
+//                h.postDelayed(new Runnable() {
+//                    public void run() {
+//                        Intent intent = new Intent(MyFirebaseMessagingService.this, HomeActivity.class);
+//                        startActivity(intent);
+//                    }
+//                }, delayInMilliseconds);
+
         Intent agreeIntent = new Intent(this,HomeActivity.class);
         SAVE_KEY = 0;
         PendingIntent resultIntent =PendingIntent.getActivity(this,0,agreeIntent,0);
         return  resultIntent;
     }
-
-    /*
-    *To get a Bitmap image from the URL received
-    * */
-    public Bitmap getBitmapfromUrl(String imageUrl) {
-        try {
-            URL url = new URL(imageUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-
-        }
-    }
-
 }
 
 

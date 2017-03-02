@@ -21,7 +21,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.trianz.locationalarm.AddReminderActivity;
-import com.trianz.locationalarm.AddReminderToDateActivity;
 import com.trianz.locationalarm.AuthenticationActivity;
 import com.trianz.locationalarm.HomeActivity;
 import com.trianz.locationalarm.OffersActivity;
@@ -90,7 +89,7 @@ public class HomeController {
     }
 
     public static void FloatActionBtnSetup(final AppCompatActivity appCompatActivity, FloatingActionButton wakeupfab, FloatingActionButton addReminderLocationfab,
-                                           FloatingActionButton addReminderDatefab, FloatingActionButton remindothersfab, final FloatingActionsMenu fabMenu){
+                                            FloatingActionButton remindothersfab, final FloatingActionsMenu fabMenu){
 
 
 
@@ -139,22 +138,6 @@ public class HomeController {
             }
         });
 
-        addReminderDatefab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(selectedDate == null){
-                    Snackbar.make(view, "Select a reminder date", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    fabMenu.collapse();
-                }else{
-
-                    Intent addReminderToDateActivity = new Intent(appCompatActivity, AddReminderToDateActivity.class);
-                    addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
-                    appCompatActivity.startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
-                    fabMenu.collapse();
-                }
-            }
-        });
 
 
         remindothersfab.setOnClickListener(new View.OnClickListener() {
@@ -172,11 +155,19 @@ public class HomeController {
         wakeupfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selfReminderFlag = true;
-                Intent remindMeTask =  new Intent(appCompatActivity, RemindMeTask.class);
-                appCompatActivity.startActivity(remindMeTask);
-                fabMenu.collapse();
-            }
+
+                if(selectedDate == null){
+                    Snackbar.make(view, "Select a reminder date", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    fabMenu.collapse();
+                }else{
+                    selfReminderFlag = true;
+                    Intent addReminderToDateActivity = new Intent(appCompatActivity, RemindMeTask.class);
+                    addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
+                    appCompatActivity.startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
+                    fabMenu.collapse();
+                }
+}
         });
 
     }

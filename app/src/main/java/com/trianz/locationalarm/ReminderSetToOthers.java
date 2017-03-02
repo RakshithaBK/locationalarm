@@ -300,13 +300,13 @@ public class ReminderSetToOthers extends AppCompatActivity {
     private void sendReminderDetailsToBackend() {
 
         HashMap<String,String> params = new HashMap<String, String>();
-        String selectedTime = String.valueOf(selectedHourAlarm) + ":" + String.valueOf(selectedMinuteAlarm);
-        String selectedDate = String.valueOf(selectedDayAlarm)+ "/" + String.valueOf(selectedMonthAlarm) + "/" + String.valueOf(selectedYearAlarm);
+        String selectedTime = String.valueOf(selectedHourAlarm) + ":" + String.valueOf(pad(selectedMinuteAlarm));
+        String selectedDate = String.valueOf(pad(selectedDayAlarm))+ "/" + String.valueOf(pad(selectedMonthAlarm + 1)) + "/" + String.valueOf(selectedYearAlarm);
         params.put(KEY_Time, selectedTime);
         params.put(KEY_DATE,selectedDate );
         params.put(KEY_PHONENUMBER, receiverNumber);
         params.put(KEY_REPEATALARMVALUE, repeatAlarmIntervalValue);
-        params.put(KEY_ALLDAYFLAG, allDayFlag);
+        params.put(KEY_ALLDAYFLAG, reminderEvent);
         JSONObject jsonBody = new JSONObject(params);
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, REMIND_TO_OTHERS_URL,jsonBody,
