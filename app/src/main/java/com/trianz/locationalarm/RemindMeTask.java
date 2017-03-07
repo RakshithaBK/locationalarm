@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ public class RemindMeTask extends AppCompatActivity {
     String pickedTask;
     ImageView saveTask;
     ImageView closeTask;
+    String reminderDate;
 
     public static String[] remindMeList={"Task","Meet","Hospital","Buy","Call","Event"};
     public static int [] remindMeImages={R.mipmap.ic_task,R.mipmap.ic_meet,R.mipmap.ic_hospital,R.mipmap.ic_buy,R.mipmap.ic_call,R.mipmap.ic_event};
@@ -42,6 +44,9 @@ public class RemindMeTask extends AppCompatActivity {
         getTask = (EditText)findViewById(R.id.et_remindmeto);
         getTask.setHintTextColor(getResources().getColor(R.color.white));
 
+        Bundle bundle = getIntent().getExtras();
+        reminderDate = bundle.getString("reminderDate");
+        Log.d("reminderDate",reminderDate);
         context = this;
 
         lv = (ListView) findViewById(R.id.listView);
@@ -103,12 +108,14 @@ public class RemindMeTask extends AppCompatActivity {
 
                 if(selfReminderFlag) {
                      intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
+                    intent.putExtra("reminderDate",reminderDate);
 
                 }else{
                      intent = new Intent(RemindMeTask.this, ReminderSetToOthers.class);
 
                 }
                 intent.putExtra("reminderEvent", pickedTask);
+
                 startActivity(intent);
             }
         });

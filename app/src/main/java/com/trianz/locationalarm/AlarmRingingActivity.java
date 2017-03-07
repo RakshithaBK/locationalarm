@@ -51,6 +51,8 @@ public class AlarmRingingActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         String reminderEvent = bundle.getString("reminderEvent");
+
+
         TextView reminderEventText = (TextView)findViewById(R.id.reminderEvent);
         reminderEventText.setText(reminderEvent);
 

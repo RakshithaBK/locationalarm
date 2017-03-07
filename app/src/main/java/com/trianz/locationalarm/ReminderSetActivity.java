@@ -99,6 +99,8 @@ public class ReminderSetActivity extends AppCompatActivity {
     Button recordButton;
     String notificationTypeValue = "Notification";
 
+    String reminderDate;
+
     /***/
 
     //For datepicker dialog
@@ -126,7 +128,6 @@ public class ReminderSetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setreminder);
 
 
-
         this.getSupportActionBar().hide();
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -134,8 +135,11 @@ public class ReminderSetActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         reminderEvent = bundle.getString("reminderEvent");
 
-        TextView datePicked =  (TextView)findViewById(R.id.datePicker);
-        final TextView timePicked =  (TextView)findViewById(R.id.timePicker);
+        reminderDate = bundle.getString("reminderDate");
+        Log.d("reminderDate", reminderDate);
+
+        TextView datePicked = (TextView) findViewById(R.id.datePicker);
+        final TextView timePicked = (TextView) findViewById(R.id.timePicker);
         Switch enableAllDay = (Switch) findViewById(R.id.switchIcon);
 
         //set the alarm text selected from previous layout
@@ -149,7 +153,12 @@ public class ReminderSetActivity extends AppCompatActivity {
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
         String currentTime = currentTimeFormat.format(myCalender.getTime());
 
-        datePicked.setText(currentDate);
+        if (reminderDate.equals(null)){
+            datePicked.setText(currentDate);
+        }
+        else {
+            datePicked.setText(reminderDate);
+        }
         timePicked.setText(currentTime);
 
 
@@ -259,6 +268,7 @@ public class ReminderSetActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(ReminderSetActivity.this, RemindMeTask.class);
+                intent.putExtra("reminderDate",reminderDate);
                 startActivity(intent);
             }
         });

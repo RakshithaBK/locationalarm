@@ -74,6 +74,7 @@ public class HomeController {
                         }
                         else {
                             Intent addReminders = new Intent(appCompatActivity, AddReminderActivity.class);
+                            addReminders.putExtra("reminder_place", (Parcelable) selectedPlace);
                             appCompatActivity.startActivity(addReminders);
                         }
                         break;
@@ -197,7 +198,7 @@ public class HomeController {
                 }else{
                     selfReminderFlag = true;
                     Intent addReminderToDateActivity = new Intent(appCompatActivity, RemindMeTask.class);
-                    addReminderToDateActivity.putExtra("reminder_Date", selectedDate);
+                    addReminderToDateActivity.putExtra("reminderDate", selectedDate);
                     appCompatActivity.startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
                     fabMenu.collapse();
                 }

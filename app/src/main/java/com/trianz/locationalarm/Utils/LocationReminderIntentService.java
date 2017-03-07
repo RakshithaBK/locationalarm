@@ -92,7 +92,10 @@ public class LocationReminderIntentService extends IntentService {
         String contextMsg = reminder_message;
         String contextPlace = reminder_place;
 
+        if(contextPlace!=null){
             callNotification(contextMsg, contextPlace);
+        }
+
 
 
     }
