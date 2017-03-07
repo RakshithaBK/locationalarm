@@ -102,23 +102,23 @@ public class ReminderSetActivity extends AppCompatActivity {
     /***/
 
     //For datepicker dialog
-     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
-                 @Override
-         public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                 int dayOfMonth) {
-             // TODO Auto-generated method stub
-                     myCalender.set(Calendar.YEAR, year);
-             myCalender.set(Calendar.MONTH, monthOfYear);
-             myCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-             selectedYearAlarm = year;
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalender.set(Calendar.YEAR, year);
+            myCalender.set(Calendar.MONTH, monthOfYear);
+            myCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            selectedYearAlarm = year;
             selectedMonthAlarm = monthOfYear;
-             selectedDayAlarm = dayOfMonth;
-             updateLabel();
+            selectedDayAlarm = dayOfMonth;
+            updateLabel();
 
-             }
+        }
 
-                 };
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,13 +212,13 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         datePicked.setOnClickListener(new View.OnClickListener() {
             @Override
-             public void onClick(View v) {
+            public void onClick(View v) {
                 // TODO Auto-generated method stub
-                     new DatePickerDialog(ReminderSetActivity.this, date, myCalender
-                             .get(Calendar.YEAR), myCalender.get(Calendar.MONTH),
-                             myCalender.get(Calendar.DAY_OF_MONTH)).show();
-                }
-            });
+                new DatePickerDialog(ReminderSetActivity.this, date, myCalender
+                        .get(Calendar.YEAR), myCalender.get(Calendar.MONTH),
+                        myCalender.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
         //TimePicker
         timePicked.setOnClickListener(new View.OnClickListener() {
@@ -416,7 +416,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                         notificationTypeValue = "Voice";
                         typeVoice.setTextColor(Color.parseColor("#9568ff"));
                         typeNotification.setTextColor(Color.parseColor("#000000"));
-                       // remindMeType.dismiss();
+                        // remindMeType.dismiss();
                         voiceRecordButtons.setVisibility(View.VISIBLE);
                         tv_reminderType.setText("Voice Reminder");
 
@@ -477,7 +477,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                     Toast.makeText(ReminderSetActivity.this, "Go to app permission in Locationalarm and allow microphone permission", Toast.LENGTH_LONG).show();
                                 }
-                               mediaPlayer.start();
+                                mediaPlayer.start();
                             }
                         });
 

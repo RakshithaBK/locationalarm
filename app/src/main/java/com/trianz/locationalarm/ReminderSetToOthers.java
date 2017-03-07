@@ -291,7 +291,9 @@ public class ReminderSetToOthers extends AppCompatActivity {
 
                 receiverNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 receiverNumber = receiverNumber.replace(" ","");
-                Log.d("PhoneNumber",receiverNumber);
+                if(receiverNumber.length() >10){
+                    receiverNumber = receiverNumber.substring(receiverNumber.length() - 10);
+                }
                 selectContactNumber.setText(receiverNumber);
             }
 

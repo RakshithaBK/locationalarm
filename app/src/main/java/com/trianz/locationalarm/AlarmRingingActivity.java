@@ -2,6 +2,7 @@ package com.trianz.locationalarm;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +40,9 @@ public class AlarmRingingActivity extends AppCompatActivity {
       Ringtone ringtone;
     Calendar myCalender = Calendar.getInstance();
     ReminderSetActivity inst = ReminderSetActivity.instance();
+    private ImageView mPendulum;
+
+    private Animation mAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,9 @@ public class AlarmRingingActivity extends AppCompatActivity {
         String reminderEvent = bundle.getString("reminderEvent");
         TextView reminderEventText = (TextView)findViewById(R.id.reminderEvent);
         reminderEventText.setText(reminderEvent);
+
+        mPendulum = (ImageView) findViewById(R.id.pendulum_ringing);
+        mAnimation = AnimationUtils.loadAnimation(this, R.anim.pendulum);
 
         repeatAlarmIntervalValue = bundle.getString("repeatAlarmIntervalValue");
         pendingIntentRequestCode = bundle.getInt("pendingIntentRequestCode");
@@ -87,6 +96,11 @@ public class AlarmRingingActivity extends AppCompatActivity {
         String currentTimeOnRinging = currentTimeFormat.format(myCalender.getTime());
         Log.d("currentTime",currentTimeOnRinging);
         tv_currentTime.setText(currentTimeOnRinging);
+
+        TextView alarm_User_Name = (TextView) findViewById(R.id.alarm_User_Name);
+        SharedPreferences prefs = getSharedPreferences(HomeActivity.MY_PREFS_USERNAME, MODE_PRIVATE);
+        String UserName = prefs.getString("UserName","No UserName Defined");
+        alarm_User_Name.setText(UserName);
     }
 
     private final class MyTouchListener implements View.OnTouchListener {
@@ -162,6 +176,12 @@ public class AlarmRingingActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPendulum.startAnimation(mAnimation);
     }
 
 }

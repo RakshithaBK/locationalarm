@@ -106,11 +106,9 @@ public class Constants {
 
         //AddReminderActivity
         public static ImageView speechToText;
-        public static EditText message;
-        public static Place place;
-        public static String location_name,reminder_message;
-        public static double location_latitude, location_longitude;
-        public static float radius;
+
+
+
 
         //Add reminderToOthers
         public static final String KEY_Time = "time";

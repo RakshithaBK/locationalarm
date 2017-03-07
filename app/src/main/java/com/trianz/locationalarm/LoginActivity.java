@@ -116,6 +116,7 @@ public class LoginActivity extends Fragment {
                                 Intent homeActivity = new Intent(getContext(),HomeActivity.class);
                                 SharedPreferences.Editor editor =  getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                                 editor.putString("AccessToken", access_Token);
+                                SaveSharedPreferences.setUserName(getContext(),"True");
                                 editor.commit();
                                 startActivity(homeActivity);
                             }else{

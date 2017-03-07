@@ -4,14 +4,18 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.trianz.locationalarm.HomeActivity;
+
+import static android.content.Context.MODE_PRIVATE;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class FingerprintHandler extends
@@ -64,11 +68,21 @@ public class FingerprintHandler extends
     public void onAuthenticationSucceeded(
             FingerprintManager.AuthenticationResult result) {
 
-        Toast.makeText(appContext,
-                "Authentication succeeded.",
-                Toast.LENGTH_LONG).show();
-        appContext.startActivity(new Intent(appContext,
-                HomeActivity.class));
+        SharedPreferences prefs = appContext.getSharedPreferences(HomeActivity.MY_PREFS_USERNAME, MODE_PRIVATE);
+        String UserName = prefs.getString("UserName","No UserName Defined");
+
+        Log.d("Username in ", UserName);
+        if(UserName == null || UserName.equals("No UserName Defined")){
+            Toast.makeText(appContext, "Please register before using Fingerprint", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(appContext,
+                    "Authentication succeeded.",
+                    Toast.LENGTH_LONG).show();
+
+            appContext.startActivity(new Intent(appContext,
+                    HomeActivity.class));
+        }
+
     }
 
 }

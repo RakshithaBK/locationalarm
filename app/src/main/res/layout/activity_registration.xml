@@ -6,6 +6,7 @@
     android:paddingTop="20dp"
     >
 
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +16,20 @@
         android:backgroundTint="@color/color_line"
         android:textColor="@color/color_Black"
         android:inputType="phone"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:id="@+id/regUserName"
+        android:textColorHint="@color/color_hint"
+        android:backgroundTint="@color/color_line"
+        android:textColor="@color/color_Black"
+        android:inputType="text"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:layout_marginTop="10dp"

@@ -12,6 +12,8 @@ public class SplashActivity extends Activity {
 
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 3000;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
+    String isUserLogged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +34,33 @@ public class SplashActivity extends Activity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashActivity.this, AuthenticationActivity.class);
-                startActivity(i);
+// SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+//         isUserLogged = prefs.getString("UserLoggedIn","no user logged");
+//        Log.d("isLogged",isUserLogged.toString());
+//                if(isUserLogged.equals("true")) {
+//                    Intent i = new Intent(SplashActivity.this, HomeActivity.class);
+//                    startActivity(i);
+//
+//                } else {
+
+                if(SaveSharedPreferences.getUserName(SplashActivity.this).length() == 0)
+                {
+                    Intent i = new Intent(SplashActivity.this, AuthenticationActivity.class);
+                    startActivity(i);
+                }
+                else
+                {
+                    // Stay at the current activity.
+                    Intent i = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(i);
+                }
 
                 // close this activity
                 finish();
             }
         }, SPLASH_TIME_OUT);
     }
+
 }
 
 

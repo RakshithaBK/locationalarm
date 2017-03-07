@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
        <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
@@ -58,6 +59,7 @@
             android:theme="@style/MyDatePickerDialogTheme" />
         <activity android:name=".AlarmRingingActivity" />
         <activity android:name=".AlarmRingingForOthers" />
+        <activity android:name=".SetReminderSentByOthers" />
 
 
         <!--

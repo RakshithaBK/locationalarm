@@ -1,7 +1,6 @@
 package com.trianz.locationalarm;
 
 import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -32,7 +31,8 @@ public class AlarmRingingForOthers extends AppCompatActivity {
     Ringtone ringtone;
     Calendar myCalender = Calendar.getInstance();
     AlarmManager alarmManager;
-   public MyFirebaseMessagingService service;
+
+    SetReminderSentByOthers inst = SetReminderSentByOthers.instance();
 
 
     @Override
@@ -41,7 +41,7 @@ public class AlarmRingingForOthers extends AppCompatActivity {
         setContentView(R.layout.activity_alarmringing);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Toast.makeText(AlarmRingingForOthers.this,"inside alarmothers", Toast.LENGTH_SHORT).show();
+        Toast.makeText(AlarmRingingForOthers.this,"inside alarm others", Toast.LENGTH_SHORT).show();
 
         Bundle bundle = getIntent().getExtras();
         String reminderEvent = bundle.getString("reminderEvent");
@@ -113,7 +113,7 @@ public class AlarmRingingForOthers extends AppCompatActivity {
 
                     if(((ImageView) v).equals(findViewById(R.id.imageView1)))
                     {
-                        //Toast.makeText(AlarmRingingForOthers.this, "Snooze", Toast.LENGTH_SHORT).show();
+
                         ringtone.stop();
 
                         Toast.makeText(AlarmRingingForOthers.this,"Alarm is postponed for 5 minutes",Toast.LENGTH_LONG).show();
@@ -123,26 +123,13 @@ public class AlarmRingingForOthers extends AppCompatActivity {
 
                     else if(((ImageView) v).equals(findViewById(R.id.imageView3)))
                     {
-                        //Toast.makeText(AlarmRingingForOthers.this, "Dismiss", Toast.LENGTH_SHORT).show();
+
 
                         ringtone.stop();
 
-                        //inst.cancelAlarmControl(pendingIntentRequestCode);
+                        inst.cancelAlarmControl(pendingIntentRequestCode);
 
                         /****NewD***/
-
-
-                        if (alarmManager != null) {
-
-                            //Toast.makeText(ReminderSetActivity.this,String.valueOf(receivedPendingIntentRequestCode),Toast.LENGTH_LONG).show();
-
-                            PendingIntent sender = PendingIntent.getBroadcast(AlarmRingingForOthers.this, pendingIntentRequestCode,
-                                    service.alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                            //Toast.makeText(ReminderSetActivity.this,"In Block", Toast.LENGTH_LONG).show();
-
-                            alarmManager.cancel(sender);
-                        }
 
                         /********/
                         Intent intent = new Intent(AlarmRingingForOthers.this, HomeActivity.class);

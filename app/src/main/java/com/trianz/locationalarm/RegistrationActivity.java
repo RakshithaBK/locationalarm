@@ -1,9 +1,9 @@
 package com.trianz.locationalarm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_EMAIL;
 import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_MOBILE;
 import static com.trianz.locationalarm.Utils.Constants.authServiceInstances.KEY_PASSWORD;
@@ -38,7 +39,8 @@ public class RegistrationActivity extends Fragment {
     private EditText editTextMobile;
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Button buttonRegister;
+    public  EditText editTextUserName;
+    public static final String MY_PREFS_USERNAME = "MyPrefsUserName" ;
 
     public RegistrationActivity() {
         // Required empty public constructor
@@ -58,6 +60,7 @@ public class RegistrationActivity extends Fragment {
         editTextMobile = (EditText) rootView.findViewById(R.id.regMobileTxt);
         editTextPassword = (EditText) rootView.findViewById(R.id.regPasswordTxt);
         editTextEmail= (EditText) rootView.findViewById(R.id.regEmailTxt);
+        editTextUserName= (EditText) rootView.findViewById(R.id.regUserName);
         Button button= (Button) rootView.findViewById(R.id.regBtn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +75,6 @@ public class RegistrationActivity extends Fragment {
 
     public void confirmRegistration(View view) {
         String token = FirebaseInstanceId.getInstance().getToken();
-        Log.d("token",token);
 
         final String mobile = editTextMobile.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
@@ -126,6 +128,11 @@ public class RegistrationActivity extends Fragment {
             String message = json.getString("message");
 
             if(status==true){
+                SharedPreferences.Editor editor =  getContext().getSharedPreferences(MY_PREFS_USERNAME, MODE_PRIVATE).edit();
+                editor.putString("UserName", editTextUserName.getText().toString());
+                editor.putString("Email",editTextEmail.getText().toString());
+                editor.commit();
+
                 Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
                 Intent homeActivity = new Intent(getContext(),ConfirmRegisterActivity.class);
                 startActivity(homeActivity);

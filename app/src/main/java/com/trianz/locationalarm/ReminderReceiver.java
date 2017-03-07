@@ -4,6 +4,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -20,10 +23,19 @@ public class ReminderReceiver extends WakefulBroadcastReceiver {
 
     private NotificationManager alarmNotificationManager;
     int pendingIntentRequestCode;
+    Ringtone ringtone;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
         Toast.makeText(context, "Received", Toast.LENGTH_SHORT).show();
+
+        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        if (alarmUri == null) {
+            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        }
+        ringtone = RingtoneManager.getRingtone(context, alarmUri);
+        ringtone.play();
+
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(2000);
 
@@ -32,15 +44,24 @@ public class ReminderReceiver extends WakefulBroadcastReceiver {
         pendingIntentRequestCode = bundle.getInt("pendingIntentRequestCode");
 
 
-        Intent alarmringingIntent = new Intent(context, AlarmRingingForOthers.class);
+//        Intent alarmringingIntent = new Intent(context, AlarmRingingForOthers.class);
 //           alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        alarmringingIntent.putExtra("reminderEvent", reminderEvent);
-        alarmringingIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
-        context.startActivity(alarmringingIntent);
+//        alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        alarmringingIntent.putExtra("reminderEvent", reminderEvent);
+//        alarmringingIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
+//        context.startActivity(alarmringingIntent);
 
         sendNotification(reminderEvent, context);
+        Handler h2 = new Handler();
+        long alarmDuration = 1000 * 10 ;
+        h2.postDelayed(new Runnable() {
+            public void run() {
+                ringtone.stop();
+            }
+        }, alarmDuration);
     }
+
+
 
     private void sendNotification(String msg, Context context) {
         Log.d("AlarmService", "Preparing to send notification...: " + msg);
@@ -62,7 +83,7 @@ public class ReminderReceiver extends WakefulBroadcastReceiver {
         Log.d("AlarmService", "Notification sent.");
 
         Handler h = new Handler();
-        long delayInMilliseconds = 1000 * 60 * 10;
+        long delayInMilliseconds = 1000 * 60 * 60;
         h.postDelayed(new Runnable() {
             public void run() {
                 alarmNotificationManager.cancel(pendingIntentRequestCode);

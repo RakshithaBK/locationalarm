@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -74,6 +75,7 @@ import static com.trianz.locationalarm.Utils.Constants.Geometry.SET_REMINDER_REQ
 import static com.trianz.locationalarm.Utils.Constants.Instances.FORMATTER;
 import static com.trianz.locationalarm.Utils.Constants.Instances.context;
 import static com.trianz.locationalarm.Utils.Constants.Instances.frameLayout;
+import static com.trianz.locationalarm.Utils.Constants.Instances.isDateSelected;
 import static com.trianz.locationalarm.Utils.Constants.Instances.mBottomSheetBehavior1;
 import static com.trianz.locationalarm.Utils.Constants.Instances.mCurrLocationMarker;
 import static com.trianz.locationalarm.Utils.Constants.Instances.mGoogleApiClient;
@@ -92,9 +94,14 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,OnDateSelectedListener, OnMonthChangedListener {
+     ViewGroup content_calender;
+     FrameLayout search_place;
+    ImageView calenderImg;
+    public static final String MY_PREFS_USERNAME = "MyPrefsUserName" ;
 
     @Bind(R.id.calender_frame)
     MaterialCalendarView widget;
+
 
 //    @Bind(R.id.textView)
 //    TextView textView;
@@ -106,7 +113,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         context = this;
-
 
         //calender widget
         ButterKnife.bind(this);
@@ -138,18 +144,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                     .create()
                     .show();
         }
-        if(!isLocationEnabled(this)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.turn_on_gps)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
 
-                            HomeActivity.this.finish();
-                        }
-                    }).setCancelable(false)
-                    .create()
-                    .show();
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
@@ -176,6 +171,8 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
             }
         }
+
+
         HomeController.subscribeToPushService();
     }
 
@@ -184,9 +181,9 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
     public void switchCalenderToMap(){
         //calender switch to map
-        ImageView calenderImg = (ImageView) findViewById(R.id.calenderImg);
-        final FrameLayout search_place = (FrameLayout) findViewById(R.id.search_place_card);
-        final ViewGroup content_calender= (ViewGroup) findViewById(R.id.calender_frame);
+         calenderImg = (ImageView) findViewById(R.id.calenderImg);
+          search_place = (FrameLayout) findViewById(R.id.search_place_card);
+         content_calender= (ViewGroup) findViewById(R.id.calender_frame);
        HomeController.switchCalenderToMapSetUp(this,calenderImg,search_place,content_calender);
     }
 
@@ -195,6 +192,18 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         FloatingActionButton wakeupfab = (FloatingActionButton) findViewById(R.id.fab_wakeup_alarm);
         FloatingActionButton  addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
         FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        HomeController.FloatActionBtnSetup(this,wakeupfab,addReminderLocationfab,remindothersfab,fabMenu);
+
+
+
+    }
+
+
+    public void navigationDrawerAttach() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Button signOut = (Button) findViewById(R.id.signOutBtn);
 
         //close Button in navigation
         final NavigationView  nvDrawer = (NavigationView) findViewById(R.id.nav_view);
@@ -207,18 +216,19 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(Gravity.LEFT);
             }});
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        HomeController.FloatActionBtnSetup(this,wakeupfab,addReminderLocationfab,remindothersfab,fabMenu);
-    }
 
-
-    public void navigationDrawerAttach() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Button signOut = (Button) findViewById(R.id.signOutBtn);
+        TextView UserName_Nav_bar = (TextView) headerView.findViewById(R.id.Username);
+        TextView Email_Nav_bar = (TextView) headerView.findViewById(R.id.emailText);
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_USERNAME, MODE_PRIVATE);
+        String UserName = prefs.getString("UserName","No UserName Defined");
+        String Email = prefs.getString("Email","No Email Defined");
+        UserName_Nav_bar.setText(UserName);
+        Email_Nav_bar.setText(Email);
         HomeController.NavigationDrawerSetup(this,drawer,navigationView,signOut);
 
     }
+
+
 
 
     public void placeAutoComplete(){
@@ -362,21 +372,24 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) + ContextCompat
                 .checkSelfPermission(this,
-                        Manifest.permission.READ_SMS)
+                        Manifest.permission.READ_SMS ) + ContextCompat
+                .checkSelfPermission(this,
+                        Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale
                     (this, Manifest.permission.ACCESS_FINE_LOCATION) ||
                     ActivityCompat.shouldShowRequestPermissionRationale
-                            (this, Manifest.permission.READ_SMS)) {
+                            (this, Manifest.permission.READ_SMS) ||  ActivityCompat.shouldShowRequestPermissionRationale
+                    (this, Manifest.permission.READ_CONTACTS) ) {
 
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_SMS},
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_SMS,Manifest.permission.READ_CONTACTS},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission
-                                .ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS},
+                                .ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS,Manifest.permission.READ_CONTACTS},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
             return false;
@@ -410,6 +423,12 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.READ_SMS)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.READ_CONTACTS)
                             == PackageManager.PERMISSION_GRANTED) {
                         //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
                     }
@@ -561,7 +580,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 //        }
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -582,8 +600,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_remindOthers) {
 
         } else if (id == R.id.nav_wakeUpAlarm) {
-
-        } else if (id == R.id.nav_myReminders) {
 
         } else if (id == R.id.nav_offers) {
 
@@ -606,6 +622,9 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
        // textView.setText(getSelectedDatesString());
         selectedDate = getSelectedDatesString();
+        isDateSelected = false;
+        content_calender.setVisibility(View.INVISIBLE);
+        search_place.setVisibility(View.VISIBLE);
         Toast.makeText(this, selectedDate, Toast.LENGTH_SHORT).show();
     }
 

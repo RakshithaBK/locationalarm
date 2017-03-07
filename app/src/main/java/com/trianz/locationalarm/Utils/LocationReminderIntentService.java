@@ -75,7 +75,6 @@ public class LocationReminderIntentService extends IntentService {
     for (String geofenceId : geofenceIds) {
         String reminder_message = "";
         String reminder_place = "";
-        String reminder_Date_Alarm = "";
 
         // Loop over all geofence keys in prefs and retrieve NamedGeofence from SharedPreference
         Map<String, ?> keys = prefs.getAll();
@@ -85,7 +84,6 @@ public class LocationReminderIntentService extends IntentService {
             if (namedGeofence.id.equals(geofenceId)) {
                 reminder_message = namedGeofence.reminder_msg;
                 reminder_place = namedGeofence.reminder_place;
-                reminder_Date_Alarm = namedGeofence.reminder_Date_ToAlarm;
                 break;
             }
         }
@@ -93,36 +91,26 @@ public class LocationReminderIntentService extends IntentService {
         // Set the notification text and send the notification
         String contextMsg = reminder_message;
         String contextPlace = reminder_place;
-        String contextAlarmDate = reminder_Date_Alarm;
 
-        if(contextAlarmDate==null){
-            callNotification(contextMsg, contextPlace, contextAlarmDate);
-        }else{
-
-        }
+            callNotification(contextMsg, contextPlace);
 
 
     }
   }
 
-  public void  callNotification(String contextMsg ,String contextPlace,String contextDate){
+  public void  callNotification(String contextMsg ,String contextPlace){
     NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
     Intent intent = new Intent(this, HomeActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     PendingIntent pendingNotificationIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-    String titileMsg = "";
-    if(contextDate == null){
-      titileMsg = contextPlace;
-    }else{
-      titileMsg = contextDate;
-    }
+
     // Sound for notification
     Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
     Notification notification = new NotificationCompat.Builder(this)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(titileMsg)
+            .setContentTitle(contextPlace)
             .setContentText(contextMsg)
             .setContentIntent(pendingNotificationIntent)
             .setStyle(new NotificationCompat.BigTextStyle().bigText(contextMsg))

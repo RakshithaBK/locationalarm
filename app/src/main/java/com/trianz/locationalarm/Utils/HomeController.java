@@ -1,5 +1,7 @@
 package com.trianz.locationalarm.Utils;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -22,11 +25,12 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.trianz.locationalarm.AddReminderActivity;
 import com.trianz.locationalarm.AuthenticationActivity;
-import com.trianz.locationalarm.HomeActivity;
 import com.trianz.locationalarm.OffersActivity;
 import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.RemindMeTask;
+import com.trianz.locationalarm.SaveSharedPreferences;
 
+import static com.trianz.locationalarm.HomeActivity.isLocationEnabled;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.SET_REMINDER_REQUEST;
 import static com.trianz.locationalarm.Utils.Constants.Instances.frameLayout;
 import static com.trianz.locationalarm.Utils.Constants.Instances.isDateSelected;
@@ -53,8 +57,25 @@ public class HomeController {
                 int id = menuItem.getItemId();
                 switch (id) {
                     case R.id.nav_addreminder:
-                        Intent addReminders = new Intent(appCompatActivity, HomeActivity.class);
-                        appCompatActivity.startActivity(addReminders);
+                        if(!isLocationEnabled(appCompatActivity)) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(appCompatActivity);
+                            builder.setMessage(R.string.turn_on_gps)
+                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+
+                                        }
+                                    }).setCancelable(false)
+                                    .create()
+                                    .show();
+                        }
+                        if(selectedPlace == null)
+                        {
+                            Toast.makeText(appCompatActivity, "Select a reminder Location", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Intent addReminders = new Intent(appCompatActivity, AddReminderActivity.class);
+                            appCompatActivity.startActivity(addReminders);
+                        }
                         break;
                     case R.id.nav_remindOthers:
                         selfReminderFlag = false;
@@ -63,12 +84,12 @@ public class HomeController {
                         break;
                     case R.id.nav_wakeUpAlarm:
                         selfReminderFlag = true;
-                        Intent wakeUp = new Intent(appCompatActivity, RemindMeTask.class);
-                        appCompatActivity.startActivity(wakeUp);
-                        break;
-                    case R.id.nav_myReminders:
-                        //Do some thing here
-                        // add navigation drawer item onclick method here
+                        if(selectedDate == null){
+                            Toast.makeText(appCompatActivity, "Select a reminder Date", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Intent wakeUp = new Intent(appCompatActivity, RemindMeTask.class);
+                            appCompatActivity.startActivity(wakeUp);
+                        }
                         break;
                     case R.id.nav_offers:
                         Intent offers = new Intent(appCompatActivity, OffersActivity.class);
@@ -84,6 +105,7 @@ public class HomeController {
             public void onClick(View v) {
                 Intent LoginAction = new Intent(appCompatActivity,AuthenticationActivity.class);
                 appCompatActivity.startActivity(LoginAction);
+                SaveSharedPreferences.clearUserName(appCompatActivity);
             }
         });
     }
@@ -121,6 +143,18 @@ public class HomeController {
         addReminderLocationfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(!isLocationEnabled(appCompatActivity)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(appCompatActivity);
+                    builder.setMessage(R.string.turn_on_gps)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            }).setCancelable(false)
+                            .create()
+                            .show();
+                }
 
                 if(selectedPlace == null)
                 {
@@ -188,7 +222,6 @@ public class HomeController {
         calenderImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(!isDateSelected){
                     content_calender.setVisibility(View.VISIBLE);
                     search_place.setVisibility(View.INVISIBLE);

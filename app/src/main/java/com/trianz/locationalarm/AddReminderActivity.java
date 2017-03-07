@@ -21,6 +21,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
 import com.trianz.locationalarm.Utils.Constants;
 import com.trianz.locationalarm.Utils.GeofenceController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
@@ -28,13 +29,6 @@ import com.trianz.locationalarm.Utils.NamedGeofence;
 import java.util.ArrayList;
 
 import static com.trianz.locationalarm.Utils.Constants.Geometry.RESULT_SPEECH;
-import static com.trianz.locationalarm.Utils.Constants.Instances.location_latitude;
-import static com.trianz.locationalarm.Utils.Constants.Instances.location_longitude;
-import static com.trianz.locationalarm.Utils.Constants.Instances.location_name;
-import static com.trianz.locationalarm.Utils.Constants.Instances.message;
-import static com.trianz.locationalarm.Utils.Constants.Instances.place;
-import static com.trianz.locationalarm.Utils.Constants.Instances.radius;
-import static com.trianz.locationalarm.Utils.Constants.Instances.reminder_message;
 import static com.trianz.locationalarm.Utils.Constants.Instances.speechToText;
 
 public class AddReminderActivity extends AppCompatActivity {
@@ -43,6 +37,11 @@ public class AddReminderActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    Place place;
+    String location_name,reminder_message;
+    double location_latitude, location_longitude;
+    float radius;
+    EditText message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +102,8 @@ public class AddReminderActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+            //noinspection SimplifiableIfStatement
+            if (id == R.id.action_settings) {
                 location_name = place.getName().toString();
                 location_latitude = place.getLatLng().latitude;
                 location_longitude = place.getLatLng().longitude;
@@ -133,7 +132,6 @@ public class AddReminderActivity extends AppCompatActivity {
                 }
                 return true;
             }
-
             return super.onOptionsItemSelected(item);
         }
 
