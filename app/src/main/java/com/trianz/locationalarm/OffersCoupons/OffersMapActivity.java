@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.OffersCoupons;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -27,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.Utils.Constants;
 import com.trianz.locationalarm.Utils.GetNearbyPlacesData;
 
@@ -223,7 +224,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
         Log.d("onClick", url);
         GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
         getNearbyPlacesData.execute(DataTransfer);
-        Toast.makeText(OffersMapActivity.this,keyToSearch, Toast.LENGTH_LONG).show();
+
     }
 
 

@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.Authentication;
 
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
@@ -19,6 +19,9 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.trianz.locationalarm.Fragments.LoginFragment;
+import com.trianz.locationalarm.Fragments.RegistrationFragment;
+import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.Utils.FingerprintHandler;
 
 import java.io.IOException;
@@ -64,16 +67,16 @@ public class AuthenticationActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Register"));
 
         //replace default fragment
-        replaceFragment(new LoginActivity());
+        replaceFragment(new LoginFragment());
 
         //handling tab click event
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
-                    replaceFragment(new LoginActivity());
+                    replaceFragment(new LoginFragment());
                 }  else {
-                    replaceFragment(new RegistrationActivity());
+                    replaceFragment(new RegistrationFragment());
                 }
             }
 

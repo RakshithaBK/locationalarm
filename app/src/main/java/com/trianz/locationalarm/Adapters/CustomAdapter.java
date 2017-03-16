@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.Adapters;
 
 /**
  * Created by Dibyojyoti.Majumder on 25-04-2016.
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.trianz.locationalarm.R;
 
 public class CustomAdapter extends BaseAdapter {
     String[] result;

@@ -1,61 +1,70 @@
-package com.trianz.locationalarm;
-
-/**
- * Created by Dibyojyoti.Majumder on 04-01-2017.
- */
+package com.trianz.locationalarm.Services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
+import android.widget.Toast;
 
-public class AlarmReceiver extends WakefulBroadcastReceiver {
+import com.trianz.locationalarm.R;
+
+/**
+ * Created by Rakshitha.Krishnayya on 02-03-2017.
+ */
+
+public class ReminderReceiver extends WakefulBroadcastReceiver {
 
     private NotificationManager alarmNotificationManager;
     int pendingIntentRequestCode;
-    String audioFilePath;
+    Ringtone ringtone;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+        Toast.makeText(context, "Received", Toast.LENGTH_SHORT).show();
+
+        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        if (alarmUri == null) {
+            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        }
+        ringtone = RingtoneManager.getRingtone(context, alarmUri);
+        ringtone.play();
+
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(2000);
+        long[] pattern = {0,100,1000,300,200,100,500,200,100};
+        vibrator.vibrate(pattern,-1);
 
         Bundle bundle = intent.getExtras();
         String reminderEvent = bundle.getString("reminderEvent");
-        Boolean allDayFlag = bundle.getBoolean("allDayFlag");
-        String repeatAlarmIntervalValue = bundle.getString("repeatAlarmIntervalValue");
-        String notificationTypeValue = bundle.getString("notificationTypeValue");
         pendingIntentRequestCode = bundle.getInt("pendingIntentRequestCode");
 
-        if (notificationTypeValue.equals("Voice")) {
-            audioFilePath = bundle.getString("audioFilePath");
-        }
 
-        Log.d("reminderEvent", reminderEvent);
-
-        if (allDayFlag == false) {
-            Intent alarmringingIntent = new Intent(context, AlarmRingingActivity.class);
-//            alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-            alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            alarmringingIntent.putExtra("reminderEvent", reminderEvent);
-            alarmringingIntent.putExtra("repeatAlarmIntervalValue", repeatAlarmIntervalValue);
-            alarmringingIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
-            alarmringingIntent.putExtra("notificationTypeValue", notificationTypeValue);
-            if (notificationTypeValue.equals("Voice")) {
-                alarmringingIntent.putExtra("audioFilePath", audioFilePath);
-            }
-            context.startActivity(alarmringingIntent);
-        }
+//        Intent alarmringingIntent = new Intent(context, AlarmRingingForOthers.class);
+//           alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+//        alarmringingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        alarmringingIntent.putExtra("reminderEvent", reminderEvent);
+//        alarmringingIntent.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
+//        context.startActivity(alarmringingIntent);
 
         sendNotification(reminderEvent, context);
-
+        Handler h2 = new Handler();
+        long alarmDuration = 1000 * 10 ;
+        h2.postDelayed(new Runnable() {
+            public void run() {
+                ringtone.stop();
+            }
+        }, alarmDuration);
     }
+
+
 
     private void sendNotification(String msg, Context context) {
         Log.d("AlarmService", "Preparing to send notification...: " + msg);
@@ -64,7 +73,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                new Intent(context, ReminderSetActivity.class), 0);
+                new Intent(context, MyFirebaseMessagingService.class), 0);
 
         NotificationCompat.Builder alamNotificationBuilder = new NotificationCompat.Builder(context)
                 .setContentTitle("Location Alarm Application").setSmallIcon(R.mipmap.ic_launcher)
@@ -77,7 +86,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Log.d("AlarmService", "Notification sent.");
 
         Handler h = new Handler();
-        long delayInMilliseconds = 1000 * 60 * 10;
+        long delayInMilliseconds = 1000 * 60 * 60;
         h.postDelayed(new Runnable() {
             public void run() {
                 alarmNotificationManager.cancel(pendingIntentRequestCode);

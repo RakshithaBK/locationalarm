@@ -1,6 +1,7 @@
 package com.trianz.locationalarm.Utils;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -19,16 +20,20 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.trianz.locationalarm.AddReminderActivity;
-import com.trianz.locationalarm.AuthenticationActivity;
-import com.trianz.locationalarm.OffersActivity;
+import com.trianz.locationalarm.OffersCoupons.OffersActivity;
 import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.RemindMeTask;
-import com.trianz.locationalarm.SaveSharedPreferences;
 
 import static com.trianz.locationalarm.HomeActivity.isLocationEnabled;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.SET_REMINDER_REQUEST;
@@ -100,16 +105,23 @@ public class HomeController {
                 return false;
             }
         });
-
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent LoginAction = new Intent(appCompatActivity,AuthenticationActivity.class);
-                appCompatActivity.startActivity(LoginAction);
-                SaveSharedPreferences.clearUserName(appCompatActivity);
-            }
-        });
+//
+//        signOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                logoutUser(appCompatActivity);
+////                SharedPreferences preferences = appCompatActivity.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+////                SharedPreferences.Editor editor = preferences.edit();
+////                editor.remove("AccessToken");
+////                editor.remove("UserName");
+////                editor.remove("Email");
+////                editor.clear();
+////                editor.commit();
+//            }
+//        });
     }
+
+
 
     public static void FloatActionBtnSetup(final AppCompatActivity appCompatActivity, FloatingActionButton wakeupfab, FloatingActionButton addReminderLocationfab,
                                             FloatingActionButton remindothersfab, final FloatingActionsMenu fabMenu){
@@ -239,5 +251,21 @@ public class HomeController {
             }
         });
     }
+
+    public static void errorInResponse(Response.ErrorListener appCompatActivity, VolleyError volleyError){
+        String message = null;
+        if (volleyError instanceof NetworkError) {
+            message = "Cannot connect to Internet...Please check your connection!";
+        } else if (volleyError instanceof ServerError) {
+            message = "The server could not be found. Please try again after some time!!";
+        } else if (volleyError instanceof AuthFailureError) {
+            message = "Cannot connect to Internet...Please check your connection!";
+        } else if (volleyError instanceof TimeoutError) {
+            message = "Connection TimeOut! Please check your internet connection.";
+        }
+        Toast.makeText((Context) appCompatActivity, message, Toast.LENGTH_SHORT).show();
+    }
+
+
 
 }

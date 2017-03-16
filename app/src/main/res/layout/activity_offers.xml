@@ -5,7 +5,7 @@
     android:id="@+id/activity_offers"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.trianz.locationalarm.OffersActivity">
+    tools:context="com.trianz.locationalarm.OffersCoupons.OffersActivity">
     <include layout="@layout/tool_bar"/>
     <LinearLayout
         android:layout_width="match_parent"

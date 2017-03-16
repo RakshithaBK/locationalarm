@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.OffersCoupons;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,8 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.trianz.locationalarm.Adapters.OffersListAdapter;
+import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.Utils.SMSData;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class OffersActivity extends AppCompatActivity {
     }
     public void cursorReadInbox(){
         Uri uri = Uri.parse("content://sms/inbox");
-        final Pattern sLimitPattern = Pattern.compile("^[A-Z][A-Z]-[A-Z]+");
+        final Pattern sLimitPattern = Pattern.compile("^[A-Z][A-Z]-?[A-Z]+");
         c = getContentResolver().query(uri, new String[]{"_id", "address", "date", "body"},null ,null,null);
         startManagingCursor(c);
         // Read the sms data and store it in the list
@@ -59,6 +60,10 @@ public class OffersActivity extends AppCompatActivity {
             for (int i = 0; i < c.getCount(); i++) {
                 SMSData sms = new SMSData();
                 address = c.getString(c.getColumnIndexOrThrow("address"));
+                if(address.length()>=6){
+                    address = address.substring(address.length()-6);
+                }
+
                 smsBody = c.getString(c.getColumnIndexOrThrow("body"));
                 addressList.put(address, smsBody);
                 matcher = sLimitPattern.matcher(address);
@@ -88,36 +93,8 @@ public class OffersActivity extends AppCompatActivity {
 
                 while(addressList.containsKey(s)){
                     if(findMyPattern.matcher(s).matches()){
-                        if(s.equals("VK-HDFCBK") || s.equals("VM-HDFCBK") || s.equals("DM-HDFCBK") ){
-                            searchKey = "Hdfcbank";
-                            moveaToMap();
-                        }else if(s.equals("AD-OLACBS") || s.equals("IX-OLACBS") || s.equals("VM-OLACAB") ||s.equals("VK-OLACAB") ){
-                            searchKey = "Ola";
-                            moveaToMap();
-                        }else if(s.equals("VK-PANTLS") || s.equals("VM-PANTLS") ){
-                            searchKey = "Pantaloons";
-                            moveaToMap();
-                        }else if(s.equals("VM-DOMINO")){
-                            searchKey = "Dominos";
-                            moveaToMap();
-                        }else if(s.equals("VM-BIGBZR")){
-                            searchKey = "BigBazarShops";
-                            moveaToMap();
-                        }else if(s.equals("VK-UBERIN")){
-                            searchKey = "Uber";
-                            moveaToMap();
-                        }else if(s.equals("DM-Centrl")){
-                            searchKey = "CentralMall";
-                            moveaToMap();
-                        }else if(s.equals("DM-ENCRL")){
-                            searchKey = "Titan";
-                            moveaToMap();
-                        }else if(s.equals("AX-ARWINF")) {
-                            searchKey = "Airtel";
-                            moveaToMap();
-                        }else{
-                            Toast.makeText(OffersActivity.this, "No location found", Toast.LENGTH_SHORT).show();
-                        }
+                       searchKey = s;
+                        moveaToMap();
                     }
                     break;
                 }
@@ -139,5 +116,34 @@ public class OffersActivity extends AppCompatActivity {
         }
     }
 
-
+//    if(s.equals("HDFCBK")){
+//        searchKey = "Hdfcbank";
+//        moveaToMap();
+//    }else if(s.equals("OLACBS")){
+//        searchKey = "Ola";
+//        moveaToMap();
+//    }else if(s.equals("PANTLS")){
+//        searchKey = "Pantaloons";
+//        moveaToMap();
+//    }else if(s.equals("DOMINO")){
+//        searchKey = "Dominos";
+//        moveaToMap();
+//    }else if(s.equals("BIGBZR")){
+//        searchKey = "BigBazarShops";
+//        moveaToMap();
+//    }else if(s.equals("UBERIN")){
+//        searchKey = "Uber";
+//        moveaToMap();
+//    }else if(s.equals("Centrl")){
+//        searchKey = "CentralMall";
+//        moveaToMap();
+//    }else if(s.equals("ENCRL")){
+//        searchKey = "Titan";
+//        moveaToMap();
+//    }else if(s.equals("ARWINF")) {
+//        searchKey = "Airtel";
+//        moveaToMap();
+//    }else{
+//        Toast.makeText(OffersActivity.this, "No location found", Toast.LENGTH_SHORT).show();
+//    }
 }

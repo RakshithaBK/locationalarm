@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.Services;
 
 /**
  * Created by Dibyojyoti.Majumder on 04-01-2017.
@@ -11,6 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.trianz.locationalarm.R;
+import com.trianz.locationalarm.ReminderSetActivity;
 
 public class AlarmService extends IntentService {
     private NotificationManager alarmNotificationManager;

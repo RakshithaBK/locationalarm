@@ -3,11 +3,17 @@ package com.trianz.locationalarm.Utils;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trianz.locationalarm.R;
 
+import java.text.DateFormatSymbols;
+
+import static com.trianz.locationalarm.ReminderSetActivity.reminder_message;
 import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.repeatAlarmIntervalValue;
 
 /**
@@ -101,5 +107,40 @@ public class ReminderSetController {
             }
         });
     }
+
+    public static String pad(int c) {
+        if (c >= 10)
+            return String.valueOf(c);
+        else
+            return "0" + String.valueOf(c);
+    }
+
+    public static boolean dataIsValid() {
+        boolean validData = true;
+
+        String reminderString = reminder_message;
+
+        if (TextUtils.isEmpty(reminderString)) {
+            validData = false;
+        } else {
+
+            validData = true;
+        }
+
+        return validData;
+    }
+
+    public static void showValidationErrorToast(AppCompatActivity appCompatActivity) {
+        Toast.makeText(appCompatActivity, appCompatActivity.getString(R.string.Toast_Validation), Toast.LENGTH_SHORT).show();
+    }
+
+    public static String getMonth(int month) {
+        String getMonthText = new DateFormatSymbols().getMonths()[month];
+        getMonthText = getMonthText.substring(0,3);
+        Log.d("month",getMonthText);
+        return getMonthText;
+    }
+
+
 
 }

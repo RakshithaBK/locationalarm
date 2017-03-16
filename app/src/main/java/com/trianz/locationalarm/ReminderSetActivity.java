@@ -19,7 +19,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,18 +31,19 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.trianz.locationalarm.Services.AlarmReceiver;
 import com.trianz.locationalarm.Utils.GeofenceController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
 import com.trianz.locationalarm.Utils.ReminderSetController;
 
 import java.io.IOException;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 import static android.R.attr.radius;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_RECORD;
+import static com.trianz.locationalarm.Utils.ReminderSetController.pad;
 
 
 /**
@@ -56,7 +56,7 @@ public class ReminderSetActivity extends AppCompatActivity {
     String remindMeBeforeTimeValue = "0minutes";
     String repeatAlarmIntervalValue = "Does not repeat";
     String reminderEvent;
-    private String reminder_message, Date_To_remid;
+    public static String reminder_message, Date_To_remid;
 
     int remindMeBeforeTimeValueInInt = 0;
     int counterMinitueValue;
@@ -601,7 +601,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 else if (repeatAlarmIntervalValue == "everyYear"){
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 365 , alarmPendingIntent);
                 }
-                String selectedDateReminder = getMonth(selectedMonthAlarm) + " " + String.valueOf(selectedDayAlarm) + ", " + String.valueOf(selectedYearAlarm) ;
+                String selectedDateReminder = ReminderSetController.getMonth(selectedMonthAlarm) + " " + String.valueOf(selectedDayAlarm) + ", " + String.valueOf(selectedYearAlarm) ;
                 addReminderToList(selectedDateReminder,reminderEvent);
 
                 Handler h = new Handler();
@@ -620,14 +620,9 @@ public class ReminderSetActivity extends AppCompatActivity {
 
     }
 
-    public String getMonth(int month) {
-        String getMonthText = new DateFormatSymbols().getMonths()[month];
-        getMonthText = getMonthText.substring(0,3);
-        Log.d("month",getMonthText);
-        return getMonthText;
-    }
 
-    public void addReminderToList(String reminderDate,String reminder_msg){
+
+    public  void addReminderToList(String reminderDate,String reminder_msg){
 
         reminder_message = reminder_msg;
         Date_To_remid = reminderDate;
@@ -637,7 +632,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                     .setAction("Action", null).show();
         } else {
 
-            if (dataIsValid()) {
+            if (ReminderSetController.dataIsValid()) {
 
                 NamedGeofence geofence = new NamedGeofence();
                 geofence.reminder_msg = reminder_message;
@@ -647,31 +642,13 @@ public class ReminderSetActivity extends AppCompatActivity {
 
 
             } else {
-                showValidationErrorToast();
+                ReminderSetController.showValidationErrorToast(this);
             }
 
         }
 
     }
 
-    public boolean dataIsValid() {
-        boolean validData = true;
-
-        String reminderString = reminder_message;
-
-        if (TextUtils.isEmpty(reminderString)) {
-            validData = false;
-        } else {
-
-            validData = true;
-        }
-
-        return validData;
-    }
-
-    private void showValidationErrorToast() {
-        Toast.makeText(ReminderSetActivity.this, ReminderSetActivity.this.getString(R.string.Toast_Validation), Toast.LENGTH_SHORT).show();
-    }
 
     private GeofenceController.GeofenceControllerListener geofenceControllerListener = new GeofenceController.GeofenceControllerListener() {
         @Override
@@ -688,6 +665,8 @@ public class ReminderSetActivity extends AppCompatActivity {
 
 
     };
+
+
 
     //when the alarm started ringing open a view
 //    public void openAlarmView() {
@@ -775,13 +754,6 @@ public class ReminderSetActivity extends AppCompatActivity {
                 PackageManager.FEATURE_MICROPHONE);
     }
 
-
-    private static String pad(int c) {
-        if (c >= 10)
-            return String.valueOf(c);
-        else
-            return "0" + String.valueOf(c);
-    }
 
 
     public boolean checkLocationPermission(){

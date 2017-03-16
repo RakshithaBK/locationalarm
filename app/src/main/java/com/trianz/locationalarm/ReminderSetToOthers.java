@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.trianz.locationalarm.Utils.HomeController;
 import com.trianz.locationalarm.Utils.ReminderSetController;
 
 import org.json.JSONException;
@@ -44,6 +45,8 @@ import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_DATE;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_PHONENUMBER;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_REPEATALARMVALUE;
 import static com.trianz.locationalarm.Utils.Constants.Instances.KEY_Time;
+import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.MY_PREFS_NAME;
+import static com.trianz.locationalarm.Utils.ReminderSetController.pad;
 
 
 /**
@@ -65,7 +68,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
     int selectedYearAlarm;
     int selectedMonthAlarm;
     int selectedDayAlarm;
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
+
 
     //for post req
     private static final String REMIND_TO_OTHERS_URL = "http://52.30.191.42:8080/locationAlarm/alarm/reminderothers/send";
@@ -302,7 +305,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
     private void sendReminderDetailsToBackend() {
 
         HashMap<String,String> params = new HashMap<String, String>();
-        String selectedTime = String.valueOf(selectedHourAlarm) + ":" + String.valueOf(pad(selectedMinuteAlarm));
+        String selectedTime = String.valueOf(pad(selectedHourAlarm)) + ":" + String.valueOf(pad(selectedMinuteAlarm));
         String selectedDate = String.valueOf(pad(selectedDayAlarm))+ "/" + String.valueOf(pad(selectedMonthAlarm + 1)) + "/" + String.valueOf(selectedYearAlarm);
         params.put(KEY_Time, selectedTime);
         params.put(KEY_DATE,selectedDate );
@@ -310,6 +313,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
         params.put(KEY_REPEATALARMVALUE, repeatAlarmIntervalValue);
         params.put(KEY_ALLDAYFLAG, reminderEvent);
         JSONObject jsonBody = new JSONObject(params);
+        Log.d("send reminders",params.toString());
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, REMIND_TO_OTHERS_URL,jsonBody,
 
@@ -337,7 +341,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ReminderSetToOthers.this,error.toString(),Toast.LENGTH_LONG).show();
+                        HomeController.errorInResponse(this,error);
                     }
                 }){
 
@@ -364,11 +368,6 @@ public class ReminderSetToOthers extends AppCompatActivity {
 
     }
 
-    private static String pad(int c) {
-        if (c >= 10)
-            return String.valueOf(c);
-        else
-            return "0" + String.valueOf(c);
-    }
+
 
 }

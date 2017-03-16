@@ -1,7 +1,6 @@
 package com.trianz.locationalarm.Utils;
 
 import android.app.KeyguardManager;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.fingerprint.FingerprintManager;
@@ -10,7 +9,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,7 +21,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
-import com.trianz.locationalarm.RemindersListAdapter;
+import com.trianz.locationalarm.Adapters.RemindersListAdapter;
 
 import java.security.KeyStore;
 import java.text.DateFormat;
@@ -46,6 +44,7 @@ public class Constants {
     public static double MaxRadius = 20.0; // kilometers
     public static  int PROXIMITY_RADIUS = 1000;
       public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+      public static final int MY_PERMISSIONS_REQUEST_SENDSMS = 99;
       public static final int MY_PERMISSIONS_REQUEST_RECORD = 99;
       public static int SET_REMINDER_REQUEST = 1;
       // The minimum distance to change updates in meters
@@ -59,8 +58,7 @@ public class Constants {
 
   public static class SharedPrefs {
     public static String Geofences = "SHARED_PREFS_GEOFENCES";
-
-      public static String remindMeBeforeTimeValue = "20minutes";
+      public static final String MY_PREFS_NAME = "MyPrefsFile";
       public static String repeatAlarmIntervalValue = "Does not repeat";
 
   }
@@ -118,12 +116,6 @@ public class Constants {
         public static final String KEY_REPEATALARMVALUE = "repeat";
 
 
-
-        //Notification
-        public static NotificationManager notificationManager;
-        public static  int DISCARD_KEY = 1;
-        public static  int SAVE_KEY = 1;
-
         //fingerPrint Auth
         public static TabLayout tabLayout;
         public static LinearLayout container;
@@ -163,15 +155,46 @@ public class Constants {
         public static final String KEY_MOBILE = "mobile";
         public static final String KEY_EMAIL = "email";
         public static final String KEY_PASSWORD = "password";
+        public static final String KEY_USERNAME = "username";
         public static final String KEY_TOKEN = "fcmRegistrationId";
 
         public static final String KEY_MOBILE_LOGIN = "mobile";
         public static final String KEY_PASSWORD_LOGIN = "password";
+
+        public static final String KEY_REG_OTP = "otp";
+        public static final String KEY_REG_OTP_TOKEN = "otp_token";
+        public static final String KEY_REG_OTP_SENDER = "mobile";
+
+        public static final String KEY_FORPWD_MOBILE = "mobile";
+        public static final String KEY_FORPWD_OTP_TOKEN = "password_otp_token";
+        public static final String KEY_FORPWD_PWD_OTP = "password_otp";
+        public static final String KEY_FORPWD_NEW_PASSWORD = "password";
+
+        //send response notification
+        public static final String KEY_RESPONSE_DATE = "date";
+        public static final String KEY_RESPONSE_TIME = "time";
+        public static final String KEY_RESPONSE_REMINDER_TYPE = "reminder_type";
+        public static final String KEY_RESPONSE_REPLY_TO = "reply_to";
+        public static final String KEY_RESPONSE_REPLY_STATUS= "reply_status";
+        public static final String KEY_RESPONSE_REPEAT= "repeat";
+
+
+
+
+
     }
 
     public static class serviceUrls{
         public static final String REGISTER_URL = "http://52.30.191.42:8080/locationAlarm/alarm/register/user";
         public static final String LOGIN_URL = "http://52.30.191.42:8080/locationAlarm/alarm/login/user";
+        public static final String REG_OTP_VERIFICATION_URL = "http://52.30.191.42:8080/locationAlarm/alarm/register/verifyOTP";
+        public static final String FORGOTPWD_URL= "http://52.30.191.42:8080/locationAlarm/alarm/login/forgotPassword/sendOtp";
+        public static final String FORGOTPWD_OTP_VERIFICATION_URL= "http://52.30.191.42:8080/locationAlarm/alarm/login/forgotPassword/verifyOtp";
+        public static final String LOGOUT_URL = "http://52.30.191.42:8080/locationAlarm/alarm/logout/user";
+        public static final String SEND_NOTIFICATION_RESPONSE_ = "http://52.30.191.42:8080/locationAlarm/alarm/reminderothers/reply";
+
+
+
     }
 
 }

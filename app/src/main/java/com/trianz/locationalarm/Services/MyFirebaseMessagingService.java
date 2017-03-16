@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.Services;
 
 /**
  * Created by AndroidBash on 20-Aug-16.
@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.provider.Contacts;
@@ -20,10 +19,10 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.trianz.locationalarm.R;
+import com.trianz.locationalarm.SetReminderSentByOthers;
 
-import static com.trianz.locationalarm.Utils.Constants.Instances.DISCARD_KEY;
-import static com.trianz.locationalarm.Utils.Constants.Instances.SAVE_KEY;
-import static com.trianz.locationalarm.Utils.Constants.Instances.notificationManager;
+import java.util.Random;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -31,6 +30,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     Bitmap bitmap;
     String message_body;
     String message_body2;
+    String messageTitle;
+    String reply_status;
     int reminderDay;
     int reminderMonth;
     int reminderYear;
@@ -38,7 +39,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     int reminderMinute;
     String reminder_message;
     AlarmManager alarmManager;
+    String reply_status_msg;
     int  pendingIntentRequestCode;
+    int DISCARD_KEY = 1;
+    int notify_ID;
+
+    public  NotificationManager notificationManager;
+
+
+
 
 
 
@@ -49,6 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         // TODO(developer): Handle FCM messages here.
         // If the application is in the foreground handle both data and notification messages here.
@@ -72,17 +82,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //You can change as per the requirement.
         try{
             //message will contain the Push Message
-            String messageTitle = remoteMessage.getData().get("from_mobile");
+             messageTitle = remoteMessage.getData().get("from_mobile");
             //message will contain the Push Message body
+            reply_status = remoteMessage.getData().get("reply_status");
             message_body = remoteMessage.getData().get("date");
             message_body2 = remoteMessage.getData().get("time");
             reminder_message = remoteMessage.getData().get("reminder_type");
-
-            Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.play);
-            //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
-            //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
+         //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
             String TrueOrFlase = remoteMessage.getData().get("AnotherActivity");
-            sendNotification(reminder_message, messageTitle,bm, TrueOrFlase, message_body,message_body2);
+
+            if(reply_status == null){
+                sendNotification(reminder_message, messageTitle, TrueOrFlase, message_body,message_body2);
+            }else{
+                sendResponseNotification(reminder_message,messageTitle,reply_status);
+            }
+
+
         }catch (Exception e){
             Log.d("error",e.toString());
         }
@@ -92,51 +107,84 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Create and show a simple notification containing the received FCM message.
      */
 
-    public void sendNotification(String reminder_message,String Title, Bitmap image, String TrueOrFalse, String message_body,String message_body2) {
+    public void sendNotification(String reminder_message,String Title, String TrueOrFalse, String message_body,String message_body2) {
         Title = getContactName(Title);
+
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("AnotherActivity", TrueOrFalse);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                /* .setLargeIcon(image)Notification icon image*/
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_appicon)
                 .setContentTitle(Title)
                 .setContentText("Date: " + message_body + "\n" + "Time: " + message_body2)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText("wants to remind you about " + reminder_message + "\n" + "Date: " + message_body + " " + "Time: " + message_body2))/*Notification with Image*/
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .addAction(R.mipmap.ic_addlocation, "Save", SaveIntent())
-                .addAction(R.mipmap.ic_addreminder, "Discard", DiscardIntent());
+                .addAction(R.mipmap.ic_addlocation, "Save", SaveIntent());
+                //.addAction(R.mipmap.ic_addreminder, "Discard", DiscardIntent());
 
-        notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(pendingIntentRequestCode /* ID of notification */, notificationBuilder.build());
-
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+         notify_ID = generateRandomNumber();
+        Log.d("notify_id",String.valueOf(notify_ID));
+        notificationManager.notify(notify_ID /* ID of notification */, notificationBuilder.build());
 
     }
+
+
+    public void sendResponseNotification(String reminder_message,String Title, String reply_status) {
+        Title = getContactName(Title);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+               /* .setLargeIcon(image)Notification icon image*/
+                .setSmallIcon(R.mipmap.ic_appicon)
+                .setContentTitle(Title)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Reminder message " + reminder_message  + " has been " + reply_status))/*Notification with Image*/
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notify_ID = generateRandomNumber();
+        notificationManager.notify(notify_ID /* ID of notification */, notificationBuilder.build());
+
+    }
+    private int generateRandomNumber(){
+        Random rand = new Random();
+        int  n = rand.nextInt(50) + 1;
+        return n;
+    }
+
+
     public PendingIntent DiscardIntent(){
-        Intent disAgreeIntent = new Intent(this, PushNotificationReceiver.class);
-        DISCARD_KEY = 0;
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, disAgreeIntent, 0);
-        startService(disAgreeIntent);
+        Intent disAgreeIntent = new Intent(MyFirebaseMessagingService.this, SetReminderSentByOthers.class);
+        reply_status_msg = "Rejected";
+        disAgreeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        sendSavedExtras(disAgreeIntent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,disAgreeIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        return  pendingIntent;
+    }
+
+    public PendingIntent SaveIntent(){
+        Intent SetReminderSentByOthers = new Intent(MyFirebaseMessagingService.this, SetReminderSentByOthers.class);
+        reply_status_msg = "Accepted";
+        SetReminderSentByOthers.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        sendSavedExtras(SetReminderSentByOthers);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,SetReminderSentByOthers,PendingIntent.FLAG_UPDATE_CURRENT);
         return  pendingIntent;
     }
 
 
-    public PendingIntent SaveIntent(){
-        Intent SetReminderSentByOthers = new Intent(MyFirebaseMessagingService.this,SetReminderSentByOthers.class);
+
+    public void sendSavedExtras(Intent SetReminderSentByOthers){
         reminderDay = Integer.parseInt(message_body.substring(0,2));
-        reminderMonth = Integer.parseInt(message_body.substring(3,5)) - 1;
+        reminderMonth = Integer.parseInt(message_body.substring(3,5))-1;
         reminderYear = Integer.parseInt(message_body.substring(6,10));
         reminderHour = Integer.parseInt(message_body2.substring(0,2));
         reminderMinute = Integer.parseInt(message_body2.substring(3,5));
-        SetReminderSentByOthers.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        pendingIntentRequestCode = reminderHour + reminderMinute + reminderDay + reminderMonth + reminderYear;
 
         SetReminderSentByOthers.putExtra("reminderDay", reminderDay);
         SetReminderSentByOthers.putExtra("reminderMinute", reminderMinute);
@@ -145,15 +193,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         SetReminderSentByOthers.putExtra("reminderYear", reminderYear);
         SetReminderSentByOthers.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
         SetReminderSentByOthers.putExtra("reminderEvent", reminder_message);
-
-        startActivity(SetReminderSentByOthers);
-
-
-        Intent agreeIntent = new Intent(this,HomeActivity.class);
-        SAVE_KEY = 0;
-        PendingIntent resultIntent =PendingIntent.getActivity(this,0,agreeIntent,0);
-        return  resultIntent;
+        SetReminderSentByOthers.putExtra("sender",messageTitle);
+        SetReminderSentByOthers.putExtra("fromNotification", true);
+        SetReminderSentByOthers.putExtra("DISCARD_KEY",DISCARD_KEY);
+        SetReminderSentByOthers.putExtra("Status_msg",reply_status_msg);
+        pendingIntentRequestCode = reminderHour + reminderMinute + reminderDay + reminderMonth + reminderYear;
     }
+
 
     public String getContactName(final String phoneNumber)
     {
@@ -190,6 +236,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             return contactName;
         }
     }
+
 
 }
 

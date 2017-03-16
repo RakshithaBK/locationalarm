@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.Fragments;
 
 /**
  * Created by Dibyojyoti.Majumder on 09-01-2017.
@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.trianz.locationalarm.R;
 
 public class ContactFragment extends Fragment implements OnMapReadyCallback {
     MapView mapView;

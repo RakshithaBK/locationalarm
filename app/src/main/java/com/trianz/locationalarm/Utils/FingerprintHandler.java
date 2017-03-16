@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.trianz.locationalarm.HomeActivity;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.MY_PREFS_NAME;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class FingerprintHandler extends
@@ -44,9 +45,9 @@ public class FingerprintHandler extends
     @Override
     public void onAuthenticationError(int errMsgId,
                                       CharSequence errString) {
-        Toast.makeText(appContext,
-                "Authentication error\n" + errString,
-                Toast.LENGTH_LONG).show();
+//        Toast.makeText(appContext,
+//                "Authentication error\n" + errString,
+//                Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -68,7 +69,7 @@ public class FingerprintHandler extends
     public void onAuthenticationSucceeded(
             FingerprintManager.AuthenticationResult result) {
 
-        SharedPreferences prefs = appContext.getSharedPreferences(HomeActivity.MY_PREFS_USERNAME, MODE_PRIVATE);
+        SharedPreferences prefs = appContext.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String UserName = prefs.getString("UserName","No UserName Defined");
 
         Log.d("Username in ", UserName);

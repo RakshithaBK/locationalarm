@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.Authentication;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.trianz.locationalarm.HomeActivity;
+import com.trianz.locationalarm.R;
+import com.trianz.locationalarm.Utils.SaveSharedPreferences;
 
 
 public class SplashActivity extends Activity {

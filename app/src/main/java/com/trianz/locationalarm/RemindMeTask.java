@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.trianz.locationalarm.Adapters.CustomAdapter;
+
 import static com.trianz.locationalarm.Utils.Constants.Instances.selfReminderFlag;
 
 
@@ -33,6 +35,7 @@ public class RemindMeTask extends AppCompatActivity {
     ImageView closeTask;
     String reminderDate;
 
+
     public static String[] remindMeList={"Task","Meet","Hospital","Buy","Call","Event"};
     public static int [] remindMeImages={R.mipmap.ic_task,R.mipmap.ic_meet,R.mipmap.ic_hospital,R.mipmap.ic_buy,R.mipmap.ic_call,R.mipmap.ic_event};
     @Override
@@ -44,9 +47,8 @@ public class RemindMeTask extends AppCompatActivity {
         getTask = (EditText)findViewById(R.id.et_remindmeto);
         getTask.setHintTextColor(getResources().getColor(R.color.white));
 
-        Bundle bundle = getIntent().getExtras();
-        reminderDate = bundle.getString("reminderDate");
-        Log.d("reminderDate",reminderDate);
+
+
         context = this;
 
         lv = (ListView) findViewById(R.id.listView);
@@ -107,6 +109,9 @@ public class RemindMeTask extends AppCompatActivity {
                 pickedTask = getTask.getText().toString();
 
                 if(selfReminderFlag) {
+                    Bundle bundle = getIntent().getExtras();
+                    reminderDate = bundle.getString("reminderDate");
+                    Log.d("reminderDate",reminderDate);
                      intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
                     intent.putExtra("reminderDate",reminderDate);
 

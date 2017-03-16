@@ -1,4 +1,4 @@
-package com.trianz.locationalarm;
+package com.trianz.locationalarm.Services;
 
 /**
  * Created by AndroidBash on 20-Aug-16.

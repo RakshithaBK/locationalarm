@@ -38,6 +38,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.common.ConnectionResult;
@@ -60,12 +65,20 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+import com.trianz.locationalarm.Adapters.RemindersListAdapter;
+import com.trianz.locationalarm.Authentication.AuthenticationActivity;
 import com.trianz.locationalarm.Utils.GeofenceController;
 import com.trianz.locationalarm.Utils.HomeController;
+import com.trianz.locationalarm.Utils.MySingleton;
 import com.trianz.locationalarm.Utils.NamedGeofence;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -89,6 +102,8 @@ import static com.trianz.locationalarm.Utils.Constants.Instances.remindersListAd
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedDate;
 import static com.trianz.locationalarm.Utils.Constants.Instances.selectedPlace;
 import static com.trianz.locationalarm.Utils.Constants.Instances.toolbar;
+import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.MY_PREFS_NAME;
+import static com.trianz.locationalarm.Utils.Constants.serviceUrls.LOGOUT_URL;
 
 public class HomeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -97,7 +112,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
      ViewGroup content_calender;
      FrameLayout search_place;
     ImageView calenderImg;
-    public static final String MY_PREFS_USERNAME = "MyPrefsUserName" ;
+
 
     @Bind(R.id.calender_frame)
     MaterialCalendarView widget;
@@ -113,11 +128,33 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         context = this;
+//        Calendar get_today = Calendar.getInstance();
+//        SimpleDateFormat cDayFormat = new SimpleDateFormat("d");
+//        String cDay = cDayFormat.format(get_today.getTime());
+//        int get_day = Integer.parseInt(cDay);
+//        Log.d("get_day",String.valueOf(get_day));
+//
+//        SimpleDateFormat cMonthFormat = new SimpleDateFormat("MM");
+//        String cMonth = cMonthFormat.format(get_today.getTime());
+//        int get_month = (Integer.parseInt(cMonth));
+//        Log.d("get_day",String.valueOf(get_month));
+//
+//        SimpleDateFormat cYearFormat = new SimpleDateFormat("yyyy");
+//        String cYear = cYearFormat.format(get_today.getTime());
+//        int get_year = Integer.parseInt(cYear);
+//        Log.d("get_day",String.valueOf(get_year));
+
 
         //calender widget
         ButterKnife.bind(this);
         widget.setOnDateChangedListener(this);
         widget.setOnMonthChangedListener(this);
+//        widget.state().edit()
+//                .setFirstDayOfWeek(Calendar.SUNDAY)
+//                .setMinimumDate(CalendarDay.from(get_year, get_month, get_day))
+//                .setCalendarDisplayMode(CalendarMode.MONTHS)
+//                .commit();
+
         //Scrollable cardview
         final View bottomSheet = findViewById(R.id.bottom_sheet1);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
@@ -157,7 +194,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         recyclerViewSetter();
 
         //FireBaseMessaging
-
         if (getIntent().getExtras() != null) {
 
             for (String key : getIntent().getExtras().keySet()) {
@@ -176,9 +212,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         HomeController.subscribeToPushService();
     }
 
-
-
-
     public void switchCalenderToMap(){
         //calender switch to map
          calenderImg = (ImageView) findViewById(R.id.calenderImg);
@@ -194,9 +227,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
         final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         HomeController.FloatActionBtnSetup(this,wakeupfab,addReminderLocationfab,remindothersfab,fabMenu);
-
-
-
     }
 
 
@@ -219,14 +249,79 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
         TextView UserName_Nav_bar = (TextView) headerView.findViewById(R.id.Username);
         TextView Email_Nav_bar = (TextView) headerView.findViewById(R.id.emailText);
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_USERNAME, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String UserName = prefs.getString("UserName","No UserName Defined");
         String Email = prefs.getString("Email","No Email Defined");
         UserName_Nav_bar.setText(UserName);
         Email_Nav_bar.setText(Email);
         HomeController.NavigationDrawerSetup(this,drawer,navigationView,signOut);
 
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutUser();
+
+            }
+        });
+
     }
+
+    public void logoutUser(){
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, LOGOUT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        try {
+                            // Parsing json object response
+                            // response will be a json object
+                            JSONObject json = new JSONObject(response.toString());
+                            Log.d("Json obj" ,json.toString());
+                            Boolean status = Boolean.parseBoolean(json.getString("status"));
+                            String message = json.getString("message");
+                            if(status==true){
+                                Toast.makeText(HomeActivity.this,message, Toast.LENGTH_SHORT).show();
+                                Intent homeActivity = new Intent(HomeActivity.this,AuthenticationActivity.class);
+                                startActivity(homeActivity);
+                            }else{
+                                Toast.makeText(HomeActivity.this,message, Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(HomeActivity.this,error.toString(),Toast.LENGTH_LONG).show();
+            }
+        }){
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                String access_TokenKey1 = prefs.getString("AccessToken","No AccessToken Defined");
+                Log.d("AccessTokenGET",access_TokenKey1);
+                String auth = access_TokenKey1;
+                headers.put("Authorization", auth);
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+
+        };
+        MySingleton.getInstance(HomeActivity.this).addToRequestQueue(stringRequest);
+
+    }
+
+
 
 
 
@@ -456,7 +551,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    public void recyclerViewSetter()
+    public  void recyclerViewSetter()
     {
         recyclerView = (RecyclerView) findViewById(R.id.reminders_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(HomeActivity.this);
@@ -519,7 +614,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         }
     };
 
-    private void refresh() {
+    public   void refresh() {
 
         if(GeofenceController.getInstance().getNamedGeofences().isEmpty())
         {
@@ -572,12 +667,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
     @Override
     public void onBackPressed() {
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
+
     }
 
     @Override
@@ -612,6 +702,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
     private String getSelectedDatesString() {
         CalendarDay date = widget.getSelectedDate();
+
         if (date == null) {
             return "No Selection";
         }

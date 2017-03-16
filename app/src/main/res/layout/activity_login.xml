@@ -17,7 +17,10 @@
         android:backgroundTint="@color/color_line"
         android:textColor="@color/color_Black"
         android:inputType="phone"
-        android:paddingBottom="10dp"/>
+        android:paddingBottom="10dp"
+        android:textCursorDrawable="@null"
+        android:focusable="true"
+        android:windowSoftInputMode="stateVisible"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +30,8 @@
         android:backgroundTint="@color/color_line"
         android:textColor="@color/color_Black"
         android:inputType="textPassword"
-        android:paddingBottom="10dp"/>
+        android:paddingBottom="10dp"
+        android:textCursorDrawable="@null"/>
 
     <TextView
         android:layout_width="wrap_content"

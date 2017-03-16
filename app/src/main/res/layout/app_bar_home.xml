@@ -71,7 +71,7 @@
                 fab:fab_colorNormal="@color/colorFabRed"
                 fab:fab_colorPressed="@color/colorFabRed"
                 fab:fab_plusIconColor="@color/color_white"
-                fab:fab_icon="@mipmap/ic_wakeupalarm"
+                fab:fab_icon="@mipmap/ic_addreminder"
                 fab:fab_size="mini"
                 fab:fab_title="Add Reminder to Date" />
 

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.MY_PREFS_NAME;
 import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.repeatAlarmIntervalValue;
 
 /**
@@ -99,8 +100,21 @@ public class AlarmRingingActivity extends AppCompatActivity {
         Log.d("currentTime",currentTimeOnRinging);
         tv_currentTime.setText(currentTimeOnRinging);
 
+        SimpleDateFormat currentHourFormat = new SimpleDateFormat("HH");
+        int currentHour = Integer.parseInt(currentHourFormat.format(myCalender.getTime()));
+        TextView tv_greetings = (TextView) findViewById(R.id.greetings);
+        if(currentHour > 5 && currentHour <= 12){
+            tv_greetings.setText("Good Morning");
+        }
+        else if(currentHour > 12 && currentHour < 17) {
+            tv_greetings.setText("Good Afternoon");
+        }
+        else {
+            tv_greetings.setText("Good Evening");
+        }
+
         TextView alarm_User_Name = (TextView) findViewById(R.id.alarm_User_Name);
-        SharedPreferences prefs = getSharedPreferences(HomeActivity.MY_PREFS_USERNAME, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String UserName = prefs.getString("UserName","No UserName Defined");
         alarm_User_Name.setText(UserName);
     }

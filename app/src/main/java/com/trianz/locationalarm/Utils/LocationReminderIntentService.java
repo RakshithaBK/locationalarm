@@ -96,8 +96,6 @@ public class LocationReminderIntentService extends IntentService {
             callNotification(contextMsg, contextPlace);
         }
 
-
-
     }
   }
 
@@ -106,7 +104,6 @@ public class LocationReminderIntentService extends IntentService {
     Intent intent = new Intent(this, HomeActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     PendingIntent pendingNotificationIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 
     // Sound for notification
     Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

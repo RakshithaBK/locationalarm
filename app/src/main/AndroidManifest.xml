@@ -15,15 +15,16 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
        <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_appicon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity android:name=".Authentication.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,14 +32,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AuthenticationActivity"
+            android:name=".Authentication.AuthenticationActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ConfirmRegisterActivity" />
+        <activity android:name=".Authentication.ConfirmRegisterActivity" />
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".OffersActivity"
+            android:name=".OffersCoupons.OffersActivity"
             android:label="Offers and Coupons"
             android:theme="@style/AppTheme" />
         <activity
@@ -47,7 +48,7 @@
 
         <service android:name=".Utils.LocationReminderIntentService" />
 
-        <activity android:name=".OffersMapActivity" />
+        <activity android:name=".OffersCoupons.OffersMapActivity" />
 
         <activity android:name=".RemindMeTask" />
 
@@ -77,12 +78,12 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".AlarmService"
+            android:name=".Services.AlarmService"
             android:enabled="true" />
 
 
         <service
-            android:name=".FirebaseIDService"
+            android:name=".Services.FirebaseIDService"
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -90,7 +91,7 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         </service>
 
         <service
-            android:name=".MyFirebaseMessagingService">
+            android:name=".Services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -99,7 +100,7 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         <!-- <receiver android:name=".AlarmReceiver" /> -->
 
         <receiver
-            android:name=".AlarmReceiver"
+            android:name=".Services.AlarmReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -107,15 +108,7 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         </receiver>
 
         <receiver
-            android:name=".ReminderReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".PushNotificationReceiver"
+            android:name=".Services.ReminderReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

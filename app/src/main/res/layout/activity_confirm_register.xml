@@ -11,7 +11,7 @@
     android:background="@drawable/tab_layout_top_gradient"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.trianz.locationalarm.ConfirmRegisterActivity">
+    tools:context="com.trianz.locationalarm.Authentication.ConfirmRegisterActivity">
 
     <ImageView
         android:layout_width="wrap_content"
