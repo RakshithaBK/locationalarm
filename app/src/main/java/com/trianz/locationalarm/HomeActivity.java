@@ -121,7 +121,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 //    @Bind(R.id.textView)
 //    TextView textView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -391,7 +390,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
         }  */
 
-
         //Initialize Google Play Services
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -404,8 +402,10 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
-        }
 
+        }
+       // IndoorBuilding building = mMap.getFocusedBuilding();
+       // onIndoorLevelActivated(building);
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -724,4 +724,5 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         getSupportActionBar().setTitle(monthFormat.format(date.getDate()).toString());
         getSupportActionBar().setSubtitle("");
     }
+
 }

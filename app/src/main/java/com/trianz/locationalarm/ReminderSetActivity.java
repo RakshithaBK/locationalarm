@@ -43,6 +43,7 @@ import java.util.Locale;
 
 import static android.R.attr.radius;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_RECORD;
+import static com.trianz.locationalarm.Utils.Constants.Instances.context;
 import static com.trianz.locationalarm.Utils.ReminderSetController.pad;
 
 
@@ -98,7 +99,6 @@ public class ReminderSetActivity extends AppCompatActivity {
     Button playButton;
     Button recordButton;
     String notificationTypeValue = "Notification";
-
     String reminderDate;
 
     /***/
@@ -132,11 +132,12 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Bundle bundle = getIntent().getExtras();
-        reminderEvent = bundle.getString("reminderEvent");
+            Bundle bundle = getIntent().getExtras();
+            reminderEvent = bundle.getString("reminderEvent");
+            reminderDate = bundle.getString("reminderDate");
+            Log.d("reminderDate", reminderDate);
+            Log.d("reminderEvent", reminderEvent);
 
-        reminderDate = bundle.getString("reminderDate");
-        Log.d("reminderDate", reminderDate);
 
         TextView datePicked = (TextView) findViewById(R.id.datePicker);
         final TextView timePicked = (TextView) findViewById(R.id.timePicker);
@@ -153,7 +154,7 @@ public class ReminderSetActivity extends AppCompatActivity {
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
         String currentTime = currentTimeFormat.format(myCalender.getTime());
 
-        if (reminderDate.equals(null)){
+        if (reminderDate == (null)){
             datePicked.setText(currentDate);
         }
         else {
@@ -632,7 +633,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                     .setAction("Action", null).show();
         } else {
 
-            if (ReminderSetController.dataIsValid()) {
+            if (ReminderSetController.dataIsValid(reminder_msg)) {
 
                 NamedGeofence geofence = new NamedGeofence();
                 geofence.reminder_msg = reminder_message;
@@ -642,7 +643,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 
 
             } else {
-                ReminderSetController.showValidationErrorToast(this);
+                ReminderSetController.showValidationErrorToast(context);
             }
 
         }

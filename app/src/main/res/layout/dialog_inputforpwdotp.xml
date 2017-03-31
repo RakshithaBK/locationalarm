@@ -12,13 +12,14 @@
         android:id="@+id/enterOTPforpwd"
         android:layout_weight="1"
         android:hint="Enter OTP"
+        android:inputType="phone"
         android:textAlignment="center"
         android:textColorHint="@color/color_hint"
         android:background="@color/color_white"
         android:layout_marginTop="40dp"
         android:layout_marginRight="50dp"
         android:layout_marginLeft="50dp"
-        android:maxLength="5"
+        android:maxLength="6"
         android:textColor="@color/color_Black"/>
 
     <EditText android:layout_height="0dp"
@@ -32,6 +33,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginRight="50dp"
         android:layout_marginLeft="50dp"
+        android:inputType="textPassword"
         android:textColor="@color/color_Black"/>
 
     <Button android:layout_height="0dp"

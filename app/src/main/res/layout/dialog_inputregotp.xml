@@ -12,6 +12,7 @@
         android:id="@+id/enterOTP"
         android:layout_weight="1"
         android:hint="Enter OTP"
+        android:inputType="phone"
         android:textAlignment="center"
         android:textColorHint="@color/color_hint"
         android:background="@color/color_white"

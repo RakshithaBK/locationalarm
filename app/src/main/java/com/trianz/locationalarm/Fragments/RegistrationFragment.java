@@ -58,6 +58,7 @@ public class RegistrationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
     super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -65,7 +66,6 @@ public class RegistrationFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.activity_registration, container,false);
-
         editTextMobile = (EditText) rootView.findViewById(R.id.regMobileTxt);
         editTextPassword = (EditText) rootView.findViewById(R.id.regPasswordTxt);
         editTextEmail= (EditText) rootView.findViewById(R.id.regEmailTxt);
@@ -142,13 +142,11 @@ public class RegistrationFragment extends Fragment {
         final String email = editTextEmail.getText().toString().trim();
         final String userName = editTextUserName.getText().toString().trim();
 
-
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(KEY_MOBILE, mobile);
         params.put(KEY_PASSWORD,password);
         params.put(KEY_USERNAME,userName);
         params.put(KEY_EMAIL, email);
-
 
         JSONObject jsonBody = new JSONObject(params);
         JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, REGISTER_URL ,jsonBody,
@@ -184,7 +182,6 @@ public class RegistrationFragment extends Fragment {
             String message = json.getString("message");
 
             if(status==true){
-
                 Intent sendOTPIntent = new Intent(getContext(), RegistrationFragment.class);
                 PendingIntent sendOTPPendingIntent = PendingIntent.getActivity(getContext(),0,sendOTPIntent,0);
                 SmsManager sms = SmsManager.getDefault();

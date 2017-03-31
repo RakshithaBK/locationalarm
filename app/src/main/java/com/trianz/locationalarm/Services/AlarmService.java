@@ -5,11 +5,13 @@ package com.trianz.locationalarm.Services;
  */
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.trianz.locationalarm.R;
@@ -39,8 +41,9 @@ public class AlarmService extends IntentService {
         NotificationCompat.Builder alamNotificationBuilder = new NotificationCompat.Builder(
                 this).setContentTitle("Location Alarm Application").setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                .setColor(ContextCompat.getColor(this,R.color.color_Purple))
                 .setContentText(msg);
-
+            alamNotificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 
         alamNotificationBuilder.setContentIntent(contentIntent);
         alarmNotificationManager.notify(1, alamNotificationBuilder.build());

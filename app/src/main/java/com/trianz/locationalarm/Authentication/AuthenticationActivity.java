@@ -55,6 +55,8 @@ public class AuthenticationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        AuthenticationActivity.this.setFinishOnTouchOutside(false);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_authentication);
@@ -73,6 +75,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
                 if (tab.getPosition() == 0) {
                     replaceFragment(new LoginFragment());
                 }  else {
@@ -88,12 +91,10 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         });
 
-
         keyguardManager =
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         fingerprintManager =
                 (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
-
 
         if (!keyguardManager.isKeyguardSecure()) {
 
@@ -109,12 +110,10 @@ public class AuthenticationActivity extends AppCompatActivity {
             Toast.makeText(this,
                     "Fingerprint authentication permission not enabled",
                     Toast.LENGTH_LONG).show();
-
             return;
         }
 
         if (!fingerprintManager.hasEnrolledFingerprints()) {
-
             // This happens when no fingerprints are registered.
             Toast.makeText(this,
                     "Register at least one fingerprint in Settings",
@@ -123,7 +122,6 @@ public class AuthenticationActivity extends AppCompatActivity {
         }
 
         if (!fingerprintManager.hasEnrolledFingerprints()) {
-
             // This happens when no fingerprints are registered.
             Toast.makeText(this,
                     "Register at least one fingerprint in Settings",

@@ -29,4 +29,12 @@
     <string name="turn_on_internet">Not connected to internet</string>
     <string name="turn_on_gps">Turn on GPS</string>
     <string name="ok">OK</string>
+
+    //hint labels
+    <string name="login_mobile_hint"><font size="15">+91 Mobile</font></string>
+    <string name="login_pwd_hint"><font size="15">Password</font></string>
+    <string name="reg_username_hint"><font size="15">Username</font></string>
+    <string name="reg_email_hint"><font size="15">Email</font></string>
+
+
 </resources>

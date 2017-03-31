@@ -9,10 +9,10 @@
 
 
     <EditText
+        android:id="@+id/loginMobileTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Mobile"
-        android:id="@+id/loginMobileTxt"
+        android:hint="@string/login_mobile_hint"
         android:textColorHint="@color/color_hint"
         android:backgroundTint="@color/color_line"
         android:textColor="@color/color_Black"
@@ -22,10 +22,10 @@
         android:focusable="true"
         android:windowSoftInputMode="stateVisible"/>
     <EditText
+        android:id="@+id/loginPasswordTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:id="@+id/loginPasswordTxt"
+        android:hint="@string/login_pwd_hint"
         android:textColorHint="@color/color_hint"
         android:backgroundTint="@color/color_line"
         android:textColor="@color/color_Black"
@@ -53,10 +53,10 @@
 
 
     <Button
-
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:text="or"
+        android:clickable="false"
         android:background="@drawable/circle_view"
         android:textColor="@color/color_hint"
         android:layout_marginTop="20dp"

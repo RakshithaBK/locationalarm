@@ -325,7 +325,6 @@ public class ReminderSetToOthers extends AppCompatActivity {
                             Log.d("Json obj" ,json.toString());
                             String message = json.getString("message");
                             Boolean status = Boolean.parseBoolean(json.getString("status"));
-
                             if(status==true){
                                 Toast.makeText(ReminderSetToOthers.this,message, Toast.LENGTH_SHORT).show();
                                 Intent homeActivity = new Intent(ReminderSetToOthers.this,HomeActivity.class);
@@ -367,7 +366,5 @@ public class ReminderSetToOthers extends AppCompatActivity {
         requestQueue.add(stringRequest);
 
     }
-
-
 
 }

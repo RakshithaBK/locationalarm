@@ -109,10 +109,12 @@ public class RemindMeTask extends AppCompatActivity {
                 pickedTask = getTask.getText().toString();
 
                 if(selfReminderFlag) {
-                    Bundle bundle = getIntent().getExtras();
-                    reminderDate = bundle.getString("reminderDate");
-                    Log.d("reminderDate",reminderDate);
-                     intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
+                    if(getIntent().hasExtra("reminderDate")){
+                        Bundle bundle = getIntent().getExtras();
+                        reminderDate = bundle.getString("reminderDate");
+                        Log.d("reminderDate",reminderDate);
+                    }
+                    intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
                     intent.putExtra("reminderDate",reminderDate);
 
                 }else{

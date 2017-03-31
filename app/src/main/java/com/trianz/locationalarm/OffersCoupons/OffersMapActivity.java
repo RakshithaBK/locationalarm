@@ -25,11 +25,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.IndoorBuilding;
+import com.google.android.gms.maps.model.IndoorLevel;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.Utils.Constants;
 import com.trianz.locationalarm.Utils.GetNearbyPlacesData;
+
+import java.util.List;
 
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.trianz.locationalarm.Utils.Constants.mapInstances.mCurrLocationMarker;
@@ -41,7 +45,7 @@ import static com.trianz.locationalarm.Utils.Constants.mapInstances.mMap;
 public class OffersMapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener{
 
     double latitude;
     double longitude;
@@ -67,6 +71,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
@@ -75,9 +80,8 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
         if (!CheckGooglePlayServices()) {
             Log.d("onCreate", "Finishing test case since Google Play Services are not available");
             finish();
-        }
-        else {
-            Log.d("onCreate","Google Play Services available.");
+        } else {
+            Log.d("onCreate", "Google Play Services available.");
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -90,8 +94,8 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
     private boolean CheckGooglePlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(this);
-        if(result != ConnectionResult.SUCCESS) {
-            if(googleAPI.isUserResolvableError(result)) {
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
                 googleAPI.getErrorDialog(this, result,
                         0).show();
             }
@@ -123,8 +127,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
@@ -195,7 +198,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-        Log.d("onLocationChanged", String.format("latitude:%.3f longitude:%.3f",latitude,longitude));
+        Log.d("onLocationChanged", String.format("latitude:%.3f longitude:%.3f", latitude, longitude));
 
         //stop location updates
         if (mGoogleApiClient != null) {
@@ -213,11 +216,11 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
-    public void getLocationOfString(){
+    public void getLocationOfString() {
         String keyToSearch = searchPlace;
         Log.d("onClick", "Button is Clicked");
         mMap.clear();
-        String url = getUrl(latitude,longitude, keyToSearch);
+        String url = getUrl(latitude, longitude, keyToSearch);
         Object[] DataTransfer = new Object[2];
         DataTransfer[0] = mMap;
         DataTransfer[1] = url;
@@ -228,7 +231,7 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
 
-    public boolean checkLocationPermission(){
+    public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -292,4 +295,6 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
             // You can add here other case statements according to your requirement.
         }
     }
+
+
 }

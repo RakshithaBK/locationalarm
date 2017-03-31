@@ -123,10 +123,7 @@ public class AlarmRingingForOthers extends AppCompatActivity {
 
                     else if(((ImageView) v).equals(findViewById(R.id.imageView3)))
                     {
-
-
                         ringtone.stop();
-
                         inst.cancelAlarmControl(pendingIntentRequestCode);
 
                         /****NewD***/

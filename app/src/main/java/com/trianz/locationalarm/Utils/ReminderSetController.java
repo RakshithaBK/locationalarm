@@ -1,6 +1,7 @@
 package com.trianz.locationalarm.Utils;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -13,7 +14,6 @@ import com.trianz.locationalarm.R;
 
 import java.text.DateFormatSymbols;
 
-import static com.trianz.locationalarm.ReminderSetActivity.reminder_message;
 import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.repeatAlarmIntervalValue;
 
 /**
@@ -115,7 +115,7 @@ public class ReminderSetController {
             return "0" + String.valueOf(c);
     }
 
-    public static boolean dataIsValid() {
+    public static boolean dataIsValid(String reminder_message) {
         boolean validData = true;
 
         String reminderString = reminder_message;
@@ -123,15 +123,14 @@ public class ReminderSetController {
         if (TextUtils.isEmpty(reminderString)) {
             validData = false;
         } else {
-
             validData = true;
         }
 
         return validData;
     }
 
-    public static void showValidationErrorToast(AppCompatActivity appCompatActivity) {
-        Toast.makeText(appCompatActivity, appCompatActivity.getString(R.string.Toast_Validation), Toast.LENGTH_SHORT).show();
+    public static void showValidationErrorToast(Context context) {
+        Toast.makeText(context, context.getString(R.string.Toast_Validation), Toast.LENGTH_SHORT).show();
     }
 
     public static String getMonth(int month) {

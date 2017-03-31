@@ -13,9 +13,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-       <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
@@ -27,7 +27,6 @@
         <activity android:name=".Authentication.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,6 +36,7 @@
         <activity android:name=".Authentication.ConfirmRegisterActivity" />
         <activity
             android:name=".HomeActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".OffersCoupons.OffersActivity"
@@ -49,9 +49,7 @@
         <service android:name=".Utils.LocationReminderIntentService" />
 
         <activity android:name=".OffersCoupons.OffersMapActivity" />
-
         <activity android:name=".RemindMeTask" />
-
         <activity
             android:name=".ReminderSetActivity"
             android:theme="@style/MyDatePickerDialogTheme" />
@@ -62,7 +60,6 @@
         <activity android:name=".AlarmRingingForOthers" />
         <activity android:name=".SetReminderSentByOthers" />
 
-
         <!--
 ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -70,8 +67,7 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDUnhFQHyEIrHGcEDwKU6xUEyc-83YGi58" />
-        <!-- AIzaSyDrgit2WdTFEhwtY2psOrsAUDiHTQEfK34-->
-
+        <!-- AIzaSyDrgit2WdTFEhwtY2psOrsAUDiHTQEfK34 -->
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -80,20 +76,19 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
         <service
             android:name=".Services.AlarmService"
             android:enabled="true" />
-
-
+        <service
+            android:name=".Services.NotifyReminderIntentService"
+            android:exported="false"/>
         <service
             android:name=".Services.FirebaseIDService"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".Services.MyFirebaseMessagingService">
+        <service android:name=".Services.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
@@ -106,7 +101,6 @@ ATTENTION: This was auto-generated to add Google Play services to your project f
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".Services.ReminderReceiver"
             android:enabled="true">

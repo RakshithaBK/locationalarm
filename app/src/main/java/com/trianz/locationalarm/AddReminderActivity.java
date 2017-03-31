@@ -122,7 +122,7 @@ public class AddReminderActivity extends AppCompatActivity {
                         geofence.reminder_place = location_name;
                         geofence.latitude = location_latitude;
                         geofence.longitude = location_longitude;
-                        geofence.radius = radius * 1000.0f;
+                        geofence.radius = radius * 50.0f;
 
                         GeofenceController.getInstance().addGeofence(geofence, geofenceControllerListener);
 
