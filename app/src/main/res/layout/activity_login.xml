@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
+    android:orientation="vertical"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="10dp">
@@ -12,66 +13,66 @@
         android:id="@+id/loginMobileTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/login_mobile_hint"
-        android:textColorHint="@color/color_hint"
         android:backgroundTint="@color/color_line"
-        android:textColor="@color/color_Black"
+        android:focusable="true"
+        android:hint="@string/login_mobile_hint"
         android:inputType="phone"
         android:paddingBottom="10dp"
+        android:textColor="@color/color_Black"
+        android:textColorHint="@color/color_hint"
         android:textCursorDrawable="@null"
-        android:focusable="true"
-        android:windowSoftInputMode="stateVisible"/>
+        android:windowSoftInputMode="stateVisible" />
+
     <EditText
         android:id="@+id/loginPasswordTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/login_pwd_hint"
-        android:textColorHint="@color/color_hint"
         android:backgroundTint="@color/color_line"
-        android:textColor="@color/color_Black"
+        android:hint="@string/login_pwd_hint"
         android:inputType="textPassword"
         android:paddingBottom="10dp"
-        android:textCursorDrawable="@null"/>
+        android:textColor="@color/color_Black"
+        android:textColorHint="@color/color_hint"
+        android:textCursorDrawable="@null" />
 
     <TextView
+        android:id="@+id/forgotpwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/forgotpwd"
-        android:text="Forgot Password?"
-        android:textColor="@color/color_ForgotPwd"
-        android:layout_gravity="right"
-        android:paddingBottom="20dp"/>
+        android:layout_gravity="end"
+        android:paddingBottom="20dp"
+        android:text="@string/text_forgotpassword"
+        android:textColor="@color/color_ForgotPwd" />
 
     <Button
         android:id="@+id/signInBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign in"
-        android:textColor="@color/color_white"
-        android:background="@drawable/btn_color_gradient"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:background="@xml/btn_color_gradient"
+        android:text="@string/text_sign_in"
+        android:textColor="@color/color_white" />
 
 
     <Button
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:text="or"
-        android:clickable="false"
-        android:background="@drawable/circle_view"
-        android:textColor="@color/color_hint"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
-        />
+        android:layout_marginTop="20dp"
+        android:background="@xml/circle_view"
+        android:clickable="false"
+        android:text="@string/text_or"
+        android:textColor="@color/color_hint" />
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_Blue"
         android:layout_gravity="center_horizontal"
-        android:text="Use finger print to sign in"
-        android:textSize="20sp"
         android:layout_marginTop="20dp"
-        android:buttonTint="@color/color_Blue"/>
+        android:buttonTint="@color/color_Blue"
+        android:text="@string/text_use_fingerprint"
+        android:textColor="@color/color_Blue"
+        android:textSize="20sp" />
 
 </LinearLayout>

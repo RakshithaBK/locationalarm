@@ -45,16 +45,6 @@ public class LogTest {
                         isDisplayed()));
         textView.check(matches(withText("Forgot Password?")));
 
-        ViewInteraction checkBox = onView(
-                allOf(withId(R.id.loginCheckBox),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_container),
-                                        0),
-                                5),
-                        isDisplayed()));
-        checkBox.check(matches(isDisplayed()));
-
     }
 
     private static Matcher<View> childAtPosition(

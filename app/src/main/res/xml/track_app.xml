@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <string name="ga_trackingID">UA-96781173-1</string>
+    <bool name="ga_autoActivityTracking">true</bool>
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+    <screenName name="com.trianz.locationalarm.HomeActivity">HomeActivity</screenName>
+
+    <!--<string name="ga_trackingId">UA-XXXXXXXX-Y</string>-->
+
+    <!--<integer name="ga_sessionTimeout">300</integer>-->
+
+    <!--<bool name="ga_autoActivityTracking">true</bool>-->
+
+    <!--<bool name="ga_reportUncaughtExceptions">true</bool>-->
+</resources>

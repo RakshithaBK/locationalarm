@@ -105,60 +105,36 @@ import static com.trianz.locationalarm.Utils.Constants.Instances.toolbar;
 import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.MY_PREFS_NAME;
 import static com.trianz.locationalarm.Utils.Constants.serviceUrls.LOGOUT_URL;
 
-public class HomeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,OnMapReadyCallback,
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener,OnDateSelectedListener, OnMonthChangedListener {
-     ViewGroup content_calender;
-     FrameLayout search_place;
+        LocationListener, OnDateSelectedListener, OnMonthChangedListener {
+
+    ViewGroup content_calender;
+    FrameLayout search_place;
     ImageView calenderImg;
-
-
     @Bind(R.id.calender_frame)
     MaterialCalendarView widget;
 
-
-//    @Bind(R.id.textView)
-//    TextView textView;
-
+    /*Overrides to be defined
+    Activity cycle methods */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         context = this;
-//        Calendar get_today = Calendar.getInstance();
-//        SimpleDateFormat cDayFormat = new SimpleDateFormat("d");
-//        String cDay = cDayFormat.format(get_today.getTime());
-//        int get_day = Integer.parseInt(cDay);
-//        Log.d("get_day",String.valueOf(get_day));
-//
-//        SimpleDateFormat cMonthFormat = new SimpleDateFormat("MM");
-//        String cMonth = cMonthFormat.format(get_today.getTime());
-//        int get_month = (Integer.parseInt(cMonth));
-//        Log.d("get_day",String.valueOf(get_month));
-//
-//        SimpleDateFormat cYearFormat = new SimpleDateFormat("yyyy");
-//        String cYear = cYearFormat.format(get_today.getTime());
-//        int get_year = Integer.parseInt(cYear);
-//        Log.d("get_day",String.valueOf(get_year));
-
 
         //calender widget
         ButterKnife.bind(this);
         widget.setOnDateChangedListener(this);
         widget.setOnMonthChangedListener(this);
-//        widget.state().edit()
-//                .setFirstDayOfWeek(Calendar.SUNDAY)
-//                .setMinimumDate(CalendarDay.from(get_year, get_month, get_day))
-//                .setCalendarDisplayMode(CalendarMode.MONTHS)
-//                .commit();
 
         //Scrollable cardview
         final View bottomSheet = findViewById(R.id.bottom_sheet1);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior1.setHideable(false);
         mBottomSheetBehavior1.setPeekHeight(400);
+
         //Toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -169,7 +145,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         fabButtonsAction();
         navigationDrawerAttach();
         reminderError = (TextView) findViewById(R.id.reminder_error_msg);
-        if(!isNetworkAvailable()) {
+        if (!isNetworkAvailable()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.turn_on_internet)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -194,7 +170,6 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
         //FireBaseMessaging
         if (getIntent().getExtras() != null) {
-
             for (String key : getIntent().getExtras().keySet()) {
                 String value = getIntent().getExtras().getString(key);
 
@@ -203,193 +178,48 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 //                    //      Toast.makeText(MainActivity.this, "Another Activity!!!", Toast.LENGTH_SHORT).show();
 //
 //                }
-
             }
         }
-
 
         HomeController.subscribeToPushService();
     }
 
-    public void switchCalenderToMap(){
-        //calender switch to map
-         calenderImg = (ImageView) findViewById(R.id.calenderImg);
-          search_place = (FrameLayout) findViewById(R.id.search_place_card);
-         content_calender= (ViewGroup) findViewById(R.id.calender_frame);
-       HomeController.switchCalenderToMapSetUp(this,calenderImg,search_place,content_calender);
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        int googlePlayServicesCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        Log.i(HomeActivity.class.getSimpleName(), "googlePlayServicesCode = " + googlePlayServicesCode);
+
+        if (googlePlayServicesCode == 1 || googlePlayServicesCode == 2 || googlePlayServicesCode == 3) {
+            GooglePlayServicesUtil.getErrorDialog(googlePlayServicesCode, this, 0).show();
+        }
     }
 
-    public void fabButtonsAction(){
-        //Fab actions
-        FloatingActionButton wakeupfab = (FloatingActionButton) findViewById(R.id.fab_wakeup_alarm);
-        FloatingActionButton  addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
-        FloatingActionButton  remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        HomeController.FloatActionBtnSetup(this,wakeupfab,addReminderLocationfab,remindothersfab,fabMenu);
+    @Override
+    public void onBackPressed() {
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    public void navigationDrawerAttach() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Button signOut = (Button) findViewById(R.id.signOutBtn);
-
-        //close Button in navigation
-        final NavigationView  nvDrawer = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = getLayoutInflater().inflate(R.layout.nav_header_home, nvDrawer, false);
-        nvDrawer.addHeaderView(headerView);
-        ImageView img = (ImageView) headerView.findViewById(R.id.nav_close);
-        img.setOnClickListener(new View.OnClickListener(){
-
-            public void onClick(View view) {
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(Gravity.LEFT);
-            }});
-
-        TextView UserName_Nav_bar = (TextView) headerView.findViewById(R.id.Username);
-        TextView Email_Nav_bar = (TextView) headerView.findViewById(R.id.emailText);
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        String UserName = prefs.getString("UserName","No UserName Defined");
-        String Email = prefs.getString("Email","No Email Defined");
-        UserName_Nav_bar.setText(UserName);
-        Email_Nav_bar.setText(Email);
-        HomeController.NavigationDrawerSetup(this,drawer,navigationView,signOut);
-
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logoutUser();
-
+        if (requestCode == SET_REMINDER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                refresh();
             }
-        });
+            if (resultCode == Activity.RESULT_CANCELED) {
 
+                // Do nothing
+            }
+        }
     }
+    //Activity life cycle methods end here
 
-    public void logoutUser(){
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, LOGOUT_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        try {
-                            // Parsing json object response
-                            // response will be a json object
-                            JSONObject json = new JSONObject(response.toString());
-                            Log.d("Json obj" ,json.toString());
-                            Boolean status = Boolean.parseBoolean(json.getString("status"));
-                            String message = json.getString("message");
-                            if(status==true){
-                                Toast.makeText(HomeActivity.this,message, Toast.LENGTH_SHORT).show();
-                                Intent homeActivity = new Intent(HomeActivity.this,AuthenticationActivity.class);
-                                startActivity(homeActivity);
-                            }else{
-                                Toast.makeText(HomeActivity.this,message, Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(HomeActivity.this,error.toString(),Toast.LENGTH_LONG).show();
-            }
-        }){
-
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                String access_TokenKey1 = prefs.getString("AccessToken","No AccessToken Defined");
-                Log.d("AccessTokenGET",access_TokenKey1);
-                String auth = access_TokenKey1;
-                headers.put("Authorization", auth);
-                return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
-
-        };
-        MySingleton.getInstance(HomeActivity.this).addToRequestQueue(stringRequest);
-
-    }
-
-
-
-
-
-
-    public void placeAutoComplete(){
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-
-               // Log.i(TAG, "Place: " + place.getName());
-                selectedPlace = place;
-
-                // Add a marker to the selected place
-                LatLng location = place.getLatLng();
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(location).title(place.getName().toString()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-                try {
-
-                    getSupportActionBar().setTitle(selectedPlace.getName());
-                    getSupportActionBar().setSubtitle(selectedPlace.getAddress());
-
-                } catch (NullPointerException e)
-                {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-               // Log.i(TAG, "An error occurred: " + status);
-            }
-        });
-    }
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    //GoogleApiclient methods
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-      /*  List<NamedGeofence> remindersOnMap = new ArrayList<>();
-        remindersOnMap = GeofenceController.getInstance().getNamedGeofences();
-
-        for(int i=0; i< remindersOnMap.size(); i++)
-        {
-            double latitude = remindersOnMap.get(i).latitude;
-            double longitude = remindersOnMap.get(i).longitude;
-            String reminder = remindersOnMap.get(i).reminder_msg;
-            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
-                    .title(reminder).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-
-        }  */
-
         //Initialize Google Play Services
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -398,43 +228,31 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
 
         }
-       // IndoorBuilding building = mMap.getFocusedBuilding();
-       // onIndoorLevelActivated(building);
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
+        // IndoorBuilding building = mMap.getFocusedBuilding();
+        // onIndoorLevelActivated(building);
     }
 
     @Override
-    public void  onConnected(Bundle bundle) {
-
+    public void onConnected(Bundle bundle) {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        // LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
@@ -445,54 +263,18 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             mCurrLocationMarker.remove();
         }
 
-
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
-
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-    public boolean checkLocationPermission(){
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) + ContextCompat
-                .checkSelfPermission(this,
-                        Manifest.permission.READ_SMS ) + ContextCompat
-                .checkSelfPermission(this,
-                        Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale
-                    (this, Manifest.permission.ACCESS_FINE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale
-                            (this, Manifest.permission.READ_SMS) ||  ActivityCompat.shouldShowRequestPermissionRationale
-                    (this, Manifest.permission.READ_CONTACTS) ) {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_SMS,Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission
-                                .ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS,Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            //Call whatever you want
-       return true;
-        }
-
     }
 
     @Override
@@ -519,18 +301,13 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.READ_SMS)
                             == PackageManager.PERMISSION_GRANTED) {
-                        //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
                     }
 
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.READ_CONTACTS)
                             == PackageManager.PERMISSION_GRANTED) {
-                        //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
                     }
-
-
                 } else {
-
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "Location permission denied", Toast.LENGTH_LONG).show();
                 }
@@ -538,33 +315,238 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             }
         }
     }
+    //GoogleApiClient method ends here
+
+    //Navigation overrides
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        if (id == R.id.nav_addreminder) {
+            // Handle the camera action
+        } else if (id == R.id.nav_remindOthers) {
+
+        } else if (id == R.id.nav_wakeUpAlarm) {
+
+        } else if (id == R.id.nav_offers) {
+
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    //Navigation overrides ends here!
+
+    //Calender methods
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        // textView.setText(getSelectedDatesString());
+        selectedDate = getSelectedDatesString();
+        isDateSelected = false;
+        content_calender.setVisibility(View.INVISIBLE);
+        search_place.setVisibility(View.VISIBLE);
+        Toast.makeText(this, selectedDate, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        getSupportActionBar().setTitle(monthFormat.format(date.getDate()).toString());
+        getSupportActionBar().setSubtitle("");
+    }
+    //Override method ends here
 
-        int googlePlayServicesCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        Log.i(HomeActivity.class.getSimpleName(), "googlePlayServicesCode = " + googlePlayServicesCode);
+    public void switchCalenderToMap() {
+        //calender switch to map
+        calenderImg = (ImageView) findViewById(R.id.calenderImg);
+        search_place = (FrameLayout) findViewById(R.id.search_place_card);
+        content_calender = (ViewGroup) findViewById(R.id.calender_frame);
+        HomeController.switchCalenderToMapSetUp(this, calenderImg, search_place, content_calender);
+    }
 
-        if (googlePlayServicesCode == 1 || googlePlayServicesCode == 2 || googlePlayServicesCode == 3) {
-            GooglePlayServicesUtil.getErrorDialog(googlePlayServicesCode, this, 0).show();
+    public void fabButtonsAction() {
+        //Fab actions
+        FloatingActionButton wakeupfab = (FloatingActionButton) findViewById(R.id.fab_wakeup_alarm);
+        FloatingActionButton addReminderLocationfab = (FloatingActionButton) findViewById(R.id.fab_add_reminder_location);
+        FloatingActionButton remindothersfab = (FloatingActionButton) findViewById(R.id.fab_remind_others);
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        HomeController.FloatActionBtnSetup(this, wakeupfab, addReminderLocationfab, remindothersfab, fabMenu);
+    }
+
+    public void navigationDrawerAttach() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Button signOut = (Button) findViewById(R.id.signOutBtn);
+
+        //close Button in navigation
+        final NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = getLayoutInflater().inflate(R.layout.nav_header_home, nvDrawer, false);
+        nvDrawer.addHeaderView(headerView);
+        ImageView img = (ImageView) headerView.findViewById(R.id.nav_close);
+        img.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(Gravity.LEFT);
+            }
+        });
+
+        TextView UserName_Nav_bar = (TextView) headerView.findViewById(R.id.Username);
+        TextView Email_Nav_bar = (TextView) headerView.findViewById(R.id.emailText);
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        String UserName = prefs.getString("UserName", "No UserName Defined");
+        String Email = prefs.getString("Email", "No Email Defined");
+        UserName_Nav_bar.setText(UserName);
+        Email_Nav_bar.setText(Email);
+        HomeController.NavigationDrawerSetup(this, drawer, navigationView, signOut);
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutUser();
+
+            }
+        });
+    }
+
+    public void logoutUser() {
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, LOGOUT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            // Parsing json object response
+                            // response will be a json object
+                            JSONObject json = new JSONObject(response.toString());
+                            Boolean status = Boolean.parseBoolean(json.getString("status"));
+                            String message = json.getString("message");
+                            if (status == true) {
+                                Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                                Intent homeActivity = new Intent(HomeActivity.this, AuthenticationActivity.class);
+                                startActivity(homeActivity);
+                            } else {
+                                Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(HomeActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                String access_TokenKey1 = prefs.getString("AccessToken", "No AccessToken Defined");
+                Log.d("AccessTokenGET", access_TokenKey1);
+                String auth = access_TokenKey1;
+                headers.put("Authorization", auth);
+                return headers;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+
+        };
+        MySingleton.getInstance(HomeActivity.this).addToRequestQueue(stringRequest);
+    }
+
+    public void placeAutoComplete() {
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                selectedPlace = place;
+                // Add a marker to the selected place
+                LatLng location = place.getLatLng();
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(location).title(place.getName().toString()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                try {
+                    getSupportActionBar().setTitle(selectedPlace.getName());
+                    getSupportActionBar().setSubtitle(selectedPlace.getAddress());
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                // Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) + ContextCompat
+                .checkSelfPermission(this,
+                        Manifest.permission.READ_SMS) + ContextCompat
+                .checkSelfPermission(this,
+                        Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale
+                    (this, Manifest.permission.ACCESS_FINE_LOCATION) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale
+                            (this, Manifest.permission.READ_SMS) || ActivityCompat.shouldShowRequestPermissionRationale
+                    (this, Manifest.permission.READ_CONTACTS)) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission
+                                .ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            //Call whatever you want
+            return true;
         }
     }
 
-    public  void recyclerViewSetter()
-    {
+    public void recyclerViewSetter() {
         recyclerView = (RecyclerView) findViewById(R.id.reminders_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(HomeActivity.this);
 
-        if(GeofenceController.getInstance().getNamedGeofences().isEmpty())
-        {
+        if (GeofenceController.getInstance().getNamedGeofences().isEmpty()) {
             reminderError.setVisibility(View.VISIBLE);
-        }
-        else {
-
+        } else {
             reminderError.setVisibility(View.GONE);
             remindersListAdapter = new RemindersListAdapter(GeofenceController.getInstance().getNamedGeofences());
-
             remindersListAdapter.setListener(new RemindersListAdapter.AllGeofencesAdapterListener() {
                 @Override
                 public void onDeleteTapped(NamedGeofence namedGeofence) {
@@ -573,33 +555,13 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                     GeofenceController.getInstance().removeGeofences(namedGeofences, geofenceControllerListener);
                 }
             });
-
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(remindersListAdapter);
         }
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == SET_REMINDER_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-
-                refresh();
-
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-
-                // Do nothing
-            }
-        }
     }
 
     // region GeofenceControllerListener
-
     private GeofenceController.GeofenceControllerListener geofenceControllerListener = new GeofenceController.GeofenceControllerListener() {
         @Override
         public void onGeofencesUpdated() {
@@ -614,21 +576,14 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         }
     };
 
-    public   void refresh() {
-
-        if(GeofenceController.getInstance().getNamedGeofences().isEmpty())
-        {
+    public void refresh() {
+        if (GeofenceController.getInstance().getNamedGeofences().isEmpty()) {
             reminderError.setVisibility(View.VISIBLE);
-        }
-        else if(GeofenceController.getInstance().getNamedGeofences().size() == 1)
-        {
+        } else if (GeofenceController.getInstance().getNamedGeofences().size() == 1) {
             recyclerViewSetter();
-        }
-        else {
-
+        } else {
             remindersListAdapter.notifyDataSetChanged();
         }
-
     }
 
     private void showErrorToast() {
@@ -646,7 +601,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         int locationMode = 0;
         String locationProviders;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             try {
                 locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
 
@@ -654,75 +609,18 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
                 e.printStackTrace();
                 return false;
             }
-
             return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-
-        }else{
+        } else {
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             return !TextUtils.isEmpty(locationProviders);
         }
-
-    }
-
-
-    @Override
-    public void onBackPressed() {
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_addreminder) {
-            // Handle the camera action
-        } else if (id == R.id.nav_remindOthers) {
-
-        } else if (id == R.id.nav_wakeUpAlarm) {
-
-        } else if (id == R.id.nav_offers) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     private String getSelectedDatesString() {
         CalendarDay date = widget.getSelectedDate();
-
         if (date == null) {
             return "No Selection";
         }
         return FORMATTER.format(date.getDate());
     }
-
-    @Override
-    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-       // textView.setText(getSelectedDatesString());
-        selectedDate = getSelectedDatesString();
-        isDateSelected = false;
-        content_calender.setVisibility(View.INVISIBLE);
-        search_place.setVisibility(View.VISIBLE);
-        Toast.makeText(this, selectedDate, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-        getSupportActionBar().setTitle(monthFormat.format(date.getDate()).toString());
-        getSupportActionBar().setSubtitle("");
-    }
-
 }

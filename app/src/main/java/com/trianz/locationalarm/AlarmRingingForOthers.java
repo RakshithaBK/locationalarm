@@ -31,9 +31,7 @@ public class AlarmRingingForOthers extends AppCompatActivity {
     Ringtone ringtone;
     Calendar myCalender = Calendar.getInstance();
     AlarmManager alarmManager;
-
     SetReminderSentByOthers inst = SetReminderSentByOthers.instance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +39,17 @@ public class AlarmRingingForOthers extends AppCompatActivity {
         setContentView(R.layout.activity_alarmringing);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Toast.makeText(AlarmRingingForOthers.this,"inside alarm others", Toast.LENGTH_SHORT).show();
+        Toast.makeText(AlarmRingingForOthers.this, "inside alarm others", Toast.LENGTH_SHORT).show();
 
         Bundle bundle = getIntent().getExtras();
         String reminderEvent = bundle.getString("reminderEvent");
-        TextView reminderEventText = (TextView)findViewById(R.id.reminderEvent);
+        TextView reminderEventText = (TextView) findViewById(R.id.reminderEvent);
         reminderEventText.setText(reminderEvent);
 
         pendingIntentRequestCode = bundle.getInt("pendingIntentRequestCode");
 
 
-        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+        final RippleBackground rippleBackground = (RippleBackground) findViewById(R.id.content);
 
         rippleBackground.startRippleAnimation();
 
@@ -71,7 +69,7 @@ public class AlarmRingingForOthers extends AppCompatActivity {
         TextView tv_currentTime = (TextView) findViewById(R.id.tv_currentTime);
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
         String currentTimeOnRinging = currentTimeFormat.format(myCalender.getTime());
-        Log.d("currentTime",currentTimeOnRinging);
+        Log.d("currentTime", currentTimeOnRinging);
         tv_currentTime.setText(currentTimeOnRinging);
     }
 
@@ -111,18 +109,14 @@ public class AlarmRingingForOthers extends AppCompatActivity {
                     // Dropped, reassign View to ViewGroup
 
 
-                    if(((ImageView) v).equals(findViewById(R.id.imageView1)))
-                    {
+                    if (((ImageView) v).equals(findViewById(R.id.imageView1))) {
 
                         ringtone.stop();
 
-                        Toast.makeText(AlarmRingingForOthers.this,"Alarm is postponed for 5 minutes",Toast.LENGTH_LONG).show();
+                        Toast.makeText(AlarmRingingForOthers.this, "Alarm is postponed for 5 minutes", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(AlarmRingingForOthers.this, HomeActivity.class);
                         startActivity(intent);
-                    }
-
-                    else if(((ImageView) v).equals(findViewById(R.id.imageView3)))
-                    {
+                    } else if (((ImageView) v).equals(findViewById(R.id.imageView3))) {
                         ringtone.stop();
                         inst.cancelAlarmControl(pendingIntentRequestCode);
 

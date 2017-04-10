@@ -76,7 +76,7 @@ public class ReminderReceiver extends WakefulBroadcastReceiver {
                 new Intent(context, MyFirebaseMessagingService.class), 0);
 
         NotificationCompat.Builder alamNotificationBuilder = new NotificationCompat.Builder(context)
-                .setContentTitle("Location Alarm Application").setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Location Alarm Application").setSmallIcon(R.drawable.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                 .setContentText(msg);
 

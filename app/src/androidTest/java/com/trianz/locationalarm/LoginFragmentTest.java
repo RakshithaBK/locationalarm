@@ -38,7 +38,6 @@ public class LoginFragmentTest {
                 .perform(typeText("8722720060"), closeSoftKeyboard());
         onView(withId(R.id.loginPasswordTxt))
                 .perform(typeText("Test@123"), closeSoftKeyboard());
-        onView(withId(R.id.loginCheckBox)).perform(click());
 
         onView(withId(R.id.signInBtn)).perform(click());
         intended(hasComponent(HomeActivity.class.getName()));

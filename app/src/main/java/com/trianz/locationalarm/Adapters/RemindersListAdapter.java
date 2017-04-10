@@ -104,14 +104,11 @@ public class RemindersListAdapter extends RecyclerView.Adapter<RemindersListAdap
     TextView message;
     ImageView reminder_delete;
 
-
     public ViewHolder(ViewGroup v) {
       super(v);
-
       place = (TextView) v.findViewById(R.id.reminder_place);
       message = (TextView) v.findViewById(R.id.reminder_message);
       reminder_delete = (ImageView) v.findViewById(R.id.reminder_delete);
-
     }
   }
 

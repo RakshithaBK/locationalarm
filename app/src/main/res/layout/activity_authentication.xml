@@ -7,13 +7,12 @@
     android:orientation="vertical"
     tools:context="com.trianz.locationalarm.Authentication.AuthenticationActivity">
 
-
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
+        android:background="@xml/tab_layout_top_gradient"
         android:paddingTop="50dp"
-        android:background="@drawable/tab_layout_top_gradient"
         android:scaleType="centerInside"
         android:src="@drawable/locationbasedlogo_210x90" />
 
@@ -23,16 +22,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_Blue"
-        app:tabSelectedTextColor="@color/color_white"
-        app:tabGravity="fill"
         android:paddingTop="10dp"
-        app:tabMode="fixed" />
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/color_white" />
 
     <LinearLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-       />
+        android:orientation="vertical" />
 </LinearLayout>
 

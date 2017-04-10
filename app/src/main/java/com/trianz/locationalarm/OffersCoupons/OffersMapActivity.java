@@ -25,15 +25,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.IndoorBuilding;
-import com.google.android.gms.maps.model.IndoorLevel;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.Utils.Constants;
-import com.trianz.locationalarm.Utils.GetNearbyPlacesData;
-
-import java.util.List;
 
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.trianz.locationalarm.Utils.Constants.mapInstances.mCurrLocationMarker;

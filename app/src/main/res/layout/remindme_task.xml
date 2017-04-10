@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
 
 
     <LinearLayout
+        android:id="@+id/enterTask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/enterTask"
+        android:background="#9568ff"
         android:orientation="horizontal"
-        android:weightSum="12"
-        android:paddingTop="5dp"
         android:paddingBottom="10dp"
-        android:background="#9568ff">
+        android:paddingTop="5dp"
+        android:weightSum="12">
 
         <ImageView
             android:id="@+id/closeIcon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_discard"
             android:layout_weight="2"
-            android:paddingTop="12dp"/>
+            android:paddingTop="12dp"
+            android:src="@drawable/ic_discard" />
 
 
         <EditText
+            android:id="@+id/et_remindmeto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="Remind Me To..."
-            android:id="@+id/et_remindmeto"
-            android:textCursorDrawable="@null"
-            android:textColor="#fff"
             android:layout_weight="8"
-            android:backgroundTint="#fff"/>
+            android:backgroundTint="#fff"
+            android:hint="Remind Me To..."
+            android:inputType="text"
+            android:textColor="#fff"
+            android:textCursorDrawable="@null" />
 
         <ImageView
             android:id="@+id/saveIcon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_save_reminder"
             android:layout_weight="2"
-            android:paddingTop="12dp"/>
+            android:paddingTop="12dp"
+            android:src="@drawable/ic_save_reminder" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/enterTask"
         android:layout_margin="10dp"
         android:divider="@color/color_line"
-        android:dividerHeight="1px"
-        android:layout_below="@+id/enterTask">
-    </ListView>
+        android:dividerHeight="1px"></ListView>
 
 </RelativeLayout>

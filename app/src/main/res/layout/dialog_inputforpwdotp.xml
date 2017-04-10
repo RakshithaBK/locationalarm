@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:weightSum="3"
-    android:background="@color/color_white"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:weightSum="3">
 
-    <EditText android:layout_height="0dp"
-        android:layout_width="match_parent"
+    <EditText
         android:id="@+id/enterOTPforpwd"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="40dp"
         android:layout_weight="1"
+        android:background="@color/color_white"
         android:hint="Enter OTP"
         android:inputType="phone"
-        android:textAlignment="center"
-        android:textColorHint="@color/color_hint"
-        android:background="@color/color_white"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginLeft="50dp"
         android:maxLength="6"
-        android:textColor="@color/color_Black"/>
-
-    <EditText android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:id="@+id/new_pwd"
-        android:layout_weight="1"
-        android:hint="New password"
         android:textAlignment="center"
-        android:textColorHint="@color/color_hint"
-        android:background="@color/color_white"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginLeft="50dp"
-        android:inputType="textPassword"
-        android:textColor="@color/color_Black"/>
+        android:textColor="@color/color_Black"
+        android:textColorHint="@color/color_hint" />
 
-    <Button android:layout_height="0dp"
+    <EditText
+        android:id="@+id/new_pwd"
         android:layout_width="match_parent"
-        android:id="@+id/OTPverifyBtn"
-        android:layout_weight="1"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="50dp"
-        android:background="@drawable/btn_color_gradient"
+        android:layout_height="0dp"
         android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        android:background="@color/color_white"
+        android:hint="New password"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textColor="@color/color_Black"
+        android:textColorHint="@color/color_hint" />
+
+    <Button
+        android:id="@+id/OTPverifyBtn"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginBottom="40dp"
-        android:textColor="@color/color_white"
-        android:text="Verify"/>
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_weight="1"
+        android:background="@xml/btn_color_gradient"
+        android:text="Verify"
+        android:textColor="@color/color_white" />
 
 </LinearLayout>

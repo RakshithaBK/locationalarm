@@ -39,7 +39,7 @@ public class AlarmService extends IntentService {
                 new Intent(this, ReminderSetActivity.class), 0);
 
         NotificationCompat.Builder alamNotificationBuilder = new NotificationCompat.Builder(
-                this).setContentTitle("Location Alarm Application").setSmallIcon(R.mipmap.ic_launcher)
+                this).setContentTitle("Location Alarm Application").setSmallIcon(R.drawable.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                 .setColor(ContextCompat.getColor(this,R.color.color_Purple))
                 .setContentText(msg);

@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.trianz.locationalarm.Fragments.LoginFragment;
 import com.trianz.locationalarm.Fragments.RegistrationFragment;
 import com.trianz.locationalarm.R;
-import com.trianz.locationalarm.Utils.FingerprintHandler;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;

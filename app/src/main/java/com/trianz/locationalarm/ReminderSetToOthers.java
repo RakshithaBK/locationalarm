@@ -102,8 +102,8 @@ public class ReminderSetToOthers extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         reminderEvent = bundle.getString("reminderEvent");
 
-        TextView datePicked =  (TextView)findViewById(R.id.datePicker);
-        final TextView timePicked =  (TextView)findViewById(R.id.timePicker);
+        TextView datePicked = (TextView) findViewById(R.id.datePicker);
+        final TextView timePicked = (TextView) findViewById(R.id.timePicker);
         Switch enableAllDay = (Switch) findViewById(R.id.switchIcon);
 
         //set the alarm text selected from previous layout
@@ -123,7 +123,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
         //some new stuff
         selectContactNumber = (TextView) findViewById(R.id.selectContactNumber);
 
-        selectContactNumber.setOnClickListener(new View.OnClickListener(){
+        selectContactNumber.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -135,8 +135,6 @@ public class ReminderSetToOthers extends AppCompatActivity {
 
             }
         });
-
-
 
 
         //new stuff ends here
@@ -189,7 +187,7 @@ public class ReminderSetToOthers extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 
-                        TextView timePicked =  (TextView)findViewById(R.id.timePicker);
+                        TextView timePicked = (TextView) findViewById(R.id.timePicker);
                         //timePicked.setText("" +  selectedHour + ":" + selectedMinute);
                         timePicked.setText(new StringBuilder().append(pad(selectedHour))
                                 .append(":").append(pad(selectedMinute)));
@@ -218,18 +216,16 @@ public class ReminderSetToOthers extends AppCompatActivity {
         });
 
 
-
-
         //set the switch for allDay to off and get the status on change
         enableAllDay.setChecked(false);
         enableAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     allDayFlag = "true";
                     timePicked.setVisibility(View.INVISIBLE);
 
-                }else {
+                } else {
                     allDayFlag = "false";
                     timePicked.setVisibility(View.VISIBLE);
                 }
@@ -248,9 +244,8 @@ public class ReminderSetToOthers extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (receiverNumber == null) {
-                    Toast.makeText(ReminderSetToOthers.this,"Please enter a number you want to send your reminder",Toast.LENGTH_LONG).show();
-                }
-                else {
+                    Toast.makeText(ReminderSetToOthers.this, "Please enter a number you want to send your reminder", Toast.LENGTH_LONG).show();
+                } else {
 
 //                    Toast.makeText(ReminderSetToOthers.this,String.valueOf(selectedHourAlarm) + ":" +
 //                                    String.valueOf(pad(selectedMinuteAlarm)) + " On " +
@@ -282,57 +277,58 @@ public class ReminderSetToOthers extends AppCompatActivity {
         TextView datePicked = (TextView) findViewById(R.id.datePicker);
         datePicked.setText(sdf.format(myCalender.getTime()));
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
 
-            if(resultCode == RESULT_OK){
-                Uri contactData = data.getData();
-                Cursor cursor =  managedQuery(contactData, null, null, null, null);
-                cursor.moveToFirst();
+        if (resultCode == RESULT_OK) {
+            Uri contactData = data.getData();
+            Cursor cursor = managedQuery(contactData, null, null, null, null);
+            cursor.moveToFirst();
 
-                receiverNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                receiverNumber = receiverNumber.replace(" ","");
-                if(receiverNumber.length() >10){
-                    receiverNumber = receiverNumber.substring(receiverNumber.length() - 10);
-                }
-                selectContactNumber.setText(receiverNumber);
+            receiverNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            receiverNumber = receiverNumber.replace(" ", "");
+            if (receiverNumber.length() > 10) {
+                receiverNumber = receiverNumber.substring(receiverNumber.length() - 10);
             }
+            selectContactNumber.setText(receiverNumber);
+        }
 
     }
 
     private void sendReminderDetailsToBackend() {
 
-        HashMap<String,String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<String, String>();
         String selectedTime = String.valueOf(pad(selectedHourAlarm)) + ":" + String.valueOf(pad(selectedMinuteAlarm));
-        String selectedDate = String.valueOf(pad(selectedDayAlarm))+ "/" + String.valueOf(pad(selectedMonthAlarm + 1)) + "/" + String.valueOf(selectedYearAlarm);
+        String selectedDate = String.valueOf(pad(selectedDayAlarm)) + "/" + String.valueOf(pad(selectedMonthAlarm + 1)) + "/" + String.valueOf(selectedYearAlarm);
         params.put(KEY_Time, selectedTime);
-        params.put(KEY_DATE,selectedDate );
+        params.put(KEY_DATE, selectedDate);
         params.put(KEY_PHONENUMBER, receiverNumber);
         params.put(KEY_REPEATALARMVALUE, repeatAlarmIntervalValue);
         params.put(KEY_ALLDAYFLAG, reminderEvent);
         JSONObject jsonBody = new JSONObject(params);
-        Log.d("send reminders",params.toString());
+        Log.d("send reminders", params.toString());
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, REMIND_TO_OTHERS_URL,jsonBody,
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, REMIND_TO_OTHERS_URL, jsonBody,
 
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject json = new JSONObject(response.toString());
-                            Log.d("Json obj" ,json.toString());
+                            Log.d("Json obj", json.toString());
                             String message = json.getString("message");
                             Boolean status = Boolean.parseBoolean(json.getString("status"));
-                            if(status==true){
-                                Toast.makeText(ReminderSetToOthers.this,message, Toast.LENGTH_SHORT).show();
-                                Intent homeActivity = new Intent(ReminderSetToOthers.this,HomeActivity.class);
+                            if (status == true) {
+                                Toast.makeText(ReminderSetToOthers.this, message, Toast.LENGTH_SHORT).show();
+                                Intent homeActivity = new Intent(ReminderSetToOthers.this, HomeActivity.class);
                                 startActivity(homeActivity);
-                            }else{
-                                Toast.makeText(ReminderSetToOthers.this,message, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ReminderSetToOthers.this, message, Toast.LENGTH_SHORT).show();
                             }
-                        } catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
@@ -340,16 +336,16 @@ public class ReminderSetToOthers extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        HomeController.errorInResponse(this,error);
+                        HomeController.errorInResponse(this, error);
                     }
-                }){
+                }) {
 
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
                 SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                String access_TokenKey1 = prefs.getString("AccessToken","No Name Defined");
+                String access_TokenKey1 = prefs.getString("AccessToken", "No Name Defined");
                 String auth = access_TokenKey1;
                 headers.put("Authorization", auth);
                 return headers;

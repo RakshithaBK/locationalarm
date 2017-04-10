@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
+    android:orientation="vertical"
     android:weightSum="15">
 
     <TextView
-        android:textColor="@color/color_Black"
+        android:id="@+id/doesNotRepeat"
         android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="40dp"
-        android:layout_height="0dp"
         android:layout_weight="3"
-        android:id="@+id/doesNotRepeat"
-        android:text="Does not repeat"/>
+        android:text="Does not repeat"
+        android:textColor="@color/color_Black" />
 
     <TextView
-        android:textColor="@color/color_Black"
-        android:layout_width="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_height="0dp"
-        android:layout_weight="3"
         android:id="@+id/everyDay"
-        android:text="Every day"/>
-
-    <TextView
-        android:textColor="@color/color_Black"
         android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="30dp"
-        android:layout_height="0dp"
         android:layout_weight="3"
+        android:text="Every day"
+        android:textColor="@color/color_Black" />
+
+    <TextView
         android:id="@+id/everyWeek"
-        android:text="Every week"/>
-
-    <TextView
-        android:textColor="@color/color_Black"
         android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="30dp"
-        android:layout_height="0dp"
         android:layout_weight="3"
+        android:text="Every week"
+        android:textColor="@color/color_Black" />
+
+    <TextView
         android:id="@+id/everyMonth"
-        android:text="Every month"/>
-
-    <TextView
-        android:textColor="@color/color_Black"
         android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="40dp"
-        android:layout_height="0dp"
         android:layout_weight="3"
+        android:text="Every month"
+        android:textColor="@color/color_Black" />
+
+    <TextView
         android:id="@+id/everyYear"
-        android:text="Every year"/>
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_weight="3"
+        android:text="Every year"
+        android:textColor="@color/color_Black" />
 </LinearLayout>

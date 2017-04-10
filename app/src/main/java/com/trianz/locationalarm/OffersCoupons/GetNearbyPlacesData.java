@@ -1,4 +1,4 @@
-package com.trianz.locationalarm.Utils;
+package com.trianz.locationalarm.OffersCoupons;
 
 import android.os.AsyncTask;
 import android.util.Log;

@@ -145,7 +145,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         ignoreIntent.setAction(SetReminderSentByOthers.ACTION_DISMISS);
         sendSavedExtras(ignoreIntent);
         PendingIntent ignoreReminderPendingIntent = PendingIntent.getService(context,ACTION_IGNORE,ignoreIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action ignoreReminderAction = new NotificationCompat.Action(R.mipmap.ic_discard,"NO THANKS!",ignoreReminderPendingIntent);
+        NotificationCompat.Action ignoreReminderAction = new NotificationCompat.Action(R.drawable.ic_discard,"NO THANKS!",ignoreReminderPendingIntent);
         return ignoreReminderAction;
     }
 
@@ -154,7 +154,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         saveIntent.setAction(SetReminderSentByOthers.ACTION_ACCEPT);
         sendSavedExtras(saveIntent);
         PendingIntent ignoreReminderPendingIntent = PendingIntent.getService(context,ACTION_SAVE,saveIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action ignoreReminderAction = new NotificationCompat.Action(R.mipmap.ic_save_reminder,"SAVE",ignoreReminderPendingIntent);
+        NotificationCompat.Action ignoreReminderAction = new NotificationCompat.Action(R.drawable.ic_save_reminder,"SAVE",ignoreReminderPendingIntent);
         return ignoreReminderAction;
     }
 

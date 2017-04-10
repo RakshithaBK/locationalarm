@@ -66,7 +66,7 @@ public class ContactFragment extends Fragment implements OnMapReadyCallback {
         this.googleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         googleMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_event))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_event))
                     .anchor(0.0f, 1.0f)
                     .position(new LatLng(12.9001, 77.5966)));
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);

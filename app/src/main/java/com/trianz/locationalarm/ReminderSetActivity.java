@@ -77,6 +77,7 @@ public class ReminderSetActivity extends AppCompatActivity {
     int pendingIntentRequestCode;
 
     private static ReminderSetActivity inst;
+
     public static ReminderSetActivity instance() {
         return inst;
     }
@@ -132,11 +133,11 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-            Bundle bundle = getIntent().getExtras();
-            reminderEvent = bundle.getString("reminderEvent");
-            reminderDate = bundle.getString("reminderDate");
-            Log.d("reminderDate", reminderDate);
-            Log.d("reminderEvent", reminderEvent);
+        Bundle bundle = getIntent().getExtras();
+        reminderEvent = bundle.getString("reminderEvent");
+        reminderDate = bundle.getString("reminderDate");
+        Log.d("reminderDate", reminderDate);
+        Log.d("reminderEvent", reminderEvent);
 
 
         TextView datePicked = (TextView) findViewById(R.id.datePicker);
@@ -154,10 +155,9 @@ public class ReminderSetActivity extends AppCompatActivity {
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
         String currentTime = currentTimeFormat.format(myCalender.getTime());
 
-        if (reminderDate == (null)){
+        if (reminderDate == (null)) {
             datePicked.setText(currentDate);
-        }
-        else {
+        } else {
             datePicked.setText(reminderDate);
         }
         timePicked.setText(currentTime);
@@ -166,7 +166,6 @@ public class ReminderSetActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-
 
 
         //if user does not use datepicker and timepicker
@@ -244,14 +243,14 @@ public class ReminderSetActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 
-                        TextView timePicked =  (TextView)findViewById(R.id.timePicker);
+                        TextView timePicked = (TextView) findViewById(R.id.timePicker);
                         //timePicked.setText("" +  selectedHour + ":" + selectedMinute);
                         timePicked.setText(new StringBuilder().append(pad(selectedHour))
                                 .append(":").append(pad(selectedMinute)));
 
                         selectedHourAlarm = selectedHour;
                         selectedMinuteAlarm = selectedMinute;
-                        Log.d("selectedMinuteAlarm",String.valueOf(selectedMinuteAlarm));
+                        Log.d("selectedMinuteAlarm", String.valueOf(selectedMinuteAlarm));
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 // mTimePicker.setTitle("Select Time");
@@ -260,69 +259,56 @@ public class ReminderSetActivity extends AppCompatActivity {
             }
         });
 
-
         //clicking on cancel button go back to previous page
         ImageView closeTask = (ImageView) findViewById(R.id.closeIcon1);
-
         closeTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(ReminderSetActivity.this, RemindMeTask.class);
-                intent.putExtra("reminderDate",reminderDate);
+                intent.putExtra("reminderDate", reminderDate);
                 startActivity(intent);
             }
         });
-
-
-
 
         //set the switch for allDay to off and get the status on change
         enableAllDay.setChecked(false);
         enableAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     allDayFlag = true;
                     timePicked.setVisibility(View.INVISIBLE);
 
-                }else {
+                } else {
                     allDayFlag = false;
                     timePicked.setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
-
         //Select How much time before the alarm should ring
         final TextView remindMeBefore = (TextView) findViewById(R.id.remindMeBefore);
-
         remindMeBefore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Dialog remindMeBeforeDialog = new Dialog(ReminderSetActivity.this);
                 remindMeBeforeDialog.setContentView(R.layout.dialog_reminderbeforetime);
-
                 final TextView zeroMinutesBefore = (TextView) remindMeBeforeDialog.findViewById(R.id.zeroMinutesBefore);
                 final TextView tenMinutesBefore = (TextView) remindMeBeforeDialog.findViewById(R.id.tenMinutesBefore);
                 final TextView twentyMinutesBefore = (TextView) remindMeBeforeDialog.findViewById(R.id.twentyMinutesBefore);
                 final TextView thirtyMinutesBefore = (TextView) remindMeBeforeDialog.findViewById(R.id.thirtyMinutesBefore);
                 final TextView oneHourBefore = (TextView) remindMeBeforeDialog.findViewById(R.id.oneHourBefore);
 
-                if(remindMeBeforeTimeValue == "10minutes") {
+                if (remindMeBeforeTimeValue == "10minutes") {
                     tenMinutesBefore.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if (remindMeBeforeTimeValue == "0minutes") {
+                } else if (remindMeBeforeTimeValue == "0minutes") {
                     zeroMinutesBefore.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if (remindMeBeforeTimeValue == "20minutes") {
+                } else if (remindMeBeforeTimeValue == "20minutes") {
                     twentyMinutesBefore.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if(remindMeBeforeTimeValue == "30minutes"){
+                } else if (remindMeBeforeTimeValue == "30minutes") {
                     thirtyMinutesBefore.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if(remindMeBeforeTimeValue == "1hour"){
+                } else if (remindMeBeforeTimeValue == "1hour") {
                     oneHourBefore.setTextColor(Color.parseColor("#9568ff"));
                 }
                 remindMeBeforeDialog.show();
@@ -340,7 +326,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 tenMinutesBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        remindMeBeforeTimeValueInInt = 10 ;
+                        remindMeBeforeTimeValueInInt = 10;
                         remindMeBeforeTimeValue = "10minutes";
                         remindMeBeforeDialog.dismiss();
                         remindMeBefore.setText("10 minutes before");
@@ -350,7 +336,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 twentyMinutesBefore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        remindMeBeforeTimeValueInInt = 20 ;
+                        remindMeBeforeTimeValueInInt = 20;
                         remindMeBeforeTimeValue = "20minutes";
                         remindMeBeforeDialog.dismiss();
                         remindMeBefore.setText("20 minutes before");
@@ -380,35 +366,25 @@ public class ReminderSetActivity extends AppCompatActivity {
         });
 
         ReminderSetController.repetationSetup(this);
-
-
         //Save reminder as audio file
         final TextView tv_reminderType = (TextView) findViewById(R.id.tv_reminderType);
-
-
         tv_reminderType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Dialog remindMeType = new Dialog(ReminderSetActivity.this);
                 remindMeType.setContentView(R.layout.dialog_remindertype);
-
-
                 final TextView typeNotification = (TextView) remindMeType.findViewById(R.id.notificationType);
                 final TextView typeVoice = (TextView) remindMeType.findViewById(R.id.voiceType);
                 final LinearLayout voiceRecordButtons = (LinearLayout) remindMeType.findViewById(R.id.ll_showVoiceRecordButtons);
-
                 recordButton = (Button) remindMeType.findViewById(R.id.btn_record);
                 playButton = (Button) remindMeType.findViewById(R.id.btn_play);
                 stopButton = (Button) remindMeType.findViewById(R.id.btn_stop);
-
                 recordButton.setText("R");
                 playButton.setText("P");
                 stopButton.setText("S");
-
-                if(notificationTypeValue == "Notification") {
+                if (notificationTypeValue == "Notification") {
                     typeNotification.setTextColor(Color.parseColor("#9568ff"));
-                }
-                else if (notificationTypeValue == "Voice") {
+                } else if (notificationTypeValue == "Voice") {
                     typeVoice.setTextColor(Color.parseColor("#9568ff"));
                 }
                 remindMeType.show();
@@ -430,26 +406,20 @@ public class ReminderSetActivity extends AppCompatActivity {
                         // remindMeType.dismiss();
                         voiceRecordButtons.setVisibility(View.VISIBLE);
                         tv_reminderType.setText("Voice Reminder");
-
-                        if(!hasMicrophone()) {
+                        if (!hasMicrophone()) {
                             stopButton.setEnabled(false);
                             playButton.setEnabled(false);
                             recordButton.setEnabled(false);
-                        }
-
-                        else {
+                        } else {
                             playButton.setEnabled(false);
                             stopButton.setEnabled(false);
                         }
-
 //                        audioFilePath =
 //                                Environment.getExternalStorageDirectory().getAbsolutePath()
 //                                        + "/myaudio.3gp";
 
-                        audioFilePath = getFilesDir()+ "/" + String.valueOf(reminderEvent) + String.valueOf(selectedMinuteAlarm) + String.valueOf(selectedHourAlarm) + "audio.m4a" ;
+                        audioFilePath = getFilesDir() + "/" + String.valueOf(reminderEvent) + String.valueOf(selectedMinuteAlarm) + String.valueOf(selectedHourAlarm) + "audio.m4a";
                         //Log.d("Send audio file path", audioFilePath);
-
-
                         recordButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -472,7 +442,6 @@ public class ReminderSetActivity extends AppCompatActivity {
                                 mediaRecorder.start();
                             }
                         });
-
                         playButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -491,89 +460,68 @@ public class ReminderSetActivity extends AppCompatActivity {
                                 mediaPlayer.start();
                             }
                         });
-
                         stopButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 stopButton.setEnabled(false);
                                 playButton.setEnabled(true);
-
-                                if(isRecording) {
+                                if (isRecording) {
                                     recordButton.setEnabled(false);
                                     mediaRecorder.stop();
                                     mediaRecorder.release();
                                     mediaRecorder = null;
                                     isRecording = false;
-                                }
-                                else {
+                                } else {
                                     mediaPlayer.release();
                                     mediaPlayer = null;
                                     recordButton.setEnabled(true);
                                 }
                             }
                         });
-
                     }
                 });
             }
         });
 
-
-
         /*************************/
-
         //Save the reminder and go back to landing page
         ImageView saveTask = (ImageView) findViewById(R.id.saveIcon1);
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((selectedMinuteAlarm - remindMeBeforeTimeValueInInt) < 0 )
-                {
-                    counterMinitueValue =  remindMeBeforeTimeValueInInt - selectedMinuteAlarm;
+                if ((selectedMinuteAlarm - remindMeBeforeTimeValueInInt) < 0) {
+                    counterMinitueValue = remindMeBeforeTimeValueInInt - selectedMinuteAlarm;
                     selectedMinuteAlarm = 60 - counterMinitueValue;
-                    myCalender.set(Calendar.MINUTE, selectedMinuteAlarm );
+                    myCalender.set(Calendar.MINUTE, selectedMinuteAlarm);
 
                     if (selectedHourAlarm != 0) {
                         selectedHourAlarm = selectedHourAlarm - 1;
-                    }
-                    else {
+                    } else {
                         selectedHourAlarm = 23;
                         selectedDayAlarm = selectedDayAlarm - 1;
                     }
                     myCalender.set(Calendar.HOUR_OF_DAY, selectedHourAlarm);
-
-
                     myCalender.set(Calendar.DAY_OF_MONTH, selectedDayAlarm);
                     myCalender.set(Calendar.MONTH, selectedMonthAlarm);
                     myCalender.set(Calendar.YEAR, selectedYearAlarm);
-
-                }
-
-                else {
+                } else {
                     myCalender.set(Calendar.HOUR_OF_DAY, selectedHourAlarm);
                     selectedMinuteAlarm = selectedMinuteAlarm - remindMeBeforeTimeValueInInt;
-                    myCalender.set(Calendar.MINUTE, selectedMinuteAlarm );
+                    myCalender.set(Calendar.MINUTE, selectedMinuteAlarm);
                     myCalender.set(Calendar.DAY_OF_MONTH, selectedDayAlarm);
                     myCalender.set(Calendar.MONTH, selectedMonthAlarm);
                     myCalender.set(Calendar.YEAR, selectedYearAlarm);
                 }
 //                Toast.makeText(ReminderSetActivity.this,"Alarm Set At " + String.valueOf(selectedHourAlarm) + ":" +
 //                        String.valueOf(selectedMinuteAlarm) + ":" + String.valueOf(selectedDayAlarm)+ ":" + String.valueOf(selectedMonthAlarm + 1)+ ":" + String.valueOf(selectedYearAlarm),  Toast.LENGTH_LONG).show();
-
-                Toast.makeText(ReminderSetActivity.this,"Alarm Set At " +
+                Toast.makeText(ReminderSetActivity.this, "Alarm Set At " +
                         String.valueOf(selectedHourAlarm) + ":" +
                         String.valueOf(pad(selectedMinuteAlarm)) + " On " +
-                        String.valueOf(selectedDayAlarm)+ "/" +
-                        String.valueOf(selectedMonthAlarm + 1)+ "/" +
-                        String.valueOf(selectedYearAlarm),  Toast.LENGTH_LONG).show();
-
-
+                        String.valueOf(selectedDayAlarm) + "/" +
+                        String.valueOf(selectedMonthAlarm + 1) + "/" +
+                        String.valueOf(selectedYearAlarm), Toast.LENGTH_LONG).show();
                 pendingIntentRequestCode = selectedHourAlarm + selectedMinuteAlarm + selectedDayAlarm + selectedMonthAlarm + selectedYearAlarm;
-
-                //Toast.makeText(ReminderSetActivity.this,String.valueOf(pendingIntentRequestCode),Toast.LENGTH_LONG).show();
-
                 alarmIntent = new Intent(ReminderSetActivity.this, AlarmReceiver.class);
-
                 alarmIntent.putExtra("reminderEvent", reminderEvent);
                 alarmIntent.putExtra("allDayFlag", allDayFlag);
                 alarmIntent.putExtra("repeatAlarmIntervalValue", repeatAlarmIntervalValue);
@@ -582,74 +530,54 @@ public class ReminderSetActivity extends AppCompatActivity {
                 if (notificationTypeValue.equals("Voice")) {
                     alarmIntent.putExtra("audioFilePath", audioFilePath);
                 }
-
                 alarmPendingIntent = PendingIntent.getBroadcast(ReminderSetActivity.this, pendingIntentRequestCode, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-
-                if(repeatAlarmIntervalValue == "Does not repeat") {
+                if (repeatAlarmIntervalValue == "Does not repeat") {
                     //alarmManager.set(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis() , alarmPendingIntent);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 5, alarmPendingIntent);
+                } else if (repeatAlarmIntervalValue == "everyDay") {
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmPendingIntent);
+                } else if (repeatAlarmIntervalValue == "everyWeek") {
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 7, alarmPendingIntent);
+                } else if (repeatAlarmIntervalValue == "everyMonth") {
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 30, alarmPendingIntent);
+                } else if (repeatAlarmIntervalValue == "everyYear") {
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 365, alarmPendingIntent);
                 }
-                else if (repeatAlarmIntervalValue == "everyDay") {
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), AlarmManager.INTERVAL_DAY , alarmPendingIntent);
-                }
-                else if (repeatAlarmIntervalValue == "everyWeek") {
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 7 , alarmPendingIntent);
-                }
-                else if (repeatAlarmIntervalValue == "everyMonth"){
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 30 , alarmPendingIntent);
-                }
-                else if (repeatAlarmIntervalValue == "everyYear"){
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), 1000 * 60 * 60 * 24 * 365 , alarmPendingIntent);
-                }
-                String selectedDateReminder = ReminderSetController.getMonth(selectedMonthAlarm) + " " + String.valueOf(selectedDayAlarm) + ", " + String.valueOf(selectedYearAlarm) ;
-                addReminderToList(selectedDateReminder,reminderEvent);
-
+                String selectedDateReminder = ReminderSetController.getMonth(selectedMonthAlarm) + " " + String.valueOf(selectedDayAlarm) + ", " + String.valueOf(selectedYearAlarm);
+                addReminderToList(selectedDateReminder, reminderEvent);
                 Handler h = new Handler();
                 long delayInMilliseconds = 1000 * 1;
                 h.postDelayed(new Runnable() {
                     public void run() {
                         Intent intent = new Intent(ReminderSetActivity.this, HomeActivity.class);
-                        intent.putExtra("Token_Flag",0);
+                        intent.putExtra("Token_Flag", 0);
                         startActivity(intent);
                     }
                 }, delayInMilliseconds);
-
             }
 
         });
-
     }
 
-
-
-    public  void addReminderToList(String reminderDate,String reminder_msg){
-
+    public void addReminderToList(String reminderDate, String reminder_msg) {
         reminder_message = reminder_msg;
         Date_To_remid = reminderDate;
-
         if (reminder_message.equals("")) {
             Snackbar.make(getWindow().getDecorView(), "Set a reminder message.", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else {
-
             if (ReminderSetController.dataIsValid(reminder_msg)) {
-
                 NamedGeofence geofence = new NamedGeofence();
                 geofence.reminder_msg = reminder_message;
                 geofence.reminder_Date_ToAlarm = Date_To_remid;
                 geofence.radius = radius * 1.0f;
                 GeofenceController.getInstance().addGeofence(geofence, geofenceControllerListener);
 
-
             } else {
                 ReminderSetController.showValidationErrorToast(context);
             }
-
         }
-
     }
-
 
     private GeofenceController.GeofenceControllerListener geofenceControllerListener = new GeofenceController.GeofenceControllerListener() {
         @Override
@@ -664,17 +592,7 @@ public class ReminderSetActivity extends AppCompatActivity {
             Toast.makeText(ReminderSetActivity.this, ReminderSetActivity.this.getString(R.string.Toast_error), Toast.LENGTH_SHORT).show();
         }
 
-
     };
-
-
-
-    //when the alarm started ringing open a view
-//    public void openAlarmView() {
-//        Intent alarmringingIntent = new Intent(ReminderSetActivity.this, AlarmRingingActivity.class);
-//        startActivity(alarmringingIntent);
-//    }
-
 
     public void snoozeAlarmControl(int receivedPendingIntentRequestCodeSnooze) {
 //        alarmManager.set(AlarmManager.RTC, myCalender.getTimeInMillis()+ 600000, alarmPendingIntent );
@@ -685,7 +603,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 //                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 //
 //        alarmManager.set(AlarmManager.RTC, myCalender.getTimeInMillis()+ 1000 * 60 * 10, senderSnoozeIntent );
-        Toast.makeText(ReminderSetActivity.this,"Alarm is postponed for 10 minutes",Toast.LENGTH_LONG).show();
+        Toast.makeText(ReminderSetActivity.this, "Alarm is postponed for 10 minutes", Toast.LENGTH_LONG).show();
 
     }
 
@@ -740,6 +658,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 
         }
     }
+
     //for Date set
     private void updateLabel() {
 
@@ -755,9 +674,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 PackageManager.FEATURE_MICROPHONE);
     }
 
-
-
-    public boolean checkLocationPermission(){
+    public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -779,7 +696,6 @@ public class ReminderSetActivity extends AppCompatActivity {
             //Call whatever you want
             return true;
         }
-
     }
 
     @Override
@@ -791,16 +707,13 @@ public class ReminderSetActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.RECORD_AUDIO)
                             == PackageManager.PERMISSION_GRANTED) {
                         //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
                     }
 
-
                 } else {
-
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "RECORD permission denied", Toast.LENGTH_LONG).show();
                 }
@@ -808,5 +721,4 @@ public class ReminderSetActivity extends AppCompatActivity {
             }
         }
     }
-
 }

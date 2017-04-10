@@ -27,22 +27,17 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-
-    </style>
-
-
-
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"></style>
     <style name="AppTheme.PopupOverlay" parent="Base.ThemeOverlay.AppCompat.Light" />
     <style name="menu_labels_style">
-
         <item name="android:textColor">@color/color_white</item>
         <item name="colorAccent">@color/color_white</item>
-        <item name="android:background">@drawable/corner_radius</item>
+        <item name="android:background">@xml/corner_radius</item>
         <item name="android:padding">10dp</item>
     </style>
 
     //datepicker theme
+
     <style name="MyDatePickerDialogTheme" parent="Theme.AppCompat.Light">
         <!-- this is new -->
         <item name="colorPrimaryDark">@color/colorActionBarHeader</item>
@@ -52,16 +47,18 @@
     </style>
 
     //date style
+
     <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
-        <item name="android:headerBackground">@drawable/tab_layout_top_gradient</item>
+        <item name="android:headerBackground">@xml/tab_layout_top_gradient</item>
         <item name="android:focusedMonthDateColor">@color/colorFabLabelbackground</item>
         <item name="android:datePickerMode">calendar</item>
         <item name="android:selectableItemBackground">@color/color_Purple</item>
     </style>
 
     //time style
+
     <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
-        <item name="android:headerBackground">@drawable/tab_layout_top_gradient</item>
+        <item name="android:headerBackground">@xml/tab_layout_top_gradient</item>
         <item name="android:numbersBackgroundColor">@color/color_white</item>
     </style>
 

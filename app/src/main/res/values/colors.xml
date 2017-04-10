@@ -15,14 +15,11 @@
     <color name="colorFabRed">#F03E56</color>
     <color name="colorFabLabelbackground">#606060</color>
 
-//color code of home screen
+    //color code of home screen
     <color name="colorPrimaryLight">#BBDEFB</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="light_grey">#c0c0c0</color>
-
-
-    <color name="white">#FFF</color>
 
 </resources>

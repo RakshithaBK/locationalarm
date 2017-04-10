@@ -36,23 +36,23 @@ public class RemindMeTask extends AppCompatActivity {
     String reminderDate;
 
 
-    public static String[] remindMeList={"Task","Meet","Hospital","Buy","Call","Event"};
-    public static int [] remindMeImages={R.mipmap.ic_task,R.mipmap.ic_meet,R.mipmap.ic_hospital,R.mipmap.ic_buy,R.mipmap.ic_call,R.mipmap.ic_event};
+    public static String[] remindMeList = {"Task", "Meet", "Hospital", "Buy", "Call", "Event"};
+    public static int[] remindMeImages = {R.drawable.ic_task, R.drawable.ic_meet, R.drawable.ic_hospital, R.drawable.ic_buy, R.drawable.ic_call, R.drawable.ic_event};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remindme_task);
 
 
-        getTask = (EditText)findViewById(R.id.et_remindmeto);
-        getTask.setHintTextColor(getResources().getColor(R.color.white));
-
+        getTask = (EditText) findViewById(R.id.et_remindmeto);
+        getTask.setHintTextColor(getResources().getColor(R.color.color_white));
 
 
         context = this;
 
         lv = (ListView) findViewById(R.id.listView);
-        lv.setAdapter(new CustomAdapter(this, remindMeList,remindMeImages));
+        lv.setAdapter(new CustomAdapter(this, remindMeList, remindMeImages));
 
         saveTask = (ImageView) findViewById(R.id.saveIcon);
         saveTask.setEnabled(false);
@@ -77,30 +77,30 @@ public class RemindMeTask extends AppCompatActivity {
 
         getTask.addTextChangedListener(new TextWatcher() {
 
-                                           @Override
-                                           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                                           }
+            }
 
-                                           @Override
-                                           public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                                           }
+            }
 
-                                           public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {
 
-                                               // you can call or do what you want with your EditText here
-                                               if (getTask.length() > 0) {
-                                                   saveTask.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                                                   saveTask.setEnabled(true);
-                                               } else {
-                                                   saveTask.setEnabled(false);
-                                                   saveTask.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
-                                               }
+                // you can call or do what you want with your EditText here
+                if (getTask.length() > 0) {
+                    saveTask.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                    saveTask.setEnabled(true);
+                } else {
+                    saveTask.setEnabled(false);
+                    saveTask.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+                }
 
-                                           }
+            }
 
-                                       });
+        });
         //savetask and proceed to next page
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,17 +108,17 @@ public class RemindMeTask extends AppCompatActivity {
                 Intent intent;
                 pickedTask = getTask.getText().toString();
 
-                if(selfReminderFlag) {
-                    if(getIntent().hasExtra("reminderDate")){
+                if (selfReminderFlag) {
+                    if (getIntent().hasExtra("reminderDate")) {
                         Bundle bundle = getIntent().getExtras();
                         reminderDate = bundle.getString("reminderDate");
-                        Log.d("reminderDate",reminderDate);
+                        Log.d("reminderDate", reminderDate);
                     }
                     intent = new Intent(RemindMeTask.this, ReminderSetActivity.class);
-                    intent.putExtra("reminderDate",reminderDate);
+                    intent.putExtra("reminderDate", reminderDate);
 
-                }else{
-                     intent = new Intent(RemindMeTask.this, ReminderSetToOthers.class);
+                } else {
+                    intent = new Intent(RemindMeTask.this, ReminderSetToOthers.class);
 
                 }
                 intent.putExtra("reminderEvent", pickedTask);
@@ -133,7 +133,7 @@ public class RemindMeTask extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent Home = new Intent(RemindMeTask.this, HomeActivity.class);
-                Home.putExtra("Token_Flag",0);
+                Home.putExtra("Token_Flag", 0);
                 startActivity(Home);
             }
         });

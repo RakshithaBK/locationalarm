@@ -34,11 +34,11 @@ import static com.trianz.locationalarm.Utils.Constants.SharedPrefs.repeatAlarmIn
 
 public class AlarmRingingActivity extends AppCompatActivity {
 
-      int pendingIntentRequestCode;
-       MediaPlayer mediaPlayer;
-      String notificationTypeValue;
-       String audioFilePath;
-      Ringtone ringtone;
+    int pendingIntentRequestCode;
+    MediaPlayer mediaPlayer;
+    String notificationTypeValue;
+    String audioFilePath;
+    Ringtone ringtone;
     Calendar myCalender = Calendar.getInstance();
     ReminderSetActivity inst = ReminderSetActivity.instance();
     private ImageView mPendulum;
@@ -54,7 +54,7 @@ public class AlarmRingingActivity extends AppCompatActivity {
         String reminderEvent = bundle.getString("reminderEvent");
 
 
-        TextView reminderEventText = (TextView)findViewById(R.id.reminderEvent);
+        TextView reminderEventText = (TextView) findViewById(R.id.reminderEvent);
         reminderEventText.setText(reminderEvent);
 
         mPendulum = (ImageView) findViewById(R.id.pendulum_ringing);
@@ -64,7 +64,7 @@ public class AlarmRingingActivity extends AppCompatActivity {
         pendingIntentRequestCode = bundle.getInt("pendingIntentRequestCode");
         notificationTypeValue = bundle.getString("notificationTypeValue");
 
-        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+        final RippleBackground rippleBackground = (RippleBackground) findViewById(R.id.content);
 
         rippleBackground.startRippleAnimation();
 
@@ -73,15 +73,14 @@ public class AlarmRingingActivity extends AppCompatActivity {
         findViewById(R.id.imageView1).setOnDragListener(new MyDragListener());
         findViewById(R.id.imageView3).setOnDragListener(new MyDragListener());
 
-        if(notificationTypeValue.equals("Notification")) {
+        if (notificationTypeValue.equals("Notification")) {
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             if (alarmUri == null) {
                 alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             }
             ringtone = RingtoneManager.getRingtone(AlarmRingingActivity.this, alarmUri);
             ringtone.play();
-        }
-        else {
+        } else {
             audioFilePath = bundle.getString("audioFilePath");
 
             mediaPlayer = new MediaPlayer();
@@ -97,25 +96,23 @@ public class AlarmRingingActivity extends AppCompatActivity {
         TextView tv_currentTime = (TextView) findViewById(R.id.tv_currentTime);
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("HH:mm ");
         String currentTimeOnRinging = currentTimeFormat.format(myCalender.getTime());
-        Log.d("currentTime",currentTimeOnRinging);
+        Log.d("currentTime", currentTimeOnRinging);
         tv_currentTime.setText(currentTimeOnRinging);
 
         SimpleDateFormat currentHourFormat = new SimpleDateFormat("HH");
         int currentHour = Integer.parseInt(currentHourFormat.format(myCalender.getTime()));
         TextView tv_greetings = (TextView) findViewById(R.id.greetings);
-        if(currentHour > 5 && currentHour <= 12){
+        if (currentHour > 5 && currentHour <= 12) {
             tv_greetings.setText("Good Morning");
-        }
-        else if(currentHour > 12 && currentHour < 17) {
+        } else if (currentHour > 12 && currentHour < 17) {
             tv_greetings.setText("Good Afternoon");
-        }
-        else {
+        } else {
             tv_greetings.setText("Good Evening");
         }
 
         TextView alarm_User_Name = (TextView) findViewById(R.id.alarm_User_Name);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        String UserName = prefs.getString("UserName","No UserName Defined");
+        String UserName = prefs.getString("UserName", "No UserName Defined");
         alarm_User_Name.setText(UserName);
     }
 
@@ -136,7 +133,6 @@ public class AlarmRingingActivity extends AppCompatActivity {
 
     public class MyDragListener implements View.OnDragListener {
 
-
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
@@ -154,22 +150,17 @@ public class AlarmRingingActivity extends AppCompatActivity {
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
 
-
-                    if(((ImageView) v).equals(findViewById(R.id.imageView1)))
-                    {
+                    if (v.equals(findViewById(R.id.imageView1))) {
                         Toast.makeText(AlarmRingingActivity.this, "Snooze", Toast.LENGTH_SHORT).show();
-                        if(notificationTypeValue.equals("Notification")) {
+                        if (notificationTypeValue.equals("Notification")) {
                             ringtone.stop();
                         }
                         inst.snoozeAlarmControl(pendingIntentRequestCode);
                         Intent intent = new Intent(AlarmRingingActivity.this, HomeActivity.class);
                         startActivity(intent);
-                    }
-
-                    else if(((ImageView) v).equals(findViewById(R.id.imageView3)))
-                    {
+                    } else if (v.equals(findViewById(R.id.imageView3))) {
                         Toast.makeText(AlarmRingingActivity.this, "Dismiss", Toast.LENGTH_SHORT).show();
-                        if(notificationTypeValue.equals("Notification")) {
+                        if (notificationTypeValue.equals("Notification")) {
                             ringtone.stop();
                         }
                         inst.cancelAlarmControl(pendingIntentRequestCode);

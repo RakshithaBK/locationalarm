@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_white">
+    android:background="@color/color_white"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,104 +14,105 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/enterTask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/enterTask"
+                android:background="#9568ff"
                 android:orientation="horizontal"
-                android:weightSum="12"
-                android:paddingTop="5dp"
                 android:paddingBottom="10dp"
-                android:background="#9568ff">
+                android:paddingTop="5dp"
+                android:weightSum="12">
 
                 <ImageView
                     android:id="@+id/closeIcon1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_discard"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_discard" />
 
 
                 <TextView
+                    android:id="@+id/finalTaskSet"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/finalTaskSet"
                     android:layout_weight="8"
-                    android:textColor="@color/color_white"
-                    android:paddingTop="11dp"/>
+                    android:paddingTop="11dp"
+                    android:textColor="@color/color_white" />
 
                 <ImageView
                     android:id="@+id/saveIcon1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_save_reminder"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_save_reminder" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/reminderType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/reminderType"
-                android:orientation="horizontal"
-                android:weightSum="12"
-                android:paddingTop="5dp"
-                android:paddingBottom="10dp"
+                android:layout_alignParentStart="true"
                 android:layout_below="@+id/enterTask"
-                android:layout_alignParentStart="true">
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:weightSum="12">
 
                 <ImageView
                     android:id="@+id/clockOne"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_allday"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_allday" />
 
 
                 <TextView
+                    android:id="@+id/allDay"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="All Day"
-                    android:textColor="@color/color_Black"
-                    android:id="@+id/allDay"
                     android:layout_weight="8"
-                    android:paddingTop="11dp"/>
+                    android:paddingTop="11dp"
+                    android:text="All Day"
+                    android:textColor="@color/color_Black" />
 
                 <Switch
                     android:id="@+id/switchIcon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_event"
                     android:layout_weight="2"
-                    android:paddingTop="6dp"/>
+                    android:paddingTop="6dp"
+                    android:src="@drawable/ic_event" />
             </LinearLayout>
+
             <LinearLayout
+                android:id="@+id/reminderType2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/reminderType2"
-                android:orientation="horizontal"
-                android:weightSum="12"
-                android:paddingTop="5dp"
-                android:paddingBottom="10dp"
+                android:layout_alignParentStart="true"
                 android:layout_below="@+id/reminderType"
-                android:layout_alignParentStart="true">
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:weightSum="12">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp" />
 
 
                 <TextView
+                    android:id="@+id/datePicker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/datePicker"
                     android:layout_weight="8"
-                    android:textColor="#5C5C5C"
+                    android:focusable="false"
                     android:paddingTop="11dp"
-                    android:focusable="false"/>
+                    android:textColor="#5C5C5C" />
 
                 <TextView
                     android:id="@+id/timePicker"
@@ -118,9 +120,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:textColor="#5C5C5C"
+                    android:paddingEnd="4dp"
                     android:paddingTop="8dp"
-                    android:paddingEnd="4dp"/>
+                    android:textColor="#5C5C5C" />
             </LinearLayout>
 
 
@@ -129,257 +131,199 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/reminderType2"
                 android:layout_marginTop="4dp"
-                android:background="@color/color_line"/>
-
+                android:background="@color/color_line" />
 
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/reminderType3"
-                android:orientation="horizontal"
-                android:weightSum="12"
-                android:paddingTop="5dp"
-                android:paddingBottom="10dp"
-                android:layout_below="@+id/reminderType2"
-                android:layout_alignParentStart="true">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_allday"
-                    android:layout_weight="2"
-                    android:paddingTop="8dp"/>
-
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Reminder type"
-                    android:layout_weight="8"
-                    android:textColor="@color/color_Black"
-                    android:paddingTop="11dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:textColor="@color/color_Black"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:paddingTop="8dp"/>
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/reminderType4"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/reminderType2"
                 android:orientation="horizontal"
-                android:weightSum="12"
-                android:paddingTop="5dp"
                 android:paddingBottom="10dp"
-                android:layout_below="@+id/reminderType3"
-                android:layout_alignParentStart="true">
+                android:paddingTop="5dp"
+                android:weightSum="12">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_allday" />
 
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Notification Reminder"
-                    android:textColor="#5C5C5C"
                     android:layout_weight="8"
                     android:paddingTop="11dp"
-                    android:id="@+id/tv_reminderType"/>
+                    android:text="Reminder type"
+                    android:textColor="@color/color_Black" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_Black"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:textColor="@color/color_Black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/reminderType4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/reminderType3"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:weightSum="12">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp" />
+
+
+                <TextView
+                    android:id="@+id/tv_reminderType"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:paddingTop="11dp"
+                    android:text="Notification Reminder"
+                    android:textColor="#5C5C5C" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"
+                    android:textColor="@color/color_Black" />
             </LinearLayout>
 
             <View
+                android:id="@+id/hrline1"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:id="@+id/hrline1"
                 android:layout_below="@+id/reminderType4"
                 android:layout_marginTop="4dp"
-                android:background="@color/color_line"/>
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/addLocation"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:weightSum="12"-->
-                <!--android:paddingTop="5dp"-->
-                <!--android:paddingBottom="10dp"-->
-                <!--android:layout_below="@+id/hrline1"-->
-                <!--android:layout_alignParentStart="true">-->
-
-                <!--<ImageView-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="2"-->
-                    <!--android:src="@mipmap/ic_addlocation"-->
-                    <!--android:paddingTop="8dp"/>-->
-
-
-                <!--<TextView-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Add Location"-->
-                    <!--android:layout_weight="8"-->
-                    <!--android:paddingTop="11dp"/>-->
-
-                <!--<TextView-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="2"-->
-                    <!--android:paddingTop="8dp"/>-->
-            <!--</LinearLayout>-->
-
-            <!--&lt;!&ndash;<com.google.android.gms.maps.MapView&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:id="@+id/mapView"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_alignParentEnd="true"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_alignParentStart="true"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_below="@+id/addLocation"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:apiKey="AIzaSyDUnhFQHyEIrHGcEDwKU6xUEyc-83YGi58"/>&ndash;&gt;-->
-
-            <!--<RelativeLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/mapView"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_alignParentStart="true"-->
-                <!--android:layout_below="@+id/addLocation" />-->
-
-            <!--<View-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:id="@+id/hrline2"-->
-                <!--android:layout_below="@id/mapView"-->
-                <!--android:layout_marginTop="4dp"-->
-                <!--android:background="#000000"/>-->
+                android:background="@color/color_line" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/remindMe"
-                android:orientation="horizontal"
-                android:weightSum="12"
-                android:paddingTop="5dp"
-                android:paddingBottom="10dp"
-                android:layout_below="@+id/hrline1"
-                android:layout_alignParentStart="true">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:src="@mipmap/ic_remindme"
-                    android:paddingTop="8dp"/>
-
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:textColor="@color/color_Black"
-                    android:layout_height="wrap_content"
-                    android:text="Remind me"
-                    android:layout_weight="8"
-                    android:paddingTop="11dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:textColor="@color/color_Black"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:paddingTop="8dp"/>
-            </LinearLayout>
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/remindMe2"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/hrline1"
                 android:orientation="horizontal"
-                android:weightSum="12"
-                android:paddingTop="5dp"
                 android:paddingBottom="10dp"
-                android:layout_below="@+id/remindMe"
-                android:layout_alignParentStart="true">
+                android:paddingTop="5dp"
+                android:weightSum="12">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_remindme" />
 
 
                 <TextView
                     android:layout_width="0dp"
-                    android:id="@+id/remindMeBefore"
-                    android:textColor="#5C5C5C"
                     android:layout_height="wrap_content"
-                    android:text="On time"
                     android:layout_weight="8"
-                    android:paddingTop="11dp"/>
+                    android:paddingTop="11dp"
+                    android:text="Remind me"
+                    android:textColor="@color/color_Black" />
 
                 <TextView
-                    android:textColor="@color/color_Black"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:textColor="@color/color_Black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/remindMe2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/remindMe"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:weightSum="12">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp" />
+
+
+                <TextView
+                    android:id="@+id/remindMeBefore"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:paddingTop="11dp"
+                    android:text="On time"
+                    android:textColor="#5C5C5C" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingTop="8dp"
+                    android:textColor="@color/color_Black" />
             </LinearLayout>
 
             <View
+                android:id="@+id/hrline3"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:id="@+id/hrline3"
                 android:layout_below="@+id/remindMe2"
                 android:layout_marginTop="4dp"
-                android:background="@color/color_line"/>
+                android:background="@color/color_line" />
 
             <LinearLayout
+                android:id="@+id/repeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/repeat"
-                android:orientation="horizontal"
-                android:weightSum="12"
-                android:paddingTop="5dp"
-                android:paddingBottom="10dp"
+                android:layout_alignParentStart="true"
                 android:layout_below="@+id/hrline3"
-                android:layout_alignParentStart="true">
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:weightSum="12">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:src="@mipmap/ic_does_not_repeat"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_does_not_repeat" />
 
 
                 <TextView
-                    android:textColor="@color/color_Black"
-                    android:layout_width="0dp"
                     android:id="@+id/reminderepeat"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Does not repeat"
                     android:layout_weight="8"
-                    android:paddingTop="11dp"/>
+                    android:paddingTop="11dp"
+                    android:text="Does not repeat"
+                    android:textColor="@color/color_Black" />
 
                 <TextView
-                    android:textColor="@color/color_Black"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:paddingTop="8dp"/>
+                    android:paddingTop="8dp"
+                    android:textColor="@color/color_Black" />
             </LinearLayout>
 
         </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.trianz.locationalarm.Utils;
+package com.trianz.locationalarm.Authentication;
 
 import android.Manifest;
 import android.annotation.TargetApi;

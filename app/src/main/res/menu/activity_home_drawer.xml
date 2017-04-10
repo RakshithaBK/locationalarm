@@ -4,20 +4,20 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_addreminder"
-            android:icon="@mipmap/ic_location_on_white_24dp"
+            android:icon="@drawable/ic_location_on_white_24dp"
             android:title="Add Reminder to Location" />
         <item
             android:id="@+id/nav_wakeUpAlarm"
-            android:icon="@mipmap/ic_addreminder"
+            android:icon="@drawable/ic_addreminder"
             android:title="Add Reminder to Date" />
         <item
             android:id="@+id/nav_remindOthers"
-            android:icon="@mipmap/ic_remindtoothers"
+            android:icon="@drawable/ic_remindtoothers"
             android:title="Remind to Others" />
 
         <item
             android:id="@+id/nav_offers"
-            android:icon="@mipmap/ic_offers_coupons"
+            android:icon="@drawable/ic_offers_coupons"
             android:title="Offers and Coupons" />
     </group>
 

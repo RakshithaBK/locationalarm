@@ -54,6 +54,7 @@ public class SetReminderSentByOthers extends AppCompatActivity {
     public static int pendingIntentRequestCode;
 
     private static SetReminderSentByOthers inst;
+
     public static SetReminderSentByOthers instance() {
         return inst;
     }
@@ -63,21 +64,23 @@ public class SetReminderSentByOthers extends AppCompatActivity {
         super.onStart();
         inst = this;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_reminder_sent_others_);
 
     }
-    public static void setAlarm(Context context,String response_dateObj,String response_timeObj,String reminderEventObj){
-        int reminderMinute = Integer.parseInt(response_timeObj.substring(3,5));
-        int reminderHour = Integer.parseInt(message_body2.substring(0,2));
-        int reminderDay = Integer.parseInt(response_dateObj.substring(0,2));
-        int reminderMonth = Integer.parseInt(message_body.substring(3,5))-1;
-        int reminderYear = Integer.parseInt(message_body.substring(6,10));
+
+    public static void setAlarm(Context context, String response_dateObj, String response_timeObj, String reminderEventObj) {
+        int reminderMinute = Integer.parseInt(response_timeObj.substring(3, 5));
+        int reminderHour = Integer.parseInt(message_body2.substring(0, 2));
+        int reminderDay = Integer.parseInt(response_dateObj.substring(0, 2));
+        int reminderMonth = Integer.parseInt(message_body.substring(3, 5)) - 1;
+        int reminderYear = Integer.parseInt(message_body.substring(6, 10));
 
         alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        myCalender.set(Calendar.MINUTE, reminderMinute );
+        myCalender.set(Calendar.MINUTE, reminderMinute);
         myCalender.set(Calendar.HOUR_OF_DAY, reminderHour);
         myCalender.set(Calendar.DAY_OF_MONTH, reminderDay);
         myCalender.set(Calendar.MONTH, reminderMonth);
@@ -87,7 +90,7 @@ public class SetReminderSentByOthers extends AppCompatActivity {
         alarmIntentforOthers.putExtra("reminderEvent", reminderEventObj);
         alarmIntentforOthers.putExtra("pendingIntentRequestCode", pendingIntentRequestCode);
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, pendingIntentRequestCode, alarmIntentforOthers, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(),alarmPendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis(), alarmPendingIntent);
     }
 
 
@@ -99,79 +102,78 @@ public class SetReminderSentByOthers extends AppCompatActivity {
         }
     }
 
-    public static void sendResponse(final Context context,String response_dateObj,String response_timeObj,String reminderEventObj,String reply_status_msgObj,String sender_nameObj){
-        HashMap<String, String> params = new HashMap<String, String>();
+    public static void sendResponse(final Context context, String response_dateObj, String response_timeObj, String reminderEventObj, String reply_status_msgObj, String sender_nameObj) {
+        HashMap<String, String> params = new HashMap<>();
         params.put(KEY_RESPONSE_DATE, response_dateObj);
-        params.put(KEY_RESPONSE_TIME,response_timeObj);
-        params.put(KEY_RESPONSE_REMINDER_TYPE,reminderEventObj);
+        params.put(KEY_RESPONSE_TIME, response_timeObj);
+        params.put(KEY_RESPONSE_REMINDER_TYPE, reminderEventObj);
         params.put(KEY_RESPONSE_REPLY_STATUS, reply_status_msgObj);
-        params.put(KEY_RESPONSE_REPLY_TO,sender_nameObj );
+        params.put(KEY_RESPONSE_REPLY_TO, sender_nameObj);
         params.put(KEY_RESPONSE_REPEAT, "Does Not repeat");
 
         JSONObject jsonBody = new JSONObject(params);
-        JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, SEND_NOTIFICATION_RESPONSE_ ,jsonBody,
+        JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, SEND_NOTIFICATION_RESPONSE_, jsonBody,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        OnResponseValidation(context,response);
+                        OnResponseValidation(context, response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        HomeController.errorInResponse(this,volleyError);
+                        HomeController.errorInResponse(this, volleyError);
                     }
-                }){
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
                 SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                String access_TokenKey_sendResponse = prefs.getString("AccessToken","No Name Defined");
-                Log.d("access",access_TokenKey_sendResponse);
-                String auth = access_TokenKey_sendResponse;
-                headers.put("Authorization", auth);
+                String access_TokenKey_sendResponse = prefs.getString("AccessToken", "No Name Defined");
+                Log.d("access", access_TokenKey_sendResponse);
+                headers.put("Authorization", access_TokenKey_sendResponse);
                 return headers;
             }
         };
         MySingleton.getInstance(context).addToRequestQueue(JsonObjRequest);
     }
 
-    public static void OnResponseValidation(Context context,JSONObject response){
+    public static void OnResponseValidation(Context context, JSONObject response) {
         try {
             JSONObject json = new JSONObject(response.toString());
-            Log.d("RegJson",json.toString());
+            Log.d("RegJson", json.toString());
             Boolean status = Boolean.parseBoolean(json.getString("status"));
             String message = json.getString("message");
 
-            if(status==true){
-                Toast.makeText(context.getApplicationContext(),message, Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(context.getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+            if (status) {
+                Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public static void executeTask(Context context, String action,String response_dateObj,String response_timeObj,String sender_nameObj,String reply_status_msgObj,String reminderEventObj) {
+    public static void executeTask(Context context, String action, String response_dateObj, String response_timeObj, String sender_nameObj, String reply_status_msgObj, String reminderEventObj) {
         if (ACTION_ACCEPT.equals(action)) {
             reply_status_msgObj = ACTION_ACCEPT;
-            saveReminder_To_Others(context,response_dateObj,response_timeObj,reminderEventObj,reply_status_msgObj,sender_nameObj);
-        }else if(ACTION_DISMISS.equals(action)){
+            saveReminder_To_Others(context, response_dateObj, response_timeObj, reminderEventObj, reply_status_msgObj, sender_nameObj);
+        } else if (ACTION_DISMISS.equals(action)) {
             reply_status_msgObj = ACTION_DISMISS;
-            discardReminder_To_Others(context,response_dateObj,response_timeObj,reminderEventObj,reply_status_msgObj,sender_nameObj);
+            discardReminder_To_Others(context, response_dateObj, response_timeObj, reminderEventObj, reply_status_msgObj, sender_nameObj);
         }
     }
 
-    private static void saveReminder_To_Others(Context context,String response_dateObj,String response_timeObj,String reminderEventObj,String reply_status_msgObj,String sender_nameObj) {
+    private static void saveReminder_To_Others(Context context, String response_dateObj, String response_timeObj, String reminderEventObj, String reply_status_msgObj, String sender_nameObj) {
         MyFirebaseMessagingService.clearAllNotifications(context);
-        setAlarm(context,response_dateObj,response_timeObj,reminderEventObj);
-        sendResponse(context,response_dateObj,response_timeObj,reminderEventObj,reply_status_msgObj,sender_nameObj);
+        setAlarm(context, response_dateObj, response_timeObj, reminderEventObj);
+        sendResponse(context, response_dateObj, response_timeObj, reminderEventObj, reply_status_msgObj, sender_nameObj);
     }
 
-    private static void discardReminder_To_Others(Context context,String response_dateObj,String response_timeObj,String reminderEventObj,String reply_status_msgObj,String sender_nameObj) {
+    private static void discardReminder_To_Others(Context context, String response_dateObj, String response_timeObj, String reminderEventObj, String reply_status_msgObj, String sender_nameObj) {
         MyFirebaseMessagingService.clearAllNotifications(context);
-        sendResponse(context,response_dateObj,response_timeObj,reminderEventObj,reply_status_msgObj,sender_nameObj);
+        sendResponse(context, response_dateObj, response_timeObj, reminderEventObj, reply_status_msgObj, sender_nameObj);
     }
 
 }
