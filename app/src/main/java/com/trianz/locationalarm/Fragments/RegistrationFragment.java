@@ -7,11 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +23,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.trianz.locationalarm.Authentication.ConfirmRegisterActivity;
+import com.trianz.locationalarm.Controllers.HomeController;
+import com.trianz.locationalarm.Controllers.PermissionsCheckController;
 import com.trianz.locationalarm.R;
-import com.trianz.locationalarm.Utils.HomeController;
 import com.trianz.locationalarm.Utils.MySingleton;
+import com.trianz.locationalarm.Utils.NetworkCallModels;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,34 +80,9 @@ public class RegistrationFragment extends Fragment {
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkSendSMSPermission();
+            PermissionsCheckController.checkSendSMSPermission((AppCompatActivity) getContext());
         }
         return rootView;
-    }
-
-    public boolean checkSendSMSPermission(){
-        if (ContextCompat.checkSelfPermission(getContext(),
-                Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale
-                    (getActivity(), android.Manifest.permission.SEND_SMS)) {
-
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.SEND_SMS},
-                        MY_PERMISSIONS_REQUEST_SENDSMS);
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission
-                                .SEND_SMS},
-                        MY_PERMISSIONS_REQUEST_SENDSMS);
-            }
-            return false;
-        } else {
-            //Call whatever you want
-            return true;
-        }
-
     }
 
     @Override
@@ -118,16 +94,12 @@ public class RegistrationFragment extends Fragment {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-
-
                     if (ContextCompat.checkSelfPermission(getContext(),
                             Manifest.permission.SEND_SMS)
                             == PackageManager.PERMISSION_GRANTED) {
                         //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
                     }
-
                 } else {
-
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(getContext(), "Location permission denied", Toast.LENGTH_LONG).show();
                 }
@@ -160,7 +132,7 @@ public class RegistrationFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         String message = null;
-                        HomeController.errorInResponse(this,volleyError);
+                        HomeController.errorInResponse(getContext(),volleyError);
                     }
 
                 });
@@ -171,30 +143,29 @@ public class RegistrationFragment extends Fragment {
 
     public void OnResponseValidation(JSONObject response){
         try {
-            JSONObject json = new JSONObject(response.toString());
-            Log.d("RegJson",json.toString());
-            JSONObject otp_data = new JSONObject(json.getString("data"));
-            Log.d("RegJson",otp_data.toString());
+            NetworkCallModels models = new NetworkCallModels();
+            models.setJson(response);
+            models.status = Boolean.parseBoolean(models.getJson().getString("status"));
+            models.message = models.getJson().getString("message");
+
+            JSONObject otp_data = new JSONObject(models.getJson().getString("data"));
             final String otp_token = otp_data.getString("otp_token");
             String otp = otp_data.getString("otp");
             final String sender_mobile = otp_data.getString("mobile");
-            Boolean status = Boolean.parseBoolean(json.getString("status"));
-            String message = json.getString("message");
 
-            if(status==true){
+            if(models.status){
                 Intent sendOTPIntent = new Intent(getContext(), RegistrationFragment.class);
                 PendingIntent sendOTPPendingIntent = PendingIntent.getActivity(getContext(),0,sendOTPIntent,0);
+
                 SmsManager sms = SmsManager.getDefault();
-                Log.d("Msg sender no:",sender_mobile);
                 sms.sendTextMessage(sender_mobile , null, "OTP RECEIVED for Location Alarm is: " + otp , sendOTPPendingIntent, null);
-                Log.d("Msg send","sent");
 
                 final Dialog regOTPDialog = new Dialog(getContext());
                 regOTPDialog.setContentView(R.layout.dialog_inputregotp);
                 regOTPDialog.show();
 
-                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-                 final EditText enter_otp = (EditText) regOTPDialog.findViewById(R.id.enterOTP);
+                Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
+                final EditText enter_otp = (EditText) regOTPDialog.findViewById(R.id.enterOTP);
                 Button verify_otp = (Button) regOTPDialog.findViewById(R.id.OTPverifyBtn);
 
                 verify_otp.setOnClickListener(new View.OnClickListener() {
@@ -209,22 +180,22 @@ public class RegistrationFragment extends Fragment {
                         params.put(KEY_REG_OTP_TOKEN,Verify_otp_token);
                         params.put(KEY_REG_OTP_SENDER,Verify_otp_sender);
 
-
                         JSONObject jsonBody = new JSONObject(params);
                         JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, REG_OTP_VERIFICATION_URL ,jsonBody,
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
                                     try{
-                                        JSONObject json = new JSONObject(response.toString());
-                                        String message = json.getString("message");
-                                        Boolean status = Boolean.parseBoolean(json.getString("status"));
-                                        if(status==true){
-                                            Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-                                            Intent homeActivity = new Intent(getContext(),ConfirmRegisterActivity.class);
-                                            startActivity(homeActivity);
+                                        NetworkCallModels models = new NetworkCallModels();
+                                        models.setJson(response);
+                                        models.status = Boolean.parseBoolean(models.getJson().getString("status"));
+                                        models.message = models.getJson().getString("message");
+
+                                        if(models.status){
+                                            Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(getContext(),ConfirmRegisterActivity.class));
                                         }else{
-                                            Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
                                         }
 
                                     } catch (JSONException e) {
@@ -235,7 +206,7 @@ public class RegistrationFragment extends Fragment {
                                 new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError volleyError) {
-                                        HomeController.errorInResponse(this,volleyError);
+                                        HomeController.errorInResponse(getContext(),volleyError);
                                     }
 
                                 });
@@ -245,15 +216,11 @@ public class RegistrationFragment extends Fragment {
                     }
                 });
 
-
-
             }else{
-                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
 }
-

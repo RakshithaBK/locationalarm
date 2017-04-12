@@ -122,7 +122,6 @@ public class RemindMeTask extends AppCompatActivity {
 
                 }
                 intent.putExtra("reminderEvent", pickedTask);
-
                 startActivity(intent);
             }
         });
@@ -131,14 +130,8 @@ public class RemindMeTask extends AppCompatActivity {
         closeTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent Home = new Intent(RemindMeTask.this, HomeActivity.class);
-                Home.putExtra("Token_Flag", 0);
-                startActivity(Home);
+                startActivity(new Intent(RemindMeTask.this, HomeActivity.class));
             }
         });
     }
-
 }
-
-

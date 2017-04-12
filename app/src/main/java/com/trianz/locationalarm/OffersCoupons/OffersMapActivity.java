@@ -126,8 +126,6 @@ public class OffersMapActivity extends FragmentActivity implements OnMapReadyCal
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
-
-
     }
 
     protected synchronized void buildGoogleApiClient() {

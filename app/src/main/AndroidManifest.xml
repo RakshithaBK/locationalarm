@@ -70,7 +70,7 @@
             android:value="@integer/google_play_services_version" />
 
         <!--Services of LocationAlarm-->
-        <service android:name=".Utils.LocationReminderIntentService" />
+        <service android:name=".Services.LocationReminderIntentService" />
         <service
             android:name=".Services.AlarmService"
             android:enabled="true" />

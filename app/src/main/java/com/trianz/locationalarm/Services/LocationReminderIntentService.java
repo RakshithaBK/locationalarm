@@ -1,4 +1,4 @@
-package com.trianz.locationalarm.Utils;
+package com.trianz.locationalarm.Services;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -17,6 +17,8 @@ import com.google.android.gms.location.GeofencingEvent;
 import com.google.gson.Gson;
 import com.trianz.locationalarm.HomeActivity;
 import com.trianz.locationalarm.R;
+import com.trianz.locationalarm.Utils.Constants;
+import com.trianz.locationalarm.Utils.NamedGeofence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,11 +85,9 @@ public class LocationReminderIntentService extends IntentService {
         // Set the notification text and send the notification
         String contextMsg = reminder_message;
         String contextPlace = reminder_place;
-
         if(contextPlace!=null){
             callNotification(contextMsg, contextPlace);
         }
-
     }
   }
 

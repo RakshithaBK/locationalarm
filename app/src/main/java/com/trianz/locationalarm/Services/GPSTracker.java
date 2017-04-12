@@ -1,4 +1,4 @@
-package com.trianz.locationalarm.Utils;
+package com.trianz.locationalarm.Services;
 
 /**
  * Created by niveditha.kabbur on 10-01-2017.

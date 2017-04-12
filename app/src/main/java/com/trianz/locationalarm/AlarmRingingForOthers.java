@@ -89,8 +89,6 @@ public class AlarmRingingForOthers extends AppCompatActivity {
     }
 
     public class MyDragListener implements View.OnDragListener {
-
-
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
@@ -114,8 +112,7 @@ public class AlarmRingingForOthers extends AppCompatActivity {
                         ringtone.stop();
 
                         Toast.makeText(AlarmRingingForOthers.this, "Alarm is postponed for 5 minutes", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(AlarmRingingForOthers.this, HomeActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(AlarmRingingForOthers.this, HomeActivity.class));
                     } else if (((ImageView) v).equals(findViewById(R.id.imageView3))) {
                         ringtone.stop();
                         inst.cancelAlarmControl(pendingIntentRequestCode);
@@ -123,8 +120,7 @@ public class AlarmRingingForOthers extends AppCompatActivity {
                         /****NewD***/
 
                         /********/
-                        Intent intent = new Intent(AlarmRingingForOthers.this, HomeActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(AlarmRingingForOthers.this, HomeActivity.class));
                     }
 
                     view.setVisibility(View.VISIBLE);
@@ -140,8 +136,5 @@ public class AlarmRingingForOthers extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-
-    }
-
+    public void onBackPressed() {}
 }

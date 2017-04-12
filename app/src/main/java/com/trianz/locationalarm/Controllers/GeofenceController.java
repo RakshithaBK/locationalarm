@@ -1,4 +1,4 @@
-package com.trianz.locationalarm.Utils;
+package com.trianz.locationalarm.Controllers;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,6 +16,9 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.trianz.locationalarm.Utils.Constants;
+import com.trianz.locationalarm.Services.LocationReminderIntentService;
+import com.trianz.locationalarm.Utils.NamedGeofence;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,11 +51,9 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
     }
     return INSTANCE;
   }
-
 // endregion
 
 // region Public
-
   public void init(Context context) {
     context = context.getApplicationContext();
 
@@ -85,7 +86,6 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
     geofenceToAdd = namedGeofence.geofence();
     this.listener = listener;
     System.out.println("in addgeofence "+ namedGeofence.reminder_msg);
-
 //connectWithCallbacks(connectionAddListener);
     onCommandAdd(namedGeofence);
   }
@@ -93,28 +93,22 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
   public void removeGeofences(List<NamedGeofence> namedGeofencesToRemove, GeofenceControllerListener listener) {
     this.namedGeofencesToRemove = namedGeofencesToRemove;
     this.listener = listener;
-
 //connectWithCallbacks(connectionRemoveListener);
     onCommandRemove();
   }
 
   public void removeAllGeofences(GeofenceControllerListener listener) {
-
     namedGeofencesToRemove = new ArrayList<>();
     for (NamedGeofence namedGeofence : namedGeofences) {
       namedGeofencesToRemove.add(namedGeofence);
     }
     this.listener = listener;
-
 //connectWithCallbacks(connectionRemoveListener);
     onCommandRemove();
-
   }
-
 // endregion
 
 // region Private
-
   private void loadGeofences() {
     // Loop over all geofence keys in prefs and add to namedGeofences
     Map<String, ?> keys = prefs.getAll();
@@ -126,7 +120,6 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
 
 // Sort namedGeofences by name
     Collections.sort(namedGeofences);
-
   }
 
 /*private void connectWithCallbacks(GoogleApiClient.ConnectionCallbacks callbacks) {
@@ -305,11 +298,9 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
       sendError();
     }
   };
-
 // endregion
 
 // region OnConnectionFailedListener
-
   private GoogleApiClient.OnConnectionFailedListener connectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -332,19 +323,13 @@ public class GeofenceController implements GoogleApiClient.ConnectionCallbacks {
   }
 
   @Override
-  public void onConnectionSuspended(int i) {
-
-  }
-
+  public void onConnectionSuspended(int i) {}
 // endregion
 
 // region Interfaces
-
   public interface GeofenceControllerListener {
     void onGeofencesUpdated();
     void onError();
   }
-
 // end region
-
 }

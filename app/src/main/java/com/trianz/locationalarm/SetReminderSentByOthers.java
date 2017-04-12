@@ -1,6 +1,5 @@
 package com.trianz.locationalarm;
 
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -16,10 +14,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.trianz.locationalarm.Controllers.HomeController;
 import com.trianz.locationalarm.Services.MyFirebaseMessagingService;
 import com.trianz.locationalarm.Services.ReminderReceiver;
-import com.trianz.locationalarm.Utils.HomeController;
 import com.trianz.locationalarm.Utils.MySingleton;
+import com.trianz.locationalarm.Utils.NetworkCallModels;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -122,7 +121,7 @@ public class SetReminderSentByOthers extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        HomeController.errorInResponse(this, volleyError);
+                        HomeController.errorInResponse(context, volleyError);
                     }
                 }) {
             @Override
@@ -130,7 +129,6 @@ public class SetReminderSentByOthers extends AppCompatActivity {
                 Map<String, String> headers = new HashMap<>();
                 SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                 String access_TokenKey_sendResponse = prefs.getString("AccessToken", "No Name Defined");
-                Log.d("access", access_TokenKey_sendResponse);
                 headers.put("Authorization", access_TokenKey_sendResponse);
                 return headers;
             }
@@ -140,15 +138,15 @@ public class SetReminderSentByOthers extends AppCompatActivity {
 
     public static void OnResponseValidation(Context context, JSONObject response) {
         try {
-            JSONObject json = new JSONObject(response.toString());
-            Log.d("RegJson", json.toString());
-            Boolean status = Boolean.parseBoolean(json.getString("status"));
-            String message = json.getString("message");
+            NetworkCallModels models = new NetworkCallModels();
+            models.setJson(response);
+            models.status = Boolean.parseBoolean(models.getJson().getString("status"));
+            models.message = models.getJson().getString("message");
 
-            if (status) {
-                Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            if (models.status) {
+                Toast.makeText(context.getApplicationContext(), models.message, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context.getApplicationContext(), models.message, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -175,7 +173,4 @@ public class SetReminderSentByOthers extends AppCompatActivity {
         MyFirebaseMessagingService.clearAllNotifications(context);
         sendResponse(context, response_dateObj, response_timeObj, reminderEventObj, reply_status_msgObj, sender_nameObj);
     }
-
 }
-
-

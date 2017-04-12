@@ -16,7 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,10 +30,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.trianz.locationalarm.Controllers.GeofenceController;
+import com.trianz.locationalarm.Controllers.ReminderSetController;
 import com.trianz.locationalarm.Services.AlarmReceiver;
-import com.trianz.locationalarm.Utils.GeofenceController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
-import com.trianz.locationalarm.Utils.ReminderSetController;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -42,9 +41,10 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import static android.R.attr.radius;
+import static com.trianz.locationalarm.Controllers.PermissionsCheckController.checkMicroPhonePermission;
+import static com.trianz.locationalarm.Controllers.ReminderSetController.pad;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_RECORD;
 import static com.trianz.locationalarm.Utils.Constants.Instances.context;
-import static com.trianz.locationalarm.Utils.ReminderSetController.pad;
 
 
 /**
@@ -164,7 +164,7 @@ public class ReminderSetActivity extends AppCompatActivity {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
+            checkMicroPhonePermission(this);
         }
 
 
@@ -549,9 +549,7 @@ public class ReminderSetActivity extends AppCompatActivity {
                 long delayInMilliseconds = 1000 * 1;
                 h.postDelayed(new Runnable() {
                     public void run() {
-                        Intent intent = new Intent(ReminderSetActivity.this, HomeActivity.class);
-                        intent.putExtra("Token_Flag", 0);
-                        startActivity(intent);
+                        startActivity(new Intent(ReminderSetActivity.this, HomeActivity.class));
                     }
                 }, delayInMilliseconds);
             }
@@ -591,7 +589,6 @@ public class ReminderSetActivity extends AppCompatActivity {
         public void onError() {
             Toast.makeText(ReminderSetActivity.this, ReminderSetActivity.this.getString(R.string.Toast_error), Toast.LENGTH_SHORT).show();
         }
-
     };
 
     public void snoozeAlarmControl(int receivedPendingIntentRequestCodeSnooze) {
@@ -608,20 +605,13 @@ public class ReminderSetActivity extends AppCompatActivity {
     }
 
     public void cancelAlarmControl(int receivedPendingIntentRequestCode) {
-
         //Toast.makeText(ReminderSetActivity.this,"Out Block", Toast.LENGTH_LONG).show();
-
         if (alarmManager != null) {
-
             //Toast.makeText(ReminderSetActivity.this,String.valueOf(receivedPendingIntentRequestCode),Toast.LENGTH_LONG).show();
-
             PendingIntent sender = PendingIntent.getBroadcast(ReminderSetActivity.this, receivedPendingIntentRequestCode,
                     alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
             //Toast.makeText(ReminderSetActivity.this,"In Block", Toast.LENGTH_LONG).show();
-
             alarmManager.cancel(sender);
-
 //            Log.d("repeatAlarm-->", getrepeatAlarmIntervalValue);
 //
 //            if (getrepeatAlarmIntervalValue.equals("everyMonth")) {
@@ -655,7 +645,6 @@ public class ReminderSetActivity extends AppCompatActivity {
 //                alarmManager.set(AlarmManager.RTC_WAKEUP, myCalender.getTimeInMillis() , alarmPendingIntent);
 //            }
             //alarmManager.cancel(alarmPendingIntent);
-
         }
     }
 
@@ -674,30 +663,6 @@ public class ReminderSetActivity extends AppCompatActivity {
                 PackageManager.FEATURE_MICROPHONE);
     }
 
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale
-                    (this, android.Manifest.permission.RECORD_AUDIO)) {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.RECORD_AUDIO},
-                        MY_PERMISSIONS_REQUEST_RECORD);
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission
-                                .RECORD_AUDIO},
-                        MY_PERMISSIONS_REQUEST_RECORD);
-            }
-            return false;
-        } else {
-            //Call whatever you want
-            return true;
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -710,7 +675,6 @@ public class ReminderSetActivity extends AppCompatActivity {
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.RECORD_AUDIO)
                             == PackageManager.PERMISSION_GRANTED) {
-                        //Toast.makeText(this, "SMS permision granted", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {

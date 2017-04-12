@@ -21,10 +21,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.trianz.locationalarm.Controllers.HomeController;
 import com.trianz.locationalarm.HomeActivity;
 import com.trianz.locationalarm.R;
-import com.trianz.locationalarm.Utils.HomeController;
 import com.trianz.locationalarm.Utils.MySingleton;
+import com.trianz.locationalarm.Utils.NetworkCallModels;
 import com.trianz.locationalarm.Utils.SaveSharedPreferences;
 
 import org.json.JSONException;
@@ -60,10 +61,7 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-    }
+    {super.onCreate(savedInstanceState);}
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -72,28 +70,22 @@ public class LoginFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.activity_login, container,false);
         loginEditTextMobile = (EditText) rootView.findViewById(R.id.loginMobileTxt);
         loginEditTextPassword = (EditText) rootView.findViewById(R.id.loginPasswordTxt);
-         loginButtonRegister= (Button) rootView.findViewById(R.id.signInBtn);
+        loginButtonRegister= (Button) rootView.findViewById(R.id.signInBtn);
         forgotPwd_btn = (TextView) rootView.findViewById(R.id.forgotpwd);
-
         forgotPwd_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callForgotpassword(v);
             }
         });
-
         loginButtonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 homeActivity(v);
             }
         });
-
-                return rootView;
-
-
+        return rootView;
     }
-
 
     public void homeActivity(View view){
         String token = FirebaseInstanceId.getInstance().getToken();
@@ -108,37 +100,33 @@ public class LoginFragment extends Fragment {
         params.put(KEY_TOKEN,fcmRegistrationId);
 
         JSONObject jsonBody = new JSONObject(params);
-        Log.d("Login_Params",params.toString());
-
         JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, LOGIN_URL ,jsonBody,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONObject json = new JSONObject(response.toString());
-                            Log.d("Json obj" ,json.toString());
-                            Boolean status = Boolean.parseBoolean(json.getString("status"));
-                            String message = json.getString("message");
+                            NetworkCallModels models = new NetworkCallModels();
+                            models.setJson(response);
+                            models.status = Boolean.parseBoolean(models.getJson().getString("status"));
+                            models.message = models.getJson().getString("message");
 
-                            if(status==true){
-                                String data_Token = json.getString("data");
+                            if(models.status){
+                                String data_Token = models.getJson().getString("data");
                                 JSONObject obj_token = new JSONObject(data_Token);
                                 String Username = obj_token.getString("username");
                                 String Email = obj_token.getString("email");
                                 String access_Token = obj_token.getString("accessToken");
-                                Log.d("access_Token",access_Token);
 
-                                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-                                Intent homeActivity = new Intent(getContext(),HomeActivity.class);
+                                Toast.makeText(getActivity(),models.message , Toast.LENGTH_SHORT).show();
                                 SharedPreferences.Editor editor =  getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                                 editor.putString("AccessToken", access_Token);
                                 editor.putString("UserName", Username);
                                 editor.putString("Email",Email);
                                 SaveSharedPreferences.setUserName(getContext(),"True");
                                 editor.commit();
-                                startActivity(homeActivity);
+                                startActivity(new Intent(getContext(),HomeActivity.class));
                             }else{
-                                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e){
                             e.printStackTrace();
@@ -148,7 +136,7 @@ public class LoginFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        HomeController.errorInResponse(this,volleyError);
+                        HomeController.errorInResponse(getContext(),volleyError);
                     }
                 });
         MySingleton.getInstance(getActivity()).addToRequestQueue(JsonObjRequest);
@@ -162,22 +150,22 @@ public class LoginFragment extends Fragment {
             final Dialog regOTPDialog = new Dialog(getContext());
             regOTPDialog.setContentView(R.layout.dialog_inputforpwdotp);
             regOTPDialog.show();
+
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(KEY_FORPWD_MOBILE,mobile);
             JSONObject jsonBody = new JSONObject(params);
-            Log.d("Login_Params",params.toString());
             JsonObjectRequest JsonObjRequest = new JsonObjectRequest(Request.Method.POST, FORGOTPWD_URL ,jsonBody,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                JSONObject json = new JSONObject(response.toString());
-                                Log.d("Json obj" ,json.toString());
-                                Boolean status = Boolean.parseBoolean(json.getString("status"));
-                                String message = json.getString("message");
+                                NetworkCallModels models = new NetworkCallModels();
+                                models.setJson(response);
+                                models.status = Boolean.parseBoolean(models.getJson().getString("status"));
+                                models.message  = models.getJson().getString("message");
 
-                                if(status==true){
-                                    String data_Token = json.getString("data");
+                                if(models.status){
+                                    String data_Token = models.getJson().getString("data");
                                     JSONObject obj_token = new JSONObject(data_Token);
                                     final String password_otp_token = obj_token.getString("password_otp_token");
                                     String password_otp = obj_token.getString("password_otp");
@@ -194,7 +182,7 @@ public class LoginFragment extends Fragment {
                                     regOTPDialog.setCanceledOnTouchOutside(false);
                                     regOTPDialog.show();
 
-                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
                                     final EditText enter_otp = (EditText) regOTPDialog.findViewById(R.id.enterOTPforpwd);
                                     final EditText enter_new_password = (EditText) regOTPDialog.findViewById(R.id.new_pwd);
                                     Button verify_otp = (Button) regOTPDialog.findViewById(R.id.OTPverifyBtn);
@@ -219,15 +207,16 @@ public class LoginFragment extends Fragment {
                                                         @Override
                                                         public void onResponse(JSONObject response) {
                                                             try{
-                                                                JSONObject json = new JSONObject(response.toString());
-                                                                String message = json.getString("message");
-                                                                Boolean status = Boolean.parseBoolean(json.getString("status"));
-                                                                if(status==true){
-                                                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-                                                                    Intent AuthenticationActivity = new Intent(getContext(), com.trianz.locationalarm.Authentication.AuthenticationActivity.class);
-                                                                    startActivity(AuthenticationActivity);
+                                                                NetworkCallModels models = new NetworkCallModels();
+                                                                models.setJson(response);
+                                                                models.message = models.getJson().getString("message");
+                                                                models.status = Boolean.parseBoolean(models.getJson().getString("status"));
+
+                                                                if(models.status==true){
+                                                                    Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
+                                                                    startActivity(new Intent(getContext(), com.trianz.locationalarm.Authentication.AuthenticationActivity.class));
                                                                 }else{
-                                                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
                                                                 }
 
                                                             } catch (JSONException e) {
@@ -238,7 +227,7 @@ public class LoginFragment extends Fragment {
                                                     new Response.ErrorListener() {
                                                         @Override
                                                         public void onErrorResponse(VolleyError volleyError) {
-                                                            HomeController.errorInResponse(this,volleyError);
+                                                            HomeController.errorInResponse(getContext(),volleyError);
                                                         }
 
                                                     });
@@ -251,7 +240,7 @@ public class LoginFragment extends Fragment {
 
 
                                 }else{
-                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(),models.message, Toast.LENGTH_SHORT).show();
                                 }
 
                             } catch (JSONException e){
@@ -262,7 +251,7 @@ public class LoginFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            HomeController.errorInResponse(this,volleyError);
+                            HomeController.errorInResponse(getContext(),volleyError);
                         }
 
 
@@ -272,7 +261,4 @@ public class LoginFragment extends Fragment {
         }
 
     }
-
-
 }
-

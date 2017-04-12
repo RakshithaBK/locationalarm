@@ -53,7 +53,6 @@ public class AlarmRingingActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         String reminderEvent = bundle.getString("reminderEvent");
 
-
         TextView reminderEventText = (TextView) findViewById(R.id.reminderEvent);
         reminderEventText.setText(reminderEvent);
 
@@ -65,11 +64,9 @@ public class AlarmRingingActivity extends AppCompatActivity {
         notificationTypeValue = bundle.getString("notificationTypeValue");
 
         final RippleBackground rippleBackground = (RippleBackground) findViewById(R.id.content);
-
         rippleBackground.startRippleAnimation();
 
         findViewById(R.id.alarmvibrate).setOnTouchListener(new MyTouchListener());
-
         findViewById(R.id.imageView1).setOnDragListener(new MyDragListener());
         findViewById(R.id.imageView3).setOnDragListener(new MyDragListener());
 
@@ -82,7 +79,6 @@ public class AlarmRingingActivity extends AppCompatActivity {
             ringtone.play();
         } else {
             audioFilePath = bundle.getString("audioFilePath");
-
             mediaPlayer = new MediaPlayer();
             try {
                 mediaPlayer.setDataSource(audioFilePath);
@@ -103,11 +99,11 @@ public class AlarmRingingActivity extends AppCompatActivity {
         int currentHour = Integer.parseInt(currentHourFormat.format(myCalender.getTime()));
         TextView tv_greetings = (TextView) findViewById(R.id.greetings);
         if (currentHour > 5 && currentHour <= 12) {
-            tv_greetings.setText("Good Morning");
+            tv_greetings.setText(getResources().getString(R.string.show_msg_morning));
         } else if (currentHour > 12 && currentHour < 17) {
-            tv_greetings.setText("Good Afternoon");
+            tv_greetings.setText(getResources().getString(R.string.show_msg_afternoon));
         } else {
-            tv_greetings.setText("Good Evening");
+            tv_greetings.setText(getResources().getString(R.string.show_msg_evening));
         }
 
         TextView alarm_User_Name = (TextView) findViewById(R.id.alarm_User_Name);
@@ -156,16 +152,14 @@ public class AlarmRingingActivity extends AppCompatActivity {
                             ringtone.stop();
                         }
                         inst.snoozeAlarmControl(pendingIntentRequestCode);
-                        Intent intent = new Intent(AlarmRingingActivity.this, HomeActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(AlarmRingingActivity.this, HomeActivity.class));
                     } else if (v.equals(findViewById(R.id.imageView3))) {
                         Toast.makeText(AlarmRingingActivity.this, "Dismiss", Toast.LENGTH_SHORT).show();
                         if (notificationTypeValue.equals("Notification")) {
                             ringtone.stop();
                         }
                         inst.cancelAlarmControl(pendingIntentRequestCode);
-                        Intent intent = new Intent(AlarmRingingActivity.this, HomeActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(AlarmRingingActivity.this, HomeActivity.class));
                     }
 
                     view.setVisibility(View.VISIBLE);
@@ -181,14 +175,11 @@ public class AlarmRingingActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-
-    }
+    public void onBackPressed() {}
 
     @Override
     public void onResume() {
         super.onResume();
         mPendulum.startAnimation(mAnimation);
     }
-
 }

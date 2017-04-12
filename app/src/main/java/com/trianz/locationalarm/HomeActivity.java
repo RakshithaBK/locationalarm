@@ -3,21 +3,16 @@ package com.trianz.locationalarm;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,7 +21,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -67,10 +61,11 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.trianz.locationalarm.Adapters.RemindersListAdapter;
 import com.trianz.locationalarm.Authentication.AuthenticationActivity;
-import com.trianz.locationalarm.Utils.GeofenceController;
-import com.trianz.locationalarm.Utils.HomeController;
+import com.trianz.locationalarm.Controllers.GeofenceController;
+import com.trianz.locationalarm.Controllers.HomeController;
 import com.trianz.locationalarm.Utils.MySingleton;
 import com.trianz.locationalarm.Utils.NamedGeofence;
+import com.trianz.locationalarm.Utils.NetworkCallModels;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +78,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.trianz.locationalarm.Controllers.PermissionsCheckController.checkLocationPermission;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.SET_REMINDER_REQUEST;
 import static com.trianz.locationalarm.Utils.Constants.Instances.FORMATTER;
@@ -145,7 +141,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fabButtonsAction();
         navigationDrawerAttach();
         reminderError = (TextView) findViewById(R.id.reminder_error_msg);
-        if (!isNetworkAvailable()) {
+        if (!HomeController.isNetworkAvailable(context)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.turn_on_internet)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -158,7 +154,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
+            checkLocationPermission(this);
         }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -168,20 +164,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         GeofenceController.getInstance().init(this);
         recyclerViewSetter();
 
-        //FireBaseMessaging
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                String value = getIntent().getExtras().getString(key);
-
-//                if (key.equals("AnotherActivity") && value.equals("True")) {
-//
-//                    //      Toast.makeText(MainActivity.this, "Another Activity!!!", Toast.LENGTH_SHORT).show();
-//
-//                }
-            }
-        }
-
-        HomeController.subscribeToPushService();
     }
 
     @Override
@@ -197,8 +179,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onBackPressed() {
-    }
+    public void onBackPressed() {}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -252,10 +233,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
 
         mLastLocation = location;
@@ -274,8 +251,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-    }
+    public void onConnectionFailed(ConnectionResult connectionResult) {}
+
+    @Override
+    public void onConnectionSuspended(int i) {}
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -323,7 +302,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 
@@ -363,8 +341,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setTitle(monthFormat.format(date.getDate()).toString());
         getSupportActionBar().setSubtitle("");
     }
-    //Override method ends here
 
+    //Override method ends here
     public void switchCalenderToMap() {
         //calender switch to map
         calenderImg = (ImageView) findViewById(R.id.calenderImg);
@@ -426,15 +404,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         try {
                             // Parsing json object response
                             // response will be a json object
-                            JSONObject json = new JSONObject(response.toString());
-                            Boolean status = Boolean.parseBoolean(json.getString("status"));
-                            String message = json.getString("message");
-                            if (status == true) {
-                                Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
-                                Intent homeActivity = new Intent(HomeActivity.this, AuthenticationActivity.class);
-                                startActivity(homeActivity);
+                            NetworkCallModels models = new NetworkCallModels();
+                            models.setJson(new JSONObject(response));
+                            models.status = Boolean.parseBoolean(models.getJson().getString("status"));
+                            models.message = models.getJson().getString("message");
+
+                            if (models.status) {
+                                Toast.makeText(HomeActivity.this, models.message, Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(HomeActivity.this, AuthenticationActivity.class));
                             } else {
-                                Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HomeActivity.this, models.message, Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
@@ -447,15 +426,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(HomeActivity.this, error.toString(), Toast.LENGTH_LONG).show();
             }
         }) {
-
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
                 SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                 String access_TokenKey1 = prefs.getString("AccessToken", "No AccessToken Defined");
-                Log.d("AccessTokenGET", access_TokenKey1);
-                String auth = access_TokenKey1;
-                headers.put("Authorization", auth);
+                headers.put("Authorization", access_TokenKey1);
                 return headers;
             }
 
@@ -463,7 +439,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public String getBodyContentType() {
                 return "application/json";
             }
-
         };
         MySingleton.getInstance(HomeActivity.this).addToRequestQueue(stringRequest);
     }
@@ -491,10 +466,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                // Log.i(TAG, "An error occurred: " + status);
-            }
+            public void onError(Status status) {}
         });
     }
 
@@ -505,37 +477,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
-    }
-
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) + ContextCompat
-                .checkSelfPermission(this,
-                        Manifest.permission.READ_SMS) + ContextCompat
-                .checkSelfPermission(this,
-                        Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale
-                    (this, Manifest.permission.ACCESS_FINE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale
-                            (this, Manifest.permission.READ_SMS) || ActivityCompat.shouldShowRequestPermissionRationale
-                    (this, Manifest.permission.READ_CONTACTS)) {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission
-                                .ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            //Call whatever you want
-            return true;
-        }
     }
 
     public void recyclerViewSetter() {
@@ -571,8 +512,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public void onError() {
-
-            showErrorToast();
+            HomeController.showErrorToast(context);
         }
     };
 
@@ -583,36 +523,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             recyclerViewSetter();
         } else {
             remindersListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    private void showErrorToast() {
-        Toast.makeText(HomeActivity.this, HomeActivity.this.getString(R.string.Toast_error), Toast.LENGTH_SHORT).show();
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public static boolean isLocationEnabled(Context context) {
-        int locationMode = 0;
-        String locationProviders;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            try {
-                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
-
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-        } else {
-            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            return !TextUtils.isEmpty(locationProviders);
         }
     }
 

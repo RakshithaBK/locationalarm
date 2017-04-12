@@ -47,7 +47,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static String reply_status_msg;
     public static int  pendingIntentRequestCode;
     public static int DISCARD_KEY = 1;
-    public static int notify_ID;
 
     public  NotificationManager notificationManager;
 
@@ -201,7 +200,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         SetReminderSentByOthers.putExtra("reminderEvent", reminder_message);
         SetReminderSentByOthers.putExtra("sender",messageTitle);
         SetReminderSentByOthers.putExtra("fromNotification", true);
-        SetReminderSentByOthers.putExtra("DISCARD_KEY",DISCARD_KEY);
         SetReminderSentByOthers.putExtra("Status_msg",reply_status_msg);
         pendingIntentRequestCode = reminderHour + reminderMinute + reminderDay + reminderMonth + reminderYear;
     }

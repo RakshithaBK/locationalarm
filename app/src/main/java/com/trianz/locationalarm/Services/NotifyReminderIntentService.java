@@ -21,7 +21,7 @@ import android.os.Bundle;
 
 import com.trianz.locationalarm.SetReminderSentByOthers;
 
-import static com.trianz.locationalarm.Utils.ReminderSetController.pad;
+import static com.trianz.locationalarm.Controllers.ReminderSetController.pad;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -33,34 +33,23 @@ public class NotifyReminderIntentService extends IntentService {
         super("NotifyReminderIntentService");
     }
 
-     int reminderDay;
-     int reminderMinute;
-     int reminderHour;
-     int reminderMonth;
-     int reminderYear;
-     int pendingIntentRequestCode;
-     int DISCARD_KEY;
-
-     String reminderEvent;
-     String reply_status_msg;
-     String sender_name;
-     String response_date;
-     String response_time;
+     int reminderDay,reminderMinute,reminderHour,reminderMonth,reminderYear,pendingIntentRequestCode;
+     String reminderEvent,reply_status_msg,sender_name,response_date,response_time;
 
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
         Bundle bundle = intent.getExtras();
         reminderDay = bundle.getInt("reminderDay");
-        reply_status_msg = bundle.getString("Status_msg");
         reminderMinute = bundle.getInt("reminderMinute");
         reminderHour = bundle.getInt("reminderHour");
         reminderMonth = bundle.getInt("reminderMonth");
         reminderYear = bundle.getInt("reminderYear");
+        reply_status_msg = bundle.getString("Status_msg");
         pendingIntentRequestCode = bundle.getInt("pendingIntentRequestCode");
         reminderEvent = bundle.getString("reminderEvent");
         sender_name = bundle.getString("sender");
-        DISCARD_KEY = bundle.getInt("DISCARD_KEY");
+
         response_date = String.valueOf(pad(reminderDay)) + "/" + String.valueOf(pad(reminderMonth+1)) + "/" + String.valueOf(reminderYear);
         response_time = String.valueOf(pad(reminderHour)) + ":" + String.valueOf(pad(reminderMinute));
         SetReminderSentByOthers.executeTask(this, action,response_date,response_time,sender_name,reply_status_msg,reminderEvent);

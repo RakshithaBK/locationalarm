@@ -1,16 +1,20 @@
-package com.trianz.locationalarm.Utils;
+package com.trianz.locationalarm.Controllers;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,20 +26,16 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
-import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.trianz.locationalarm.AddReminderActivity;
 import com.trianz.locationalarm.OffersCoupons.OffersActivity;
 import com.trianz.locationalarm.R;
 import com.trianz.locationalarm.RemindMeTask;
 
-import static com.trianz.locationalarm.HomeActivity.isLocationEnabled;
 import static com.trianz.locationalarm.Utils.Constants.Geometry.SET_REMINDER_REQUEST;
 import static com.trianz.locationalarm.Utils.Constants.Instances.frameLayout;
 import static com.trianz.locationalarm.Utils.Constants.Instances.isDateSelected;
@@ -85,21 +85,18 @@ public class HomeController {
                         break;
                     case R.id.nav_remindOthers:
                         selfReminderFlag = false;
-                        Intent remindToOthers = new Intent(appCompatActivity, RemindMeTask.class);
-                        appCompatActivity.startActivity(remindToOthers);
+                        appCompatActivity.startActivity(new Intent(appCompatActivity, RemindMeTask.class));
                         break;
                     case R.id.nav_wakeUpAlarm:
                         selfReminderFlag = true;
                         if(selectedDate == null){
                             Toast.makeText(appCompatActivity, "Select a reminder Date", Toast.LENGTH_SHORT).show();
                         }else {
-                            Intent wakeUp = new Intent(appCompatActivity, RemindMeTask.class);
-                            appCompatActivity.startActivity(wakeUp);
+                            appCompatActivity.startActivity(new Intent(appCompatActivity, RemindMeTask.class));
                         }
                         break;
                     case R.id.nav_offers:
-                        Intent offers = new Intent(appCompatActivity, OffersActivity.class);
-                        appCompatActivity.startActivity(offers);
+                        appCompatActivity.startActivity(new Intent(appCompatActivity, OffersActivity.class));
                         break;
                 }
                 return false;
@@ -121,14 +118,8 @@ public class HomeController {
 //        });
     }
 
-
-
     public static void FloatActionBtnSetup(final AppCompatActivity appCompatActivity, FloatingActionButton wakeupfab, FloatingActionButton addReminderLocationfab,
                                             FloatingActionButton remindothersfab, final FloatingActionsMenu fabMenu){
-
-
-
-
 
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
@@ -150,8 +141,6 @@ public class HomeController {
                 frameLayout.setOnTouchListener(null);
             }
         });
-
-
 
         addReminderLocationfab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +164,6 @@ public class HomeController {
                             .setAction("Action", null).show();
                     fabMenu.collapse();
                 }
-
                 else {
                     Intent addReminderActivity = new Intent(appCompatActivity, AddReminderActivity.class);
                     addReminderActivity.putExtra("reminder_place", (Parcelable) selectedPlace);
@@ -184,8 +172,6 @@ public class HomeController {
                 }
             }
         });
-
-
 
         remindothersfab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,7 +188,6 @@ public class HomeController {
         wakeupfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(selectedDate == null){
                     Snackbar.make(view, "Select a reminder date", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -214,20 +199,27 @@ public class HomeController {
                     appCompatActivity.startActivityForResult(addReminderToDateActivity, SET_REMINDER_REQUEST);
                     fabMenu.collapse();
                 }
-}
+            }
         });
-
     }
 
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
 
-    public static void subscribeToPushService() {
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-        Log.d("AndroidBash", "Subscribed");
-        String token = FirebaseInstanceId.getInstance().getToken();
-        // Log and toast
-        //   Log.d("AndroidBash", token);
-        //   Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        } else {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
     }
 
     public  static void switchCalenderToMapSetUp(final AppCompatActivity appCompatActivity, ImageView calenderImg, final FrameLayout search_place, final ViewGroup content_calender){
@@ -252,8 +244,8 @@ public class HomeController {
         });
     }
 
-    public static void errorInResponse(Response.ErrorListener appCompatActivity, VolleyError volleyError){
-        String message = null;
+    public static void errorInResponse(Context context, VolleyError volleyError){
+        String message = String.valueOf(volleyError);
         if (volleyError instanceof NetworkError) {
             message = "Cannot connect to Internet...Please check your connection!";
         } else if (volleyError instanceof ServerError) {
@@ -263,9 +255,17 @@ public class HomeController {
         } else if (volleyError instanceof TimeoutError) {
             message = "Connection TimeOut! Please check your internet connection.";
         }
-        Toast.makeText((Context) appCompatActivity, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void showErrorToast(Context context) {
+        Toast.makeText(context, context.getString(R.string.Toast_error), Toast.LENGTH_SHORT).show();
+    }
 
-
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

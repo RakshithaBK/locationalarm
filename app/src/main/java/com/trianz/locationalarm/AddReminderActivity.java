@@ -23,12 +23,14 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.trianz.locationalarm.Utils.Constants;
-import com.trianz.locationalarm.Utils.GeofenceController;
+import com.trianz.locationalarm.Controllers.GeofenceController;
+import com.trianz.locationalarm.Controllers.HomeController;
 import com.trianz.locationalarm.Utils.NamedGeofence;
 
 import java.util.ArrayList;
 
 import static com.trianz.locationalarm.Utils.Constants.Geometry.RESULT_SPEECH;
+import static com.trianz.locationalarm.Utils.Constants.Instances.context;
 import static com.trianz.locationalarm.Utils.Constants.Instances.speechToText;
 
 public class AddReminderActivity extends AppCompatActivity {
@@ -83,7 +85,6 @@ public class AddReminderActivity extends AppCompatActivity {
 
             }
         });
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -136,12 +137,9 @@ public class AddReminderActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
 
-
-
     @Override
     public boolean onSupportNavigateUp() {
         finish(); // close this activity as oppose to navigating up
-
         return false;
     }
 
@@ -188,14 +186,10 @@ public class AddReminderActivity extends AppCompatActivity {
         @Override
         public void onError() {
 
-            showErrorToast();
+            HomeController.showErrorToast(context);
 
         }
     };
-
-    private void showErrorToast() {
-        Toast.makeText(AddReminderActivity.this, AddReminderActivity.this.getString(R.string.Toast_error), Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -239,7 +233,6 @@ public class AddReminderActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
@@ -249,7 +242,6 @@ public class AddReminderActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());

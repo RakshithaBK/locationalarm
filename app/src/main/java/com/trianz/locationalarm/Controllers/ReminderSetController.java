@@ -1,4 +1,4 @@
-package com.trianz.locationalarm.Utils;
+package com.trianz.locationalarm.Controllers;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -139,7 +139,5 @@ public class ReminderSetController {
         Log.d("month",getMonthText);
         return getMonthText;
     }
-
-
 
 }
